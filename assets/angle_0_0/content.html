@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精選主視覺 & 品牌整合 - 專案展演</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="p-3 md:p-6 min-h-screen bg-slate-950 custom-scroll selection:bg-cyan-500 selection:text-slate-950 overflow-x-hidden">
+
+    <!-- Angle 0_0 Custom Portfolio Layout Container -->
+    <div id="angle00-wrapper" class="relative w-full max-w-5xl mx-auto text-gray-100 overflow-x-hidden">
+        
+        <!-- Top Navigation Header -->
+        <header class="sticky top-0 z-30 flex items-center justify-between pb-3 mb-4 border-b border-white/10 bg-slate-950/90 backdrop-blur-md">
+            <div class="flex items-center gap-2">
+                <span class="p-2 bg-cyan-500/20 text-cyan-400 rounded-xl text-xs border border-cyan-500/30">
+                    <i class="fa-solid fa-palette"></i>
+                </span>
+                <div id="angle00-breadcrumb" class="text-sm font-bold text-white flex items-center gap-1.5">
+                    <span>精選主視覺</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <div id="angle00-grid-switcher" class="hidden flex items-center bg-slate-900 border border-white/10 rounded-xl p-1 text-xs">
+                    <button id="btn-grid-2" onclick="window.angle00SetGridCols(2)" 
+                            class="px-2.5 py-1 rounded-lg text-cyan-300 bg-cyan-500/20 font-mono font-bold transition">
+                        2xN
+                    </button>
+                    <button id="btn-grid-3" onclick="window.angle00SetGridCols(3)" 
+                            class="px-2.5 py-1 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition">
+                        3xN
+                    </button>
+                </div>
+
+                <button id="angle00-btn-back" 
+                        onclick="window.angle00GoBack()" 
+                        class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-cyan-500/20 hover:border-cyan-400/50 transition border border-white/10 shadow-md opacity-0 pointer-events-none"
+                        title="上一頁">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <button onclick="window.angle00CloseModal()" 
+                        class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-rose-500/20 hover:border-rose-400/50 transition border border-white/10 shadow-md"
+                        title="關閉作品面板">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- LEVEL 1: 4 CATEGORY BANNERS -->
+        <div id="angle00-level1" class="space-y-4 transition-all duration-300">
+            <!-- Category 1: 厚塗插畫 -->
+            <div onclick="window.angle00OpenCategory('painterly')" 
+                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-cyan-400/60 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 active:scale-[0.99]">
+                <div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-45 group-hover:scale-105 transition-all duration-500" 
+                     style="background-image: url('https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+                <div class="relative z-10 flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-cyan-400">Digital Painting</span>
+                        <h3 class="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-2 mt-0.5">
+                            <i class="fa-solid fa-brush text-sm text-cyan-400"></i> 厚塗插畫
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-1">光影筆觸堆疊、質感細節與氛圍感極佳的厚塗創作</p>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-cyan-500 group-hover:text-slate-950 transition-all">
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 2: 日系插畫 -->
+            <div onclick="window.angle00OpenCategory('anime')" 
+                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-pink-400/60 bg-gradient-to-r from-slate-900 via-pink-950/30 to-slate-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-pink-500/10 active:scale-[0.99]">
+                <div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-45 group-hover:scale-105 transition-all duration-500" 
+                     style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+                <div class="relative z-10 flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-pink-400">Anime & Concept</span>
+                        <h3 class="text-lg font-bold text-white group-hover:text-pink-300 transition-colors flex items-center gap-2 mt-0.5">
+                            <i class="fa-solid fa-wand-magic-sparkles text-sm text-pink-400"></i> 日系插畫
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-1">動漫人物風格、二次元賽博朋克與角色設計專案</p>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-pink-500 group-hover:text-slate-950 transition-all">
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 3: 練習作品 -->
+            <div onclick="window.angle00OpenCategory('sketches')" 
+                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-amber-400/60 bg-gradient-to-r from-slate-900 via-amber-950/30 to-slate-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10 active:scale-[0.99]">
+                <div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-45 group-hover:scale-105 transition-all duration-500" 
+                     style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+                <div class="relative z-10 flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-amber-400">Studies & Sketches</span>
+                        <h3 class="text-lg font-bold text-white group-hover:text-amber-300 transition-colors flex items-center gap-2 mt-0.5">
+                            <i class="fa-solid fa-pen-ruler text-sm text-amber-400"></i> 練習作品
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-1">速寫研究、色彩實驗、結構造型練習與概念研究</p>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-slate-950 transition-all">
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category 4: 黑線繪 -->
+            <div onclick="window.angle00OpenCategory('lineart')" 
+                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-emerald-400/60 bg-gradient-to-r from-slate-900 via-emerald-950/30 to-slate-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/10 active:scale-[0.99]">
+                <div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-45 group-hover:scale-105 transition-all duration-500" 
+                     style="background-image: url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+                <div class="relative z-10 flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-emerald-400">Ink & Line Art</span>
+                        <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors flex items-center gap-2 mt-0.5">
+                            <i class="fa-solid fa-pen-nib text-sm text-emerald-400"></i> 黑線繪
+                        </h3>
+                        <p class="text-xs text-gray-400 mt-1">精細線稿、黑白點陣風格、漫畫風格線描作品</p>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-slate-950 transition-all">
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEVEL 2: SUB-CATEGORY & SQUARE THUMBNAIL GRID -->
+        <div id="angle00-level2" class="hidden transition-all duration-300 overflow-x-hidden">
+            <div id="angle00-grid-container" class="grid grid-cols-2 gap-3.5 w-full max-w-full overflow-x-hidden">
+                <!-- Dynamically injected subcategory dividers & 1:1 square crop thumbnails -->
+            </div>
+        </div>
+
+        <!-- LEVEL 3: FULLSCREEN LIGHTBOX MODAL -->
+        <div id="angle00-lightbox" 
+             class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between items-center p-4 opacity-0 pointer-events-none transition-all duration-300 select-none">
+            
+            <div class="w-full max-w-5xl flex justify-between items-center text-xs text-gray-300 px-2 py-2 border-b border-white/10">
+                <div class="flex items-center gap-2">
+                    <span id="angle00-lightbox-title" class="font-bold text-cyan-300 text-sm">全螢幕檢視</span>
+                    <span id="angle00-lightbox-subcat-tag" class="px-2.5 py-0.5 bg-cyan-500/20 text-cyan-300 rounded-full text-[10px] border border-cyan-500/30">
+                        小類別
+                    </span>
+                </div>
+                
+                <div class="flex items-center gap-2.5">
+                    <span id="angle00-lightbox-counter" class="font-mono bg-white/10 px-2.5 py-1 rounded-full text-xs">1 / 10</span>
+                    <button onclick="window.angle00GoBack()" 
+                            class="px-3 py-1.5 rounded-xl glass-panel text-xs text-gray-200 hover:text-white hover:bg-cyan-500/20 hover:border-cyan-400/50 transition border border-white/10 flex items-center gap-1.5 shadow-md active:scale-95">
+                        <i class="fa-solid fa-arrow-left text-cyan-400"></i>
+                        <span>返回上一層</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative flex-1 w-full max-w-5xl flex items-center justify-center my-2 overflow-hidden">
+                <div id="angle00-lightbox-toast" 
+                     class="absolute top-4 z-30 px-4 py-2 rounded-full bg-cyan-400 text-slate-950 font-bold text-xs shadow-2xl backdrop-blur-md transition-all duration-500 opacity-0 -translate-y-4 pointer-events-none flex items-center gap-2">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span id="angle00-toast-text">已進入小類別</span>
+                </div>
+
+                <button onclick="event.stopPropagation(); window.angle00NavImage(-1);" 
+                        class="absolute left-2 z-20 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-cyan-500 hover:text-slate-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl">
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                </button>
+
+                <img id="angle00-lightbox-img" 
+                     src="" 
+                     class="max-w-full max-h-[78vh] object-contain rounded-xl shadow-2xl transition-transform duration-200"
+                     alt="Full Artwork Detail">
+
+                <button onclick="event.stopPropagation(); window.angle00NavImage(1);" 
+                        class="absolute right-2 z-20 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-cyan-500 hover:text-slate-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl">
+                    <i class="fa-solid fa-chevron-right text-sm"></i>
+                </button>
+            </div>
+
+            <div class="text-[11px] text-gray-400 text-center flex items-center gap-2 bg-white/5 px-4 py-1.5 rounded-full border border-white/10">
+                <i class="fa-solid fa-hand-pointer text-cyan-400"></i>
+                <span>左右滑動 / 點擊按鈕切換作品 | 點擊右上角「返回上一層」返回縮圖頁</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            const DATABASE = {
+                painterly: {
+                    title: "厚塗插畫",
+                    folder: "assets/angle_0_0/painterly/",
+                    subcategories: [
+                        {
+                            name: "角色光影研究",
+                            folder: "characters/",
+                            items: [
+                                { src: "assets/angle_0_0/painterly/characters/01.jpg", fallback: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1348&q=80", name: "角色光影研究 #01" },
+                                { src: "assets/angle_0_0/painterly/characters/02.jpg", fallback: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1348&q=80", name: "角色光影研究 #02" },
+                                { src: "assets/angle_0_0/painterly/characters/03.jpg", fallback: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1348&q=80", name: "質感色彩練習 #03" }
+                            ]
+                        },
+                        {
+                            name: "概念場景氛圍",
+                            folder: "environments/",
+                            items: [
+                                { src: "assets/angle_0_0/painterly/environments/01.jpg", fallback: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80", name: "場景概念繪製 #01" },
+                                { src: "assets/angle_0_0/painterly/environments/02.jpg", fallback: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=1348&q=80", name: "幾何厚塗繪圖 #02" }
+                            ]
+                        }
+                    ]
+                },
+                anime: {
+                    title: "日系插畫",
+                    folder: "assets/angle_0_0/anime/",
+                    subcategories: [
+                        {
+                            name: "賽博朋克系列",
+                            folder: "cyberpunk/",
+                            items: [
+                                { src: "assets/angle_0_0/anime/cyberpunk/01.jpg", fallback: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1348&q=80", name: "賽博朋克角色 #01" },
+                                { src: "assets/angle_0_0/anime/cyberpunk/02.jpg", fallback: "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1348&q=80", name: "霓虹美學專案 #02" }
+                            ]
+                        },
+                        {
+                            name: "二次元立繪專案",
+                            folder: "portraits/",
+                            items: [
+                                { src: "assets/angle_0_0/anime/portraits/01.jpg", fallback: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1348&q=80", name: "動漫立繪展示 #01" },
+                                { src: "assets/angle_0_0/anime/portraits/02.jpg", fallback: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1348&q=80", name: "動態視覺設定 #02" }
+                            ]
+                        }
+                    ]
+                },
+                sketches: {
+                    title: "練習作品",
+                    folder: "assets/angle_0_0/sketches/",
+                    subcategories: [
+                        {
+                            name: "人體與結構速寫",
+                            folder: "anatomy/",
+                            items: [
+                                { src: "assets/angle_0_0/sketches/anatomy/01.jpg", fallback: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1348&q=80", name: "解剖與造型速寫 #01" },
+                                { src: "assets/angle_0_0/sketches/anatomy/02.jpg", fallback: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1348&q=80", name: "明暗調子練習 #02" }
+                            ]
+                        },
+                        {
+                            name: "透視與空間實驗",
+                            folder: "perspective/",
+                            items: [
+                                { src: "assets/angle_0_0/sketches/perspective/01.jpg", fallback: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=1348&q=80", name: "透視場景研究 #01" },
+                                { src: "assets/angle_0_0/sketches/perspective/02.jpg", fallback: "https://images.unsplash.com/photo-1501084291732-13b1ba830ee4?auto=format&fit=crop&w=1348&q=80", name: "色彩球體實驗 #02" }
+                            ]
+                        }
+                    ]
+                },
+                lineart: {
+                    title: "黑線繪",
+                    folder: "assets/angle_0_0/lineart/",
+                    subcategories: [
+                        {
+                            name: "精細墨線繪圖",
+                            folder: "ink/",
+                            items: [
+                                { src: "assets/angle_0_0/lineart/ink/01.jpg", fallback: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1348&q=80", name: "精細墨線繪圖 #01" },
+                                { src: "assets/angle_0_0/lineart/ink/02.jpg", fallback: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80", name: "結構線描稿 #02" }
+                            ]
+                        },
+                        {
+                            name: "黑白漫畫分鏡",
+                            folder: "manga/",
+                            items: [
+                                { src: "assets/angle_0_0/lineart/manga/01.jpg", fallback: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1348&q=80", name: "黑白點陣風格 #01" },
+                                { src: "assets/angle_0_0/lineart/manga/02.jpg", fallback: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1348&q=80", name: "漫畫風分鏡稿 #02" }
+                            ]
+                        }
+                    ]
+                }
+            };
+
+            let currentLevel = 1;
+            let activeCategoryKey = null;
+            let flatImageList = [];
+            let activeGlobalImageIndex = 0;
+
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            window.initAngle00App = function() {
+                currentLevel = 1;
+                updateUILevelState();
+                setupTouchSwiping();
+            };
+
+            window.angle00SetGridCols = function(cols) {
+                const gridContainer = document.getElementById('angle00-grid-container');
+                const btn2 = document.getElementById('btn-grid-2');
+                const btn3 = document.getElementById('btn-grid-3');
+
+                if (gridContainer) {
+                    if (cols === 3) {
+                        gridContainer.classList.remove('grid-cols-2');
+                        gridContainer.classList.add('grid-cols-3');
+                        if (btn2) btn2.className = "px-2.5 py-1 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition";
+                        if (btn3) btn3.className = "px-2.5 py-1 rounded-lg text-cyan-300 bg-cyan-500/20 font-mono font-bold transition";
+                    } else {
+                        gridContainer.classList.remove('grid-cols-3');
+                        gridContainer.classList.add('grid-cols-2');
+                        if (btn2) btn2.className = "px-2.5 py-1 rounded-lg text-cyan-300 bg-cyan-500/20 font-mono font-bold transition";
+                        if (btn3) btn3.className = "px-2.5 py-1 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition";
+                    }
+                }
+            };
+
+            window.angle00OpenCategory = function(catKey) {
+                if (!DATABASE[catKey]) return;
+                activeCategoryKey = catKey;
+                const categoryData = DATABASE[catKey];
+
+                flatImageList = [];
+                let globalIndex = 0;
+                let gridHTML = "";
+
+                categoryData.subcategories.forEach((subCat) => {
+                    gridHTML += `
+                        <div class="col-span-full mt-4 first:mt-0 pt-2 pb-1 border-b border-white/10 flex items-center justify-between">
+                            <span class="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-folder-open text-amber-400 text-[10px]"></i>
+                                ${subCat.name}
+                            </span>
+                            <span class="text-[10px] text-gray-400 font-mono">
+                                ${subCat.items.length} 張作品
+                            </span>
+                        </div>
+                    `;
+
+                    subCat.items.forEach((item) => {
+                        const currentIndex = globalIndex;
+                        flatImageList.push({
+                            ...item,
+                            subCatName: subCat.name,
+                            globalIndex: currentIndex
+                        });
+
+                        gridHTML += `
+                            <div onclick="window.angle00OpenLightbox(${currentIndex})" 
+                                 class="group relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-900 border border-white/10 hover:border-cyan-400 cursor-pointer shadow-lg transition-all duration-300 hover:scale-[1.03]">
+                                <img src="${item.src}" 
+                                     alt="${item.name}" 
+                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                     onerror="this.onerror=null; this.src='${item.fallback}';">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-2.5">
+                                    <span class="text-[11px] text-white font-semibold truncate">${item.name}</span>
+                                </div>
+                            </div>
+                        `;
+                        globalIndex++;
+                    });
+                });
+
+                const gridContainer = document.getElementById('angle00-grid-container');
+                if (gridContainer) gridContainer.innerHTML = gridHTML;
+
+                currentLevel = 2;
+                updateUILevelState();
+            };
+
+            window.angle00OpenLightbox = function(globalIndex) {
+                if (!flatImageList || flatImageList.length === 0) return;
+                activeGlobalImageIndex = globalIndex;
+                currentLevel = 3;
+                updateUILevelState();
+                renderLightboxImage(false);
+            };
+
+            window.angle00NavImage = function(direction) {
+                if (!flatImageList || flatImageList.length === 0) return;
+                const prevSubCat = flatImageList[activeGlobalImageIndex].subCatName;
+
+                activeGlobalImageIndex = (activeGlobalImageIndex + direction + flatImageList.length) % flatImageList.length;
+                const newSubCat = flatImageList[activeGlobalImageIndex].subCatName;
+
+                renderLightboxImage(prevSubCat !== newSubCat);
+            };
+
+            function renderLightboxImage(showToast) {
+                const currentItem = flatImageList[activeGlobalImageIndex];
+                if (!currentItem) return;
+
+                const imgEl = document.getElementById('angle00-lightbox-img');
+                const counterEl = document.getElementById('angle00-lightbox-counter');
+                const titleEl = document.getElementById('angle00-lightbox-title');
+                const subCatTagEl = document.getElementById('angle00-lightbox-subcat-tag');
+
+                if (imgEl) {
+                    imgEl.src = currentItem.src;
+                    imgEl.onerror = function() {
+                        this.onerror = null;
+                        this.src = currentItem.fallback;
+                    };
+                }
+
+                if (counterEl) counterEl.innerText = `${activeGlobalImageIndex + 1} / ${flatImageList.length}`;
+                if (titleEl) titleEl.innerText = currentItem.name;
+                if (subCatTagEl) subCatTagEl.innerText = currentItem.subCatName;
+
+                if (showToast) triggerSubcategoryToast(currentItem.subCatName);
+            }
+
+            function triggerSubcategoryToast(subCatName) {
+                const toastEl = document.getElementById('angle00-lightbox-toast');
+                const toastTextEl = document.getElementById('angle00-toast-text');
+
+                if (toastEl && toastTextEl) {
+                    toastTextEl.innerText = `進入小類別：${subCatName}`;
+                    toastEl.classList.remove('opacity-0', '-translate-y-4');
+                    toastEl.classList.add('opacity-100', 'translate-y-0');
+
+                    setTimeout(() => {
+                        toastEl.classList.remove('opacity-100', 'translate-y-0');
+                        toastEl.classList.add('opacity-0', '-translate-y-4');
+                    }, 1800);
+                }
+            }
+
+            window.angle00GoBack = function() {
+                if (currentLevel === 3) {
+                    currentLevel = 2;
+                } else if (currentLevel === 2) {
+                    currentLevel = 1;
+                    activeCategoryKey = null;
+                }
+                updateUILevelState();
+            };
+
+            window.angle00CloseModal = function() {
+                const modalDetails = document.getElementById('modal-details');
+                if (modalDetails) {
+                    modalDetails.classList.add('opacity-0', 'pointer-events-none');
+                }
+            };
+
+            function updateUILevelState() {
+                const level1El = document.getElementById('angle00-level1');
+                const level2El = document.getElementById('angle00-level2');
+                const lightboxEl = document.getElementById('angle00-lightbox');
+                const btnBackEl = document.getElementById('angle00-btn-back');
+                const breadcrumbEl = document.getElementById('angle00-breadcrumb');
+                const gridSwitcherEl = document.getElementById('angle00-grid-switcher');
+
+                if (currentLevel === 1) {
+                    if (level1El) level1El.classList.remove('hidden');
+                    if (level2El) level2El.classList.add('hidden');
+                    if (gridSwitcherEl) gridSwitcherEl.classList.add('hidden');
+                    if (lightboxEl) lightboxEl.classList.add('opacity-0', 'pointer-events-none');
+                    if (btnBackEl) btnBackEl.classList.add('opacity-0', 'pointer-events-none');
+                    if (breadcrumbEl) breadcrumbEl.innerHTML = `<span>精選主視覺</span>`;
+                } else if (currentLevel === 2) {
+                    if (level1El) level1El.classList.add('hidden');
+                    if (level2El) level2El.classList.remove('hidden');
+                    if (gridSwitcherEl) gridSwitcherEl.classList.remove('hidden');
+                    if (lightboxEl) lightboxEl.classList.add('opacity-0', 'pointer-events-none');
+                    if (btnBackEl) btnBackEl.classList.remove('opacity-0', 'pointer-events-none');
+                    if (breadcrumbEl) {
+                        const catTitle = DATABASE[activeCategoryKey] ? DATABASE[activeCategoryKey].title : '';
+                        breadcrumbEl.innerHTML = `
+                            <span class="text-gray-400">精選主視覺</span>
+                            <i class="fa-solid fa-chevron-right text-[10px] text-gray-500"></i>
+                            <span class="text-cyan-300 font-bold">${catTitle}</span>
+                        `;
+                    }
+                } else if (currentLevel === 3) {
+                    if (lightboxEl) lightboxEl.classList.remove('opacity-0', 'pointer-events-none');
+                    if (btnBackEl) btnBackEl.classList.remove('opacity-0', 'pointer-events-none');
+                }
+            }
+
+            function setupTouchSwiping() {
+                const lightboxEl = document.getElementById('angle00-lightbox');
+                if (!lightboxEl) return;
+
+                lightboxEl.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                lightboxEl.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    const diff = touchEndX - touchStartX;
+                    if (Math.abs(diff) > 40) {
+                        if (diff < 0) window.angle00NavImage(1);
+                        else window.angle00NavImage(-1);
+                    }
+                }, { passive: true });
+            }
+
+            window.initAngle00App();
+        })();
+    </script>
+</body>
+</html>

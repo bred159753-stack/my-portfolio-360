@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>360° Spatial Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            user-select: none;
+            background-color: #060913;
+            color: #f3f4f6;
+            touch-action: none;
+        }
+        #webgl-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            cursor: grab;
+            touch-action: none;
+        }
+        #webgl-container:active {
+            cursor: grabbing;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.78);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        .spatial-node {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: auto;
+            will-change: transform, opacity;
+            transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.15s ease;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="h-full font-sans antialiased overflow-hidden">
+
+    <!-- 360 Canvas Container -->
+    <div id="webgl-container"></div>
+
+    <!-- 3D Spatial Fixed Hotspot Cards Layer -->
+    <div id="spatial-panels-container" class="absolute inset-0 z-10 pointer-events-none overflow-hidden touch-none">
+        <!-- 3D Spatial cards projected dynamically -->
+    </div>
+
+    <!-- UI Overlay HUD Layer -->
+    <div class="relative z-20 pointer-events-none w-full h-full flex flex-col justify-between p-4 md:p-6">
+        
+        <!-- Top Navigation HUD -->
+        <header class="flex justify-between items-center w-full max-w-7xl mx-auto pointer-events-auto">
+            <div class="glass-panel px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-2xl">
+                <div class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></div>
+                <div>
+                    <h1 class="text-xs md:text-sm font-bold tracking-wider text-white" id="current-panel-title">當前區域：精選主視覺 & 品牌整合</h1>
+                </div>
+            </div>
+
+            <button id="open-structure" class="glass-panel px-3.5 py-2 rounded-2xl text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/10 transition flex items-center gap-2 shadow-xl">
+                <i class="fa-solid fa-folder-tree text-amber-400"></i>
+                <span class="hidden sm:inline">專案資料夾結構</span>
+            </button>
+        </header>
+
+        <!-- Bottom Section Navigation Bar -->
+        <footer class="w-full max-w-6xl mx-auto pointer-events-auto flex flex-col items-center">
+            <button id="toggle-nav-btn" class="glass-panel px-6 py-1.5 rounded-t-2xl text-gray-300 hover:text-white flex items-center justify-center gap-2 shadow-xl cursor-pointer border-b-0 -mb-[1px] z-10 transition-all hover:bg-white/10 active:scale-95" title="收折/展開選單">
+                <div class="w-8 h-1 bg-cyan-400/70 rounded-full"></div>
+                <i id="toggle-nav-icon" class="fa-solid fa-chevron-down text-xs text-cyan-400"></i>
+            </button>
+
+            <div id="nav-content-wrapper" class="w-full flex flex-col items-center gap-2 transition-all duration-300 ease-in-out max-h-[350px] opacity-100 overflow-hidden">
+                <div class="text-[11px] text-gray-400 flex items-center gap-1.5 glass-panel px-3 py-1 rounded-full border border-white/5">
+                    <i class="fa-solid fa-hand-pointer text-cyan-400 animate-bounce"></i>
+                    <span>隨意拖曳 360° 空間，點擊「展開作品」觀看專案細節</span>
+                </div>
+
+                <div class="glass-panel p-2 rounded-2xl flex flex-wrap justify-center items-center gap-1.5 shadow-2xl max-w-full overflow-x-auto custom-scroll">
+                    <span class="text-xs text-cyan-400 font-semibold px-2 hidden lg:inline border-r border-white/10">快速切換：</span>
+
+                    <button data-yaw="0" data-pitch="-30" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-user text-emerald-400 text-[10px]"></i> 關於我
+                    </button>
+
+                    <div class="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block"></div>
+
+                    <button data-yaw="0" data-pitch="0" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-star text-amber-400 text-[10px]"></i> 精選主視覺
+                    </button>
+                    <button data-yaw="90" data-pitch="0" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-globe text-blue-400 text-[10px]"></i> Web 應用
+                    </button>
+                    <button data-yaw="180" data-pitch="0" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-cube text-indigo-400 text-[10px]"></i> 3D 建模
+                    </button>
+                    <button data-yaw="270" data-pitch="0" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-wand-magic-sparkles text-pink-400 text-[10px]"></i> 生成藝術
+                    </button>
+
+                    <div class="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block"></div>
+
+                    <button data-yaw="0" data-pitch="30" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-laptop-code text-cyan-400 text-[10px]"></i> UI/UX 介面
+                    </button>
+                    <button data-yaw="90" data-pitch="30" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-mobile-screen text-sky-400 text-[10px]"></i> App 開發
+                    </button>
+                    <button data-yaw="180" data-pitch="30" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-film text-violet-400 text-[10px]"></i> 動態視覺
+                    </button>
+                    <button data-yaw="270" data-pitch="30" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-music text-teal-400 text-[10px]"></i> 音效互動
+                    </button>
+
+                    <div class="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block"></div>
+
+                    <button data-yaw="0" data-pitch="60" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
+                        <i class="fa-solid fa-network-wired text-purple-400 text-[10px]"></i> 全端架構
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Folder Structure Modal -->
+    <div id="modal-structure" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-2xl rounded-3xl p-6 md:p-8 max-h-[85vh] flex flex-col border border-white/20 shadow-2xl">
+            <div class="flex justify-between items-center pb-4 border-b border-white/10">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 bg-amber-500/20 text-amber-400 rounded-xl">
+                        <i class="fa-solid fa-folder-tree text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">專案資料夾結構指南</h3>
+                        <p class="text-xs text-gray-400">依據各主題區域對應的素材目錄</p>
+                    </div>
+                </div>
+                <button id="close-structure" class="text-gray-400 hover:text-white p-2 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="mt-4 overflow-y-auto custom-scroll pr-2 space-y-3 font-mono text-xs md:text-sm text-gray-300">
+                <div class="bg-slate-950/60 p-4 rounded-xl border border-white/5">
+                    <p class="text-cyan-400 font-semibold mb-2">my-portfolio-360/</p>
+                    <p class="pl-4 text-emerald-400">├── index.html <span class="text-gray-500 text-xs">// 核心 360° 空間網站</span></p>
+                    <p class="pl-4 text-purple-400">├── assets/</p>
+                    <p class="pl-8 text-amber-300">├── pano_bg.jpg <span class="text-gray-500 text-xs">// 360° 全景底圖</span></p>
+
+                    <p class="pl-8 text-emerald-400 mt-2 font-bold">// 1. 個人簡介區</p>
+                    <p class="pl-12">├── angle_0_-30/ <span class="text-emerald-300 text-xs">關於我與履歷資訊</span></p>
+
+                    <p class="pl-8 text-blue-400 mt-2 font-bold">// 2. 水平核心展示區</p>
+                    <p class="pl-12">├── angle_0_0/ <span class="text-cyan-300 text-xs">精選主視覺</span></p>
+                    <p class="pl-16 text-cyan-400">├── content.html <span class="text-gray-400 text-xs">(多層級縮圖展演頁面)</span></p>
+                    <p class="pl-16 text-purple-300">├── painterly/ <span class="text-gray-500 text-xs">(厚塗插畫/小類別)</span></p>
+                    <p class="pl-16 text-pink-300">├── anime/ <span class="text-gray-500 text-xs">(日系插畫/小類別)</span></p>
+                    <p class="pl-16 text-amber-300">├── sketches/ <span class="text-gray-500 text-xs">(練習作品/小類別)</span></p>
+                    <p class="pl-16 text-emerald-300">└── lineart/ <span class="text-gray-500 text-xs">(黑線繪/小類別)</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty Framework Container for Content Injection -->
+    <div id="modal-details" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-panel w-full max-w-5xl rounded-3xl p-4 sm:p-6 max-h-[92vh] flex flex-col border border-white/20 shadow-2xl relative overflow-hidden">
+            <div class="overflow-y-auto custom-scroll w-full h-full flex-1" id="modal-detail-content">
+                <!-- content.html is injected here cleanly -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PORTFOLIO_DATA = {
+            "0_-30": {
+                title: "關於我 & 履歷與聯繫",
+                category: "關於我",
+                desc: "個人經歷簡介、設計哲學與專案合作諮詢。",
+                folder: "assets/angle_0_-30/",
+                hasCustomHtml: false,
+                icon: "fa-user",
+                iconColor: "text-emerald-400",
+                images: [
+                    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80"
+                ]
+            },
+            "0_0": {
+                title: "精選主視覺 & 品牌整合",
+                category: "精選主視覺",
+                desc: "展示品牌核心視覺與標誌設計案例。融合現代幾何學與沉浸式視覺體驗。",
+                folder: "assets/angle_0_0/",
+                hasCustomHtml: true,
+                icon: "fa-star",
+                iconColor: "text-amber-400",
+                images: [
+                    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80"
+                ]
+            },
+            "90_0": {
+                title: "Web 應用與互動體驗",
+                category: "Web 應用",
+                desc: "包含沉浸式 WebGL 網頁、動態網頁動畫與 3D 產品展示頁。",
+                folder: "assets/angle_90_0/",
+                hasCustomHtml: false,
+                icon: "fa-globe",
+                iconColor: "text-blue-400",
+                images: [
+                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80"
+                ]
+            },
+            "180_0": {
+                title: "3D 建模與動態視覺",
+                category: "3D 建模",
+                desc: "Blender / Cinema4D 產品 Rendering、幾何場景與光影質感設計。",
+                folder: "assets/angle_180_0/",
+                hasCustomHtml: false,
+                icon: "fa-cube",
+                iconColor: "text-indigo-400",
+                images: [
+                    "https://images.unsplash.com/photo-1633167606207-d840b5070fc2?auto=format&fit=crop&w=600&q=80"
+                ]
+            },
+            "270_0": {
+                title: "生成式藝術 & 實驗專案",
+                category: "生成藝術",
+                desc: "Shader 演算法動畫、Generative Art 與聲音感應互動專案。",
+                folder: "assets/angle_270_0/",
+                hasCustomHtml: false,
+                icon: "fa-wand-magic-sparkles",
+                iconColor: "text-pink-400",
+                images: [
+                    "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=600&q=80"
+                ]
+            },
+            "0_30": {
+                title: "UI / UX 介面設計系統",
+                category: "UI/UX 介面",
+                desc: "專注於跨平台 Dashboard 介面與 Component Design System 規範。",
+                folder: "assets/angle_0_30/",
+                hasCustomHtml: false,
+                icon: "fa-laptop-code",
+                iconColor: "text-cyan-400",
+                images: [
+                    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80"
+                ]
+            },
+            "90_30": {
+                title: "跨平台 App 開發專案",
+                category: "App 開發",
+                desc: "Flutter 與 React Native 跨平台應用程式設計與體驗調優。",
+                folder: "assets/angle_90_30/",
+                hasCustomHtml: false,
+                icon: "fa-mobile-screen",
+                iconColor: "text-sky-400",
+                images: [
+                    "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80"
+                ]
+            },
+            "180_30": {
+                title: "動態視覺與特效展示",
+                category: "動態視覺",
+                desc: "AE 影音後製、粒子特效與 UI 動態微互動設計。",
+                folder: "assets/angle_180_30/",
+                hasCustomHtml: false,
+                icon: "fa-film",
+                iconColor: "text-violet-400",
+                images: [
+                    "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=600&q=80"
+                ]
+            },
+            "270_30": {
+                title: "音效與聲音互動實驗",
+                category: "音效互動",
+                desc: "Web Audio API 聲波視覺化與聲音微程式控制。",
+                folder: "assets/angle_270_30/",
+                hasCustomHtml: false,
+                icon: "fa-music",
+                iconColor: "text-teal-400",
+                images: [
+                    "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80"
+                ]
+            },
+            "0_60": {
+                title: "高階架構 & 全端技術棧",
+                category: "全端架構",
+                desc: "包含前後端分離系統、Three.js 演算效能調優與 API 串接。",
+                folder: "assets/angle_0_60/",
+                hasCustomHtml: false,
+                icon: "fa-network-wired",
+                iconColor: "text-purple-400",
+                images: [
+                    "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80"
+                ]
+            }
+        };
+
+        const YAW_TARGETS = [0, 90, 180, 270];
+        const PITCH_TARGETS = [-60, -30, 0, 30, 60];
+
+        let container, scene, camera, renderer, sphereMesh;
+        let isUserInteracting = false;
+        let onPointerDownPointerX = 0, onPointerDownPointerY = 0;
+        let onPointerDownLon = 0, onPointerDownLat = 0;
+        let pointerMoveDistance = 0;
+
+        let lon = 0, lat = 0;
+        let targetLon = 0, targetLat = 0;
+        let isSnapping = false;
+
+        const spatialDomNodes = {};
+
+        function init() {
+            container = document.getElementById('webgl-container');
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
+            scene = new THREE.Scene();
+
+            const geometry = new THREE.SphereGeometry(500, 60, 40);
+            geometry.scale(-1, 1, 1);
+
+            const defaultTexture = new THREE.CanvasTexture(generateDefaultPanoCanvas());
+            const material = new THREE.MeshBasicMaterial({ map: defaultTexture });
+
+            sphereMesh = new THREE.Mesh(geometry, material);
+            scene.add(sphereMesh);
+
+            const textureLoader = new THREE.TextureLoader();
+            textureLoader.load(
+                'assets/pano_bg.jpg',
+                function (loadedTexture) {
+                    material.map = loadedTexture;
+                    material.needsUpdate = true;
+                },
+                undefined,
+                function () {
+                    console.log('未讀取到 assets/pano_bg.jpg，使用預設網格背景。');
+                }
+            );
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            createSpatialPanelElements();
+
+            container.addEventListener('pointerdown', onPointerDown);
+            window.addEventListener('resize', onWindowResize);
+
+            setupNavigationButtons();
+            snapToNearestAngle();
+            animate();
+        }
+
+        function generateDefaultPanoCanvas() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 4096;
+            canvas.height = 2048;
+            const ctx = canvas.getContext('2d');
+
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, '#020617');
+            grad.addColorStop(0.5, '#0f172a');
+            grad.addColorStop(1, '#020617');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < 360; i += 15) {
+                const x = (i / 360) * canvas.width;
+                ctx.beginPath();
+                if (i % 90 === 0) {
+                    ctx.strokeStyle = 'rgba(6, 182, 212, 0.4)';
+                    ctx.lineWidth = 6;
+                } else {
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                    ctx.lineWidth = 2;
+                }
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            const pitchAngles = [-60, -30, 0, 30, 60];
+            pitchAngles.forEach(p => {
+                const y = ((90 - p) / 180) * canvas.height;
+                ctx.beginPath();
+                ctx.strokeStyle = p === 0 ? 'rgba(99, 102, 241, 0.5)' : 'rgba(255, 255, 255, 0.08)';
+                ctx.lineWidth = p === 0 ? 5 : 2;
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            });
+
+            return canvas;
+        }
+
+        function createSpatialPanelElements() {
+            const containerOverlay = document.getElementById('spatial-panels-container');
+
+            Object.keys(PORTFOLIO_DATA).forEach(key => {
+                const item = PORTFOLIO_DATA[key];
+                const [yaw, pitch] = key.split('_').map(Number);
+
+                const node = document.createElement('div');
+                node.className = 'spatial-node glass-card p-4 rounded-2xl w-64 text-left border border-cyan-500/30 hover:border-cyan-400 cursor-pointer shadow-2xl';
+                node.dataset.key = key;
+
+                updateNodeCardHTML(node, item);
+
+                node.addEventListener('pointerdown', (e) => {
+                    if (e.target.closest('.btn-expand-project')) {
+                        e.stopPropagation();
+                        return;
+                    }
+                    onPointerDown(e);
+                });
+
+                const expandBtn = node.querySelector('.btn-expand-project');
+                if (expandBtn) {
+                    expandBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        openProjectDetailModal(key);
+                    });
+                }
+
+                node.addEventListener('click', (e) => {
+                    if (pointerMoveDistance > 8) return;
+                    if (e.target.closest('.btn-expand-project')) return;
+
+                    targetLon = Math.floor(lon / 360) * 360 + yaw;
+                    targetLat = pitch;
+                    isSnapping = true;
+                    updateButtonHighlights(yaw, pitch);
+                });
+
+                containerOverlay.appendChild(node);
+                spatialDomNodes[key] = {
+                    element: node,
+                    yaw: yaw,
+                    pitch: pitch
+                };
+            });
+        }
+
+        function updateNodeCardHTML(node, item) {
+            node.innerHTML = `
+                <div class="flex items-center justify-between mb-2">
+                    <span class="px-2.5 py-0.5 bg-cyan-500/20 text-cyan-300 text-[10px] font-semibold rounded-md border border-cyan-500/30">
+                        ${item.category}
+                    </span>
+                    <i class="fa-solid ${item.icon} ${item.iconColor} text-sm"></i>
+                </div>
+                <h3 class="text-sm font-bold text-white mb-1 flex items-center gap-1.5">
+                    ${item.title}
+                </h3>
+                <p class="text-gray-300 text-xs line-clamp-2 mb-3 leading-relaxed">
+                    ${item.desc}
+                </p>
+                <div class="pt-2 border-t border-white/10 text-xs font-semibold">
+                    <button class="btn-expand-project w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 py-1.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-500/20 font-bold">
+                        <i class="fa-solid fa-folder-open"></i> 展開作品
+                    </button>
+                </div>
+            `;
+        }
+
+        function onPointerDown(event) {
+            if (event.isPrimary === false) return;
+
+            isUserInteracting = true;
+            isSnapping = false;
+            pointerMoveDistance = 0;
+
+            onPointerDownPointerX = event.clientX;
+            onPointerDownPointerY = event.clientY;
+
+            onPointerDownLon = lon;
+            onPointerDownLat = lat;
+
+            document.addEventListener('pointermove', onPointerMove);
+            document.addEventListener('pointerup', onPointerUp);
+            document.addEventListener('pointercancel', onPointerUp);
+        }
+
+        function onPointerMove(event) {
+            if (event.isPrimary === false) return;
+
+            const dx = event.clientX - onPointerDownPointerX;
+            const dy = event.clientY - onPointerDownPointerY;
+            pointerMoveDistance = Math.sqrt(dx * dx + dy * dy);
+
+            const sensitivity = 0.27;
+            lon = (onPointerDownPointerX - event.clientX) * sensitivity + onPointerDownLon;
+            lat = (event.clientY - onPointerDownPointerY) * sensitivity + onPointerDownLat;
+
+            lat = Math.max(-85, Math.min(85, lat));
+            updateHUDAngleDisplay(lon, lat);
+        }
+
+        function onPointerUp(event) {
+            if (event.isPrimary === false) return;
+
+            isUserInteracting = false;
+            document.removeEventListener('pointermove', onPointerMove);
+            document.removeEventListener('pointerup', onPointerUp);
+            document.removeEventListener('pointercancel', onPointerUp);
+
+            snapToNearestAngle();
+        }
+
+        function snapToNearestAngle() {
+            let normalizedLon = ((lon % 360) + 360) % 360;
+
+            let closestYaw = YAW_TARGETS[0];
+            let minYawDiff = Infinity;
+
+            YAW_TARGETS.forEach(target => {
+                let diff = Math.abs(getShortestAngleDiff(normalizedLon, target));
+                if (diff < minYawDiff) {
+                    minYawDiff = diff;
+                    closestYaw = target;
+                }
+            });
+
+            let closestPitch = PITCH_TARGETS[0];
+            let minPitchDiff = Infinity;
+
+            PITCH_TARGETS.forEach(target => {
+                let diff = Math.abs(lat - target);
+                if (diff < minPitchDiff) {
+                    minPitchDiff = diff;
+                    closestPitch = target;
+                }
+            });
+
+            const currentCircle = Math.floor(lon / 360);
+            let candidate1 = currentCircle * 360 + closestYaw;
+            let candidate2 = (currentCircle + 1) * 360 + closestYaw;
+            let candidate3 = (currentCircle - 1) * 360 + closestYaw;
+
+            let candidates = [candidate1, candidate2, candidate3];
+            candidates.sort((a, b) => Math.abs(a - lon) - Math.abs(b - lon));
+
+            targetLon = candidates[0];
+            targetLat = closestPitch;
+            isSnapping = true;
+
+            updateButtonHighlights(closestYaw, closestPitch);
+        }
+
+        function getShortestAngleDiff(from, to) {
+            let diff = (to - from) % 360;
+            if (diff < -180) diff += 360;
+            if (diff > 180) diff -= 360;
+            return diff;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (isSnapping && !isUserInteracting) {
+                const lerpFactor = 0.08;
+                lon += (targetLon - lon) * lerpFactor;
+                lat += (targetLat - lat) * lerpFactor;
+
+                updateHUDAngleDisplay(lon, lat);
+
+                if (Math.abs(targetLon - lon) < 0.1 && Math.abs(targetLat - lat) < 0.1) {
+                    lon = targetLon;
+                    lat = targetLat;
+                    isSnapping = false;
+                }
+            }
+
+            const phi = THREE.MathUtils.degToRad(90 - lat);
+            const theta = THREE.MathUtils.degToRad(lon);
+
+            const x = 500 * Math.sin(phi) * Math.cos(theta);
+            const y = 500 * Math.cos(phi);
+            const z = 500 * Math.sin(phi) * Math.sin(theta);
+
+            camera.lookAt(x, y, z);
+            renderer.render(scene, camera);
+
+            updateSpatialPanelPositions();
+        }
+
+        function updateSpatialPanelPositions() {
+            const radius = 400;
+
+            Object.keys(spatialDomNodes).forEach(key => {
+                const item = spatialDomNodes[key];
+
+                const phi = THREE.MathUtils.degToRad(90 - item.pitch);
+                const theta = THREE.MathUtils.degToRad(item.yaw);
+
+                const vec = new THREE.Vector3(
+                    radius * Math.sin(phi) * Math.cos(theta),
+                    radius * Math.cos(phi),
+                    radius * Math.sin(phi) * Math.sin(theta)
+                );
+
+                const cameraDir = new THREE.Vector3();
+                camera.getWorldDirection(cameraDir);
+                const dot = vec.clone().normalize().dot(cameraDir);
+
+                const projectedVec = vec.clone().project(camera);
+
+                if (dot > 0.2 && projectedVec.z < 1) {
+                    const screenX = (projectedVec.x * 0.5 + 0.5) * window.innerWidth;
+                    const screenY = (-(projectedVec.y * 0.5) + 0.5) * window.innerHeight;
+
+                    const centerDist = Math.sqrt(
+                        Math.pow(projectedVec.x, 2) + Math.pow(projectedVec.y, 2)
+                    );
+                    
+                    const opacity = Math.max(0, 1 - centerDist * 0.8);
+                    const scale = (centerDist < 0.2) ? 1.05 : Math.max(0.75, 1 - centerDist * 0.3);
+
+                    item.element.style.transform = `translate3d(${screenX}px, ${screenY}px, 0px) translate(-50%, -50%) scale(${scale.toFixed(3)})`;
+                    item.element.style.opacity = opacity.toFixed(2);
+                    item.element.style.pointerEvents = opacity > 0.3 ? 'auto' : 'none';
+                } else {
+                    item.element.style.opacity = '0';
+                    item.element.style.pointerEvents = 'none';
+                }
+            });
+        }
+
+        function updateHUDAngleDisplay(currentLon, currentLat) {
+            let normalizedYaw = Math.round(((currentLon % 360) + 360) % 360);
+            let normalizedPitch = Math.round(currentLat);
+
+            let closestYaw = YAW_TARGETS.reduce((prev, curr) => 
+                Math.abs(getShortestAngleDiff(normalizedYaw, curr)) < Math.abs(getShortestAngleDiff(normalizedYaw, prev)) ? curr : prev
+            );
+            let closestPitch = PITCH_TARGETS.reduce((prev, curr) => 
+                Math.abs(normalizedPitch - curr) < Math.abs(normalizedPitch - prev) ? curr : prev
+            );
+
+            const key = `${closestYaw}_${closestPitch}`;
+            const itemData = PORTFOLIO_DATA[key];
+            const titleLabel = document.getElementById('current-panel-title');
+
+            if (titleLabel) {
+                if (itemData) {
+                    titleLabel.innerText = `當前區域：${itemData.title}`;
+                } else {
+                    titleLabel.innerText = `當前區域：全景視野區`;
+                }
+            }
+        }
+
+        function updateButtonHighlights(yaw, pitch) {
+            document.querySelectorAll('.btn-nav').forEach(btn => {
+                const btnYaw = parseInt(btn.dataset.yaw);
+                const btnPitch = parseInt(btn.dataset.pitch);
+
+                if (btnYaw === yaw && btnPitch === pitch) {
+                    btn.classList.add('bg-cyan-500/30', 'text-cyan-300', 'border', 'border-cyan-500/50');
+                    btn.classList.remove('text-gray-300');
+                } else {
+                    btn.classList.remove('bg-cyan-500/30', 'text-cyan-300', 'border', 'border-cyan-500/50');
+                    btn.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        function setupNavigationButtons() {
+            document.querySelectorAll('.btn-nav').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const y = parseInt(btn.dataset.yaw);
+                    const p = parseInt(btn.dataset.pitch);
+
+                    targetLon = Math.floor(lon / 360) * 360 + y;
+                    targetLat = p;
+                    isSnapping = true;
+                    updateButtonHighlights(y, p);
+                });
+            });
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        async function openProjectDetailModal(key) {
+            const data = PORTFOLIO_DATA[key];
+            if (!data) return;
+
+            const modalContentEl = document.getElementById('modal-detail-content');
+            
+            modalContentEl.innerHTML = `
+                <div class="flex items-center justify-center py-16 text-cyan-400 gap-3">
+                    <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
+                    <span class="text-sm font-semibold">正在讀取專案內容...</span>
+                </div>
+            `;
+
+            const modalDetails = document.getElementById('modal-details');
+            if (modalDetails) {
+                modalDetails.classList.remove('opacity-0', 'pointer-events-none');
+            }
+
+            // 清除先前載入的動態腳本，確保不發生名稱衝突
+            const existingDynamicScripts = document.querySelectorAll('.dynamic-modal-script');
+            existingDynamicScripts.forEach(s => s.remove());
+
+            let loadedCustom = false;
+
+            if (data.hasCustomHtml) {
+                const customHtmlPath = `${data.folder}content.html`;
+                try {
+                    const response = await fetch(customHtmlPath);
+                    if (response.ok) {
+                        const htmlText = await response.text();
+                        if (htmlText && htmlText.trim().length > 0) {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(htmlText, 'text/html');
+                            
+                            modalContentEl.innerHTML = doc.body ? doc.body.innerHTML : htmlText;
+
+                            const scripts = doc.querySelectorAll('script');
+                            scripts.forEach(oldScript => {
+                                const newScript = document.createElement('script');
+                                newScript.className = 'dynamic-modal-script';
+                                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                                newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                                document.body.appendChild(newScript);
+                            });
+
+                            loadedCustom = true;
+                        }
+                    }
+                } catch (err) {
+                    console.error(`[Fetch 異常] 讀取 ${customHtmlPath} 時發生錯誤:`, err);
+                }
+            }
+
+            if (!loadedCustom) {
+                modalContentEl.innerHTML = `
+                    <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+                        <div>
+                            <span class="px-2.5 py-0.5 bg-cyan-500/20 text-cyan-300 text-xs font-semibold rounded-md border border-cyan-500/30">
+                                ${data.category}
+                            </span>
+                            <h3 class="text-xl font-bold text-white mt-2">${data.title}</h3>
+                        </div>
+                        <button onclick="window.closeModalFallback()" class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-rose-500/20 hover:border-rose-400/50 transition border border-white/10 shadow-md">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <p class="text-sm text-gray-200 leading-relaxed mb-6">${data.desc}</p>
+                    
+                    <h4 class="text-sm font-bold text-white pt-2 border-t border-white/10 flex items-center gap-2 mb-4">
+                        <i class="fa-solid fa-images text-cyan-400"></i> 作品展示媒體庫：
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${data.images.map(img => `
+                            <div class="rounded-2xl overflow-hidden border border-white/10 bg-slate-900 group relative">
+                                <img src="${img}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/0f172a/06b6d4?text=Portfolio+Asset'">
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        window.closeModalFallback = function() {
+            const modalDetails = document.getElementById('modal-details');
+            if (modalDetails) modalDetails.classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        const modalStructure = document.getElementById('modal-structure');
+        const openStructureBtn = document.getElementById('open-structure');
+        const closeStructureBtn = document.getElementById('close-structure');
+
+        if (openStructureBtn && modalStructure) {
+            openStructureBtn.addEventListener('click', () => {
+                modalStructure.classList.remove('opacity-0', 'pointer-events-none');
+            });
+        }
+
+        if (closeStructureBtn && modalStructure) {
+            closeStructureBtn.addEventListener('click', () => {
+                modalStructure.classList.add('opacity-0', 'pointer-events-none');
+            });
+        }
+
+        const toggleNavBtn = document.getElementById('toggle-nav-btn');
+        const navContentWrapper = document.getElementById('nav-content-wrapper');
+        const toggleNavIcon = document.getElementById('toggle-nav-icon');
+        let isNavExpanded = true;
+
+        if (toggleNavBtn && navContentWrapper && toggleNavIcon) {
+            toggleNavBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                isNavExpanded = !isNavExpanded;
+                if (isNavExpanded) {
+                    navContentWrapper.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none');
+                    navContentWrapper.classList.add('max-h-[350px]', 'opacity-100');
+                    toggleNavIcon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+                } else {
+                    navContentWrapper.classList.remove('max-h-[350px]', 'opacity-100');
+                    navContentWrapper.classList.add('max-h-0', 'opacity-0', 'pointer-events-none');
+                    toggleNavIcon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+                }
+            });
+        }
+
+        window.onload = function() {
+            init();
+        };
+    </script>
+</body>
+</html>
