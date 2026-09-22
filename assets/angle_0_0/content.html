@@ -3,25 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>精選主視覺 & 品牌整合 - 專案展演</title>
+    <title>精選個人作品 & 品牌整合 - 專案展演</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        peach: {
+                            300: '#fde5be',
+                            400: '#fcd8a0',
+                            500: '#fcd191',
+                            600: '#e0b879',
+                        },
+                        charcoal: {
+                            800: '#2c2c31',
+                            850: '#232327',
+                            900: '#1c1c1f',
+                            950: '#141416',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #020617;
+            background-color: #141416;
             color: #f3f4f6;
             overflow-x: hidden;
         }
         .glass-panel {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(35, 35, 39, 0.9);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .custom-scroll::-webkit-scrollbar {
             width: 6px;
@@ -30,50 +53,53 @@
             background: rgba(0, 0, 0, 0.2);
         }
         .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(252, 209, 145, 0.3);
             border-radius: 3px;
         }
     </style>
 </head>
-<body class="p-3 md:p-6 min-h-screen bg-slate-950 custom-scroll selection:bg-cyan-500 selection:text-slate-950 overflow-x-hidden">
+<body class="p-3 md:p-6 min-h-screen bg-charcoal-950 custom-scroll selection:bg-peach-500 selection:text-charcoal-950 overflow-x-hidden">
 
     <!-- Angle 0_0 Custom Portfolio Layout Container -->
     <div id="angle00-wrapper" class="relative w-full max-w-5xl mx-auto text-gray-100 overflow-x-hidden">
         
         <!-- Top Navigation Header -->
-        <header class="sticky top-0 z-30 flex items-center justify-between pb-3 mb-4 border-b border-white/10 bg-slate-950/90 backdrop-blur-md">
+        <header class="sticky top-0 z-30 flex items-center justify-between pb-3 mb-4 border-b border-white/10 bg-charcoal-950/90 backdrop-blur-md">
             <div class="flex items-center gap-2">
-                <span class="p-2 bg-cyan-500/20 text-cyan-400 rounded-xl text-xs border border-cyan-500/30">
-                    <i class="fa-solid fa-palette"></i>
-                </span>
                 <div id="angle00-breadcrumb" class="text-sm font-bold text-white flex items-center gap-1.5">
-                    <span>精選主視覺</span>
+                    <span>精選個人作品</span>
                 </div>
             </div>
 
             <div class="flex items-center gap-2">
-                <div id="angle00-grid-switcher" class="hidden flex items-center bg-slate-900 border border-white/10 rounded-xl p-1 text-xs">
+                <div id="angle00-grid-switcher" class="hidden flex items-center bg-charcoal-900 border border-white/10 rounded-xl p-1 text-xs gap-1">
                     <button id="btn-grid-2" onclick="window.angle00SetGridCols(2)" 
-                            class="px-2.5 py-1 rounded-lg text-cyan-300 bg-cyan-500/20 font-mono font-bold transition">
-                        2xN
+                            class="p-1.5 rounded-lg text-charcoal-950 bg-peach-500 font-mono font-bold transition flex items-center justify-center"
+                            title="2x2 檢視模式">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 16 16">
+                            <path d="M1 1h6v6H1V1zm8 0h6v6H9V1zM1 9h6v6H1V9zm8 0h6v6H9V9z"/>
+                        </svg>
                     </button>
                     <button id="btn-grid-3" onclick="window.angle00SetGridCols(3)" 
-                            class="px-2.5 py-1 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition">
-                        3xN
+                            class="p-1.5 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition flex items-center justify-center"
+                            title="3x2 檢視模式">
+                        <svg class="w-5 h-4 fill-current" viewBox="0 0 20 14">
+                            <path d="M1 1h5v5H1V1zm7 0h5v5H8V1zm7 0h5v5h-5V1zM1 8h5v5H1V8zm7 0h5v5H8V8zm7 0h5v5h-5V8z"/>
+                        </svg>
                     </button>
                 </div>
 
                 <button id="angle00-btn-back" 
                         onclick="window.angle00GoBack()" 
-                        class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-cyan-500/20 hover:border-cyan-400/50 transition border border-white/10 shadow-md opacity-0 pointer-events-none"
+                        class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-peach-500/20 hover:border-peach-500/40 transition border border-white/10 shadow-md opacity-0 pointer-events-none"
                         title="上一頁">
-                    <i class="fa-solid fa-chevron-left"></i>
+                    ⬅
                 </button>
 
                 <button onclick="window.angle00CloseModal()" 
                         class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-rose-500/20 hover:border-rose-400/50 transition border border-white/10 shadow-md"
                         title="關閉作品面板">
-                    <i class="fa-solid fa-xmark"></i>
+                    ✕
                 </button>
             </div>
         </header>
@@ -82,80 +108,68 @@
         <div id="angle00-level1" class="space-y-4 transition-all duration-300">
             <!-- Category 1: 厚塗插畫 -->
             <div onclick="window.angle00OpenCategory('painterly')" 
-                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-cyan-400/60 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 active:scale-[0.99]">
-                <div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-45 group-hover:scale-105 transition-all duration-500" 
+                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-peach-500/60 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-peach-500/10 active:scale-[0.99]">
+                <div class="absolute inset-0 bg-cover bg-center opacity-25 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500" 
                      style="background-image: url('https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80');"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
                 <div class="relative z-10 flex justify-between items-center">
                     <div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-cyan-400">Digital Painting</span>
-                        <h3 class="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-2 mt-0.5">
-                            <i class="fa-solid fa-brush text-sm text-cyan-400"></i> 厚塗插畫
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Digital Painting</span>
+                        <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
+                            厚塗插畫
                         </h3>
                         <p class="text-xs text-gray-400 mt-1">光影筆觸堆疊、質感細節與氛圍感極佳的厚塗創作</p>
-                    </div>
-                    <div class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-cyan-500 group-hover:text-slate-950 transition-all">
-                        <i class="fa-solid fa-arrow-right text-xs"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Category 2: 日系插畫 -->
             <div onclick="window.angle00OpenCategory('anime')" 
-                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-pink-400/60 bg-gradient-to-r from-slate-900 via-pink-950/30 to-slate-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-pink-500/10 active:scale-[0.99]">
-                <div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-45 group-hover:scale-105 transition-all duration-500" 
+                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-peach-500/60 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-peach-500/10 active:scale-[0.99]">
+                <div class="absolute inset-0 bg-cover bg-center opacity-25 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500" 
                      style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80');"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
                 <div class="relative z-10 flex justify-between items-center">
                     <div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-pink-400">Anime & Concept</span>
-                        <h3 class="text-lg font-bold text-white group-hover:text-pink-300 transition-colors flex items-center gap-2 mt-0.5">
-                            <i class="fa-solid fa-wand-magic-sparkles text-sm text-pink-400"></i> 日系插畫
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Anime & Concept</span>
+                        <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
+                            日系插畫
                         </h3>
                         <p class="text-xs text-gray-400 mt-1">動漫人物風格、二次元賽博朋克與角色設計專案</p>
-                    </div>
-                    <div class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-pink-500 group-hover:text-slate-950 transition-all">
-                        <i class="fa-solid fa-arrow-right text-xs"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Category 3: 練習作品 -->
             <div onclick="window.angle00OpenCategory('sketches')" 
-                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-amber-400/60 bg-gradient-to-r from-slate-900 via-amber-950/30 to-slate-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10 active:scale-[0.99]">
-                <div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-45 group-hover:scale-105 transition-all duration-500" 
+                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-peach-500/60 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-peach-500/10 active:scale-[0.99]">
+                <div class="absolute inset-0 bg-cover bg-center opacity-25 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500" 
                      style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80');"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
                 <div class="relative z-10 flex justify-between items-center">
                     <div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-amber-400">Studies & Sketches</span>
-                        <h3 class="text-lg font-bold text-white group-hover:text-amber-300 transition-colors flex items-center gap-2 mt-0.5">
-                            <i class="fa-solid fa-pen-ruler text-sm text-amber-400"></i> 練習作品
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Studies & Sketches</span>
+                        <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
+                            練習作品
                         </h3>
                         <p class="text-xs text-gray-400 mt-1">速寫研究、色彩實驗、結構造型練習與概念研究</p>
-                    </div>
-                    <div class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-slate-950 transition-all">
-                        <i class="fa-solid fa-arrow-right text-xs"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Category 4: 黑線繪 -->
             <div onclick="window.angle00OpenCategory('lineart')" 
-                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-emerald-400/60 bg-gradient-to-r from-slate-900 via-emerald-950/30 to-slate-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/10 active:scale-[0.99]">
-                <div class="absolute inset-0 bg-cover bg-center opacity-30 group-hover:opacity-45 group-hover:scale-105 transition-all duration-500" 
+                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-peach-500/60 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-peach-500/10 active:scale-[0.99]">
+                <div class="absolute inset-0 bg-cover bg-center opacity-25 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500" 
                      style="background-image: url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80');"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
                 <div class="relative z-10 flex justify-between items-center">
                     <div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-emerald-400">Ink & Line Art</span>
-                        <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors flex items-center gap-2 mt-0.5">
-                            <i class="fa-solid fa-pen-nib text-sm text-emerald-400"></i> 黑線繪
+                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Ink & Line Art</span>
+                        <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
+                            黑線繪
                         </h3>
                         <p class="text-xs text-gray-400 mt-1">精細線稿、黑白點陣風格、漫畫風格線描作品</p>
-                    </div>
-                    <div class="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-slate-950 transition-all">
-                        <i class="fa-solid fa-arrow-right text-xs"></i>
                     </div>
                 </div>
             </div>
@@ -170,12 +184,12 @@
 
         <!-- LEVEL 3: FULLSCREEN LIGHTBOX MODAL -->
         <div id="angle00-lightbox" 
-             class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between items-center p-4 opacity-0 pointer-events-none transition-all duration-300 select-none">
+             class="fixed inset-0 z-50 bg-charcoal-950/95 backdrop-blur-xl flex flex-col justify-between items-center p-4 opacity-0 pointer-events-none transition-all duration-300 select-none">
             
             <div class="w-full max-w-5xl flex justify-between items-center text-xs text-gray-300 px-2 py-2 border-b border-white/10">
                 <div class="flex items-center gap-2">
-                    <span id="angle00-lightbox-title" class="font-bold text-cyan-300 text-sm">全螢幕檢視</span>
-                    <span id="angle00-lightbox-subcat-tag" class="px-2.5 py-0.5 bg-cyan-500/20 text-cyan-300 rounded-full text-[10px] border border-cyan-500/30">
+                    <span id="angle00-lightbox-title" class="font-bold text-peach-400 text-sm">全螢幕檢視</span>
+                    <span id="angle00-lightbox-subcat-tag" class="px-2.5 py-0.5 bg-peach-500/20 text-peach-300 rounded-full text-[10px] border border-peach-500/30">
                         小類別
                     </span>
                 </div>
@@ -183,23 +197,22 @@
                 <div class="flex items-center gap-2.5">
                     <span id="angle00-lightbox-counter" class="font-mono bg-white/10 px-2.5 py-1 rounded-full text-xs">1 / 10</span>
                     <button onclick="window.angle00GoBack()" 
-                            class="px-3 py-1.5 rounded-xl glass-panel text-xs text-gray-200 hover:text-white hover:bg-cyan-500/20 hover:border-cyan-400/50 transition border border-white/10 flex items-center gap-1.5 shadow-md active:scale-95">
-                        <i class="fa-solid fa-arrow-left text-cyan-400"></i>
-                        <span>返回上一層</span>
+                            class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-200 hover:text-white hover:bg-peach-500/20 hover:border-peach-500/40 transition border border-white/10 shadow-md active:scale-95"
+                            title="返回上一層">
+                        ⬅
                     </button>
                 </div>
             </div>
 
             <div class="relative flex-1 w-full max-w-5xl flex items-center justify-center my-2 overflow-hidden">
                 <div id="angle00-lightbox-toast" 
-                     class="absolute top-4 z-30 px-4 py-2 rounded-full bg-cyan-400 text-slate-950 font-bold text-xs shadow-2xl backdrop-blur-md transition-all duration-500 opacity-0 -translate-y-4 pointer-events-none flex items-center gap-2">
-                    <i class="fa-solid fa-folder-open"></i>
+                     class="absolute top-4 z-30 px-4 py-2 rounded-full bg-peach-500 text-charcoal-950 font-bold text-xs shadow-2xl backdrop-blur-md transition-all duration-500 opacity-0 -translate-y-4 pointer-events-none">
                     <span id="angle00-toast-text">已進入小類別</span>
                 </div>
 
                 <button onclick="event.stopPropagation(); window.angle00NavImage(-1);" 
-                        class="absolute left-2 z-20 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-cyan-500 hover:text-slate-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl">
-                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                        class="absolute left-2 z-20 w-10 h-10 rounded-full bg-charcoal-900/90 hover:bg-peach-500 hover:text-charcoal-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold">
+                    ‹
                 </button>
 
                 <img id="angle00-lightbox-img" 
@@ -208,14 +221,13 @@
                      alt="Full Artwork Detail">
 
                 <button onclick="event.stopPropagation(); window.angle00NavImage(1);" 
-                        class="absolute right-2 z-20 w-10 h-10 rounded-full bg-slate-900/80 hover:bg-cyan-500 hover:text-slate-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl">
-                    <i class="fa-solid fa-chevron-right text-sm"></i>
+                        class="absolute right-2 z-20 w-10 h-10 rounded-full bg-charcoal-900/90 hover:bg-peach-500 hover:text-charcoal-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold">
+                    ›
                 </button>
             </div>
 
-            <div class="text-[11px] text-gray-400 text-center flex items-center gap-2 bg-white/5 px-4 py-1.5 rounded-full border border-white/10">
-                <i class="fa-solid fa-hand-pointer text-cyan-400"></i>
-                <span>左右滑動 / 點擊按鈕切換作品 | 點擊右上角「返回上一層」返回縮圖頁</span>
+            <div class="text-[11px] text-gray-400 text-center bg-white/5 px-4 py-1.5 rounded-full border border-white/10">
+                <span>左右滑動 / 點擊按鈕切換作品 | 點擊右上角「⬅」返回縮圖頁</span>
             </div>
         </div>
 
@@ -338,13 +350,13 @@
                     if (cols === 3) {
                         gridContainer.classList.remove('grid-cols-2');
                         gridContainer.classList.add('grid-cols-3');
-                        if (btn2) btn2.className = "px-2.5 py-1 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition";
-                        if (btn3) btn3.className = "px-2.5 py-1 rounded-lg text-cyan-300 bg-cyan-500/20 font-mono font-bold transition";
+                        if (btn2) btn2.className = "p-1.5 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition flex items-center justify-center";
+                        if (btn3) btn3.className = "p-1.5 rounded-lg text-charcoal-950 bg-peach-500 font-mono font-bold transition flex items-center justify-center";
                     } else {
                         gridContainer.classList.remove('grid-cols-3');
                         gridContainer.classList.add('grid-cols-2');
-                        if (btn2) btn2.className = "px-2.5 py-1 rounded-lg text-cyan-300 bg-cyan-500/20 font-mono font-bold transition";
-                        if (btn3) btn3.className = "px-2.5 py-1 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition";
+                        if (btn2) btn2.className = "p-1.5 rounded-lg text-charcoal-950 bg-peach-500 font-mono font-bold transition flex items-center justify-center";
+                        if (btn3) btn3.className = "p-1.5 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition flex items-center justify-center";
                     }
                 }
             };
@@ -361,8 +373,7 @@
                 categoryData.subcategories.forEach((subCat) => {
                     gridHTML += `
                         <div class="col-span-full mt-4 first:mt-0 pt-2 pb-1 border-b border-white/10 flex items-center justify-between">
-                            <span class="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
-                                <i class="fa-solid fa-folder-open text-amber-400 text-[10px]"></i>
+                            <span class="text-xs font-bold text-peach-400">
                                 ${subCat.name}
                             </span>
                             <span class="text-[10px] text-gray-400 font-mono">
@@ -381,7 +392,7 @@
 
                         gridHTML += `
                             <div onclick="window.angle00OpenLightbox(${currentIndex})" 
-                                 class="group relative aspect-square w-full rounded-2xl overflow-hidden bg-slate-900 border border-white/10 hover:border-cyan-400 cursor-pointer shadow-lg transition-all duration-300 hover:scale-[1.03]">
+                                 class="group relative aspect-square w-full rounded-2xl overflow-hidden bg-charcoal-900 border border-white/10 hover:border-peach-500 cursor-pointer shadow-lg transition-all duration-300 hover:scale-[1.03]">
                                 <img src="${item.src}" 
                                      alt="${item.name}" 
                                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -491,7 +502,7 @@
                     if (gridSwitcherEl) gridSwitcherEl.classList.add('hidden');
                     if (lightboxEl) lightboxEl.classList.add('opacity-0', 'pointer-events-none');
                     if (btnBackEl) btnBackEl.classList.add('opacity-0', 'pointer-events-none');
-                    if (breadcrumbEl) breadcrumbEl.innerHTML = `<span>精選主視覺</span>`;
+                    if (breadcrumbEl) breadcrumbEl.innerHTML = `<span>精選個人作品</span>`;
                 } else if (currentLevel === 2) {
                     if (level1El) level1El.classList.add('hidden');
                     if (level2El) level2El.classList.remove('hidden');
@@ -501,9 +512,9 @@
                     if (breadcrumbEl) {
                         const catTitle = DATABASE[activeCategoryKey] ? DATABASE[activeCategoryKey].title : '';
                         breadcrumbEl.innerHTML = `
-                            <span class="text-gray-400">精選主視覺</span>
-                            <i class="fa-solid fa-chevron-right text-[10px] text-gray-500"></i>
-                            <span class="text-cyan-300 font-bold">${catTitle}</span>
+                            <span class="text-gray-400">精選個人作品</span>
+                            <span class="text-xs text-gray-500">›</span>
+                            <span class="text-peach-400 font-bold">${catTitle}</span>
                         `;
                     }
                 } else if (currentLevel === 3) {
