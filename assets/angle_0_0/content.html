@@ -61,11 +61,12 @@
     <!-- Angle 0_0 Custom Portfolio Layout Container -->
     <div id="angle00-wrapper" class="relative w-full max-w-5xl mx-auto text-gray-100 overflow-x-hidden">
         
-        <!-- Top Navigation Header (增加 px-3 md:px-5 邊距讓視覺不擁擠) -->
+        <!-- Top Navigation Header -->
         <header class="sticky top-0 z-30 flex items-center justify-between pb-3 mb-4 bg-transparent px-3 md:px-5">
             <div class="flex items-center gap-2">
+                <!-- 移除父層統一的 ml-[100px]，將 Level 1 與 Level 2 的位置徹底解綁 -->
                 <div id="angle00-breadcrumb" class="text-sm font-bold text-white flex items-center gap-1.5">
-                    <span class="text-white font-bold">精選個人作品</span>
+                    <span class="text-white font-bold ml-[20px]">精選個人作品</span>
                 </div>
             </div>
 
@@ -114,7 +115,7 @@
                      style="background-image: url('https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80');"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
                 <div class="relative z-10 flex justify-between items-center">
-                    <div class="ml-[100px]">
+                    <div>
                         <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Digital Painting</span>
                         <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
                             厚塗插畫
@@ -131,7 +132,7 @@
                      style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80');"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
                 <div class="relative z-10 flex justify-between items-center">
-                    <div class="ml-[100px]">
+                    <div>
                         <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Anime & Concept</span>
                         <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
                             日系插畫
@@ -148,7 +149,7 @@
                      style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80');"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
                 <div class="relative z-10 flex justify-between items-center">
-                    <div class="ml-[100px]">
+                    <div>
                         <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Studies & Sketches</span>
                         <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
                             練習作品
@@ -165,7 +166,7 @@
                      style="background-image: url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80');"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
                 <div class="relative z-10 flex justify-between items-center">
-                    <div class="ml-[100px]">
+                    <div>
                         <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Ink & Line Art</span>
                         <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
                             黑線繪
@@ -194,7 +195,7 @@
             
             <div class="w-full max-w-5xl flex justify-between items-center text-xs text-gray-300 px-3 md:px-5 py-2">
                 <div class="flex items-center gap-2">
-                    <!-- 標題文字改為白色，已移除下方分隔線 -->
+                    <!-- 標題文字改為白色 -->
                     <span id="angle00-lightbox-title" class="font-bold text-white text-sm">全螢幕檢視</span>
                 </div>
                 
@@ -228,7 +229,7 @@
                 <img id="angle00-lightbox-img" 
                      src="" 
                      draggable="false"
-                     class="max-w-full max-h-[66vh] object-contain rounded-xl shadow-2xl transition-transform duration-200 select-none pointer-events-auto"
+                     class="max-w-full max-h-[66vh] object-contain rounded-xl shadow-2xl transition-transform duration-200 select-none"
                      alt="Full Artwork Detail">
 
                 <button onclick="event.stopPropagation(); window.angle00NavImage(1);" 
@@ -237,9 +238,9 @@
                 </button>
             </div>
 
-            <!-- 底下正方形縮圖輪播，可滑動並自動將當前作品置中 -->
+            <!-- 底下正方形縮圖輪播：前後加入緩衝墊區塊，允許拖曳超越第 1 張與最後 1 張，放開時自動吸附中線 -->
             <div class="w-full max-w-5xl py-2 px-1">
-                <div id="angle00-thumb-strip" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 px-1 justify-start cursor-grab active:cursor-grabbing select-none">
+                <div id="angle00-thumb-strip" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 px-0 justify-start cursor-grab active:cursor-grabbing select-none">
                     <!-- Dynamic thumbnails injected here -->
                 </div>
             </div>
@@ -350,9 +351,11 @@
             let touchEndX = 0;
             let currentCols = 2;
 
-            // 用於防止拖曳滑動時誤觸點擊點開圖片
             let isDraggingLevel2 = false;
             let isDraggingThumbStrip = false;
+
+            let isProgrammaticScroll = false;
+            let scrollSnapTimer = null;
 
             window.initAngle00App = function() {
                 currentLevel = 1;
@@ -361,6 +364,7 @@
                 setupLevel2MouseDragScroll();
                 setupLightboxMouseDrag();
                 setupThumbStripMouseDrag();
+                setupThumbStripScrollAndSnap();
             };
 
             window.angle00SetGridCols = function(cols) {
@@ -394,7 +398,6 @@
                 let gridHTML = "";
 
                 categoryData.subcategories.forEach((subCat) => {
-                    // 類別區小類別分界線與白色標題
                     gridHTML += `
                         <div class="col-span-full mt-4 first:mt-0 pt-2 pb-1 border-b border-white/10 flex items-center justify-between">
                             <span class="text-xs font-bold text-white">
@@ -505,7 +508,8 @@
                 const stripEl = document.getElementById('angle00-thumb-strip');
                 if (!stripEl) return;
 
-                let html = '';
+                // 前後加入彈性寬度 Spacer，確保第一張與最後一張都可以拖曳超越畫面中線並平滑回彈
+                let html = '<div style="width: calc(50% + 3rem); flex-shrink: 0; height: 1px; pointer-events: none;"></div>';
                 flatImageList.forEach((item, idx) => {
                     const isActive = idx === activeGlobalImageIndex;
                     html += `
@@ -516,11 +520,17 @@
                         </div>
                     `;
                 });
+                html += '<div style="width: calc(50% + 3rem); flex-shrink: 0; height: 1px; pointer-events: none;"></div>';
                 stripEl.innerHTML = html;
                 centerActiveThumbnail(false);
             }
 
             function updateThumbStripActiveState() {
+                updateThumbOutlineOnly();
+                centerActiveThumbnail(true);
+            }
+
+            function updateThumbOutlineOnly() {
                 const stripEl = document.getElementById('angle00-thumb-strip');
                 if (!stripEl) return;
 
@@ -532,25 +542,90 @@
                         el.className = "thumb-item flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 border-white/20 opacity-60 hover:opacity-100 cursor-pointer transition-all duration-300";
                     }
                 });
-                centerActiveThumbnail(true);
             }
 
-            // 將當前縮圖位移至正中間
+            // 將當前縮圖位移至正中間 (第 1 張至第 N 張皆精準對齊)
             function centerActiveThumbnail(smooth = true) {
+                requestAnimationFrame(() => {
+                    const stripEl = document.getElementById('angle00-thumb-strip');
+                    if (!stripEl) return;
+                    const activeEl = stripEl.querySelector(`[data-thumb-idx="${activeGlobalImageIndex}"]`);
+                    if (!activeEl) return;
+
+                    const containerWidth = stripEl.clientWidth;
+                    const itemCenter = activeEl.offsetLeft + activeEl.clientWidth / 2;
+                    const scrollTarget = itemCenter - (containerWidth / 2);
+
+                    isProgrammaticScroll = true;
+                    stripEl.scrollTo({
+                        left: scrollTarget,
+                        behavior: smooth ? 'smooth' : 'auto'
+                    });
+                    setTimeout(() => {
+                        isProgrammaticScroll = false;
+                    }, smooth ? 350 : 50);
+                });
+            }
+
+            // 監聽縮圖群滑動：即時偵測中線最接近的縮圖並切換大圖，停止滑動時自動置中對齊
+            function setupThumbStripScrollAndSnap() {
+                const stripEl = document.getElementById('angle00-thumb-strip');
+                if (!stripEl) return;
+
+                stripEl.addEventListener('scroll', () => {
+                    if (isProgrammaticScroll) return;
+
+                    const containerWidth = stripEl.clientWidth;
+                    const containerCenter = stripEl.scrollLeft + containerWidth / 2;
+                    const thumbs = stripEl.querySelectorAll('.thumb-item');
+
+                    let closestIdx = activeGlobalImageIndex;
+                    let minDiff = Infinity;
+
+                    thumbs.forEach((el) => {
+                        const idx = parseInt(el.dataset.thumbIdx, 10);
+                        const elCenter = el.offsetLeft + el.clientWidth / 2;
+                        const diff = Math.abs(containerCenter - elCenter);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            closestIdx = idx;
+                        }
+                    });
+
+                    if (closestIdx !== activeGlobalImageIndex) {
+                        const prevSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+                        activeGlobalImageIndex = closestIdx;
+                        const newSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+
+                        renderLightboxImage(prevSubCat !== newSubCat);
+                        updateThumbOutlineOnly();
+                    }
+
+                    clearTimeout(scrollSnapTimer);
+                    scrollSnapTimer = setTimeout(() => {
+                        snapClosestThumbnailToCenter();
+                    }, 120);
+                });
+            }
+
+            function snapClosestThumbnailToCenter() {
                 const stripEl = document.getElementById('angle00-thumb-strip');
                 if (!stripEl) return;
                 const activeEl = stripEl.querySelector(`[data-thumb-idx="${activeGlobalImageIndex}"]`);
                 if (!activeEl) return;
 
                 const containerWidth = stripEl.clientWidth;
-                const itemLeft = activeEl.offsetLeft;
-                const itemWidth = activeEl.clientWidth;
+                const itemCenter = activeEl.offsetLeft + activeEl.clientWidth / 2;
+                const scrollTarget = itemCenter - (containerWidth / 2);
 
-                const scrollTarget = itemLeft - (containerWidth / 2) + (itemWidth / 2);
+                isProgrammaticScroll = true;
                 stripEl.scrollTo({
                     left: scrollTarget,
-                    behavior: smooth ? 'smooth' : 'auto'
+                    behavior: 'smooth'
                 });
+                setTimeout(() => {
+                    isProgrammaticScroll = false;
+                }, 300);
             }
 
             function triggerSubcategoryToast(subCatName) {
@@ -580,11 +655,15 @@
             };
 
             window.angle00CloseModal = function() {
+                // 關閉作品面板時，重置 content.html 內部狀態回到 Level 1
+                currentLevel = 1;
+                activeCategoryKey = null;
+                updateUILevelState();
+
                 const modalDetails = document.getElementById('modal-details');
                 if (modalDetails) {
-                    modalDetails.classList.add('opacity-0', 'pointer-events-none');
+                    modalDetails.classList.add('opacity-0', 'pointer-events-none', 'hidden');
                 }
-                // 呼叫主視窗 close fallback (避免跨域 parent 存取 SecurityError)
                 if (typeof window.closeModalFallback === 'function') {
                     try {
                         window.closeModalFallback();
@@ -608,16 +687,18 @@
                     if (gridSwitcherEl) gridSwitcherEl.classList.add('hidden');
                     if (lightboxEl) lightboxEl.classList.add('opacity-0', 'pointer-events-none');
                     if (btnBackEl) btnBackEl.classList.add('opacity-0', 'pointer-events-none');
-                    if (breadcrumbEl) breadcrumbEl.innerHTML = `<span class="text-white font-bold">精選個人作品</span>`;
+                    // Level 1 主題區標題：獨立設置邊距 (預設 ml-[20px])
+                    if (breadcrumbEl) breadcrumbEl.innerHTML = `<span class="text-white font-bold ml-[20px]">精選個人作品</span>`;
                 } else if (currentLevel === 2) {
                     if (level1El) level1El.classList.add('hidden');
                     if (level2El) level2El.classList.remove('hidden');
                     if (gridSwitcherEl) gridSwitcherEl.classList.remove('hidden');
                     if (lightboxEl) lightboxEl.classList.add('opacity-0', 'pointer-events-none');
                     if (btnBackEl) btnBackEl.classList.remove('opacity-0', 'pointer-events-none');
+                    // Level 2 類別區標題：獨立設置邊距 (預設 ml-0，可單獨調整)
                     if (breadcrumbEl) {
                         const catTitle = DATABASE[activeCategoryKey] ? DATABASE[activeCategoryKey].title : '';
-                        breadcrumbEl.innerHTML = `<span class="text-white font-bold">${catTitle}</span>`;
+                        breadcrumbEl.innerHTML = `<span class="text-white font-bold ml-0">${catTitle}</span>`;
                     }
                 } else if (currentLevel === 3) {
                     if (lightboxEl) lightboxEl.classList.remove('opacity-0', 'pointer-events-none');
@@ -625,7 +706,6 @@
                 }
             }
 
-            // 支持 PC / 手機版拖曳垂直滾動，並精準判斷是否有移動 (Drag vs Click)
             function setupLevel2MouseDragScroll() {
                 const level2El = document.getElementById('angle00-level2');
                 if (!level2El) return;
@@ -677,7 +757,6 @@
                 }, { passive: true });
             }
 
-            // PC 版大圖按著滑鼠左右拖曳切換圖片 (禁止 HTML5 原生圖片拖曳)
             function setupLightboxMouseDrag() {
                 const lightboxEl = document.getElementById('angle00-lightbox');
                 if (!lightboxEl) return;
@@ -708,7 +787,6 @@
                 });
             }
 
-            // 底下正方形縮圖區 PC 版按住拖曳滑動 (禁止 HTML5 原生圖片拖曳)
             function setupThumbStripMouseDrag() {
                 const stripEl = document.getElementById('angle00-thumb-strip');
                 if (!stripEl) return;
@@ -728,14 +806,20 @@
                 });
 
                 stripEl.addEventListener('mouseleave', () => {
-                    isMouseDown = false;
+                    if (isMouseDown) {
+                        isMouseDown = false;
+                        snapClosestThumbnailToCenter();
+                    }
                 });
 
                 stripEl.addEventListener('mouseup', () => {
-                    isMouseDown = false;
-                    if (dragDistance > 6) {
-                        isDraggingThumbStrip = true;
-                        setTimeout(() => { isDraggingThumbStrip = false; }, 50);
+                    if (isMouseDown) {
+                        isMouseDown = false;
+                        if (dragDistance > 6) {
+                            isDraggingThumbStrip = true;
+                            setTimeout(() => { isDraggingThumbStrip = false; }, 50);
+                        }
+                        snapClosestThumbnailToCenter();
                     }
                 });
 

@@ -172,7 +172,7 @@
     </div>
 
     <!-- Modal Detail Container -->
-    <div id="modal-details" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="modal-details" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none hidden transition-opacity duration-300">
         <div class="glass-panel w-full max-w-5xl rounded-3xl p-4 sm:p-6 max-h-[92vh] flex flex-col border border-white/20 shadow-2xl relative overflow-hidden">
             <!-- 確保此頁面不要有任何卷軸顯示 -->
             <div class="overflow-y-auto no-scrollbar w-full h-full flex-1" id="modal-detail-content">
@@ -679,7 +679,7 @@
 
             const modalDetails = document.getElementById('modal-details');
             if (modalDetails) {
-                modalDetails.classList.remove('opacity-0', 'pointer-events-none');
+                modalDetails.classList.remove('opacity-0', 'pointer-events-none', 'hidden');
             }
 
             // 自動隱藏所有 UI 介面，讓使用者透過霧面透明區塊看到全景底圖
@@ -754,18 +754,16 @@
 
         window.closeModalFallback = function() {
             const modalDetails = document.getElementById('modal-details');
-            if (modalDetails) modalDetails.classList.add('opacity-0', 'pointer-events-none');
+            if (modalDetails) modalDetails.classList.add('opacity-0', 'pointer-events-none', 'hidden');
 
-            // 關閉專案面板時恢復顯示 360 UI 介面（保持根容器 pointer-events-none 以防阻擋 360 畫布拖曳）
+            // 關閉專案面板時恢復顯示 360 UI 介面
             const hudOverlay = document.getElementById('ui-hud-overlay');
             const spatialPanels = document.getElementById('spatial-panels-container');
             if (hudOverlay) {
                 hudOverlay.classList.remove('opacity-0');
-                hudOverlay.classList.add('pointer-events-none');
             }
             if (spatialPanels) {
                 spatialPanels.classList.remove('opacity-0');
-                spatialPanels.classList.add('pointer-events-none');
             }
         };
 
