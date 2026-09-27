@@ -1,0 +1,270 @@
+{
+    "01": {
+        "title": "厚塗插畫",
+        "tag": "Digital Painting",
+        "desc": "光影筆觸堆疊、質感細節與氛圍感極佳的厚塗創作",
+        "bgImage": "assets/angle_0_0/01.jpg",
+        "bgFallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+        "folder": "assets/angle_0_0/01/",
+        "subcategories": [
+            {
+                "name": "角色光影研究",
+                "folder": "A/",
+                "items": [
+                    {
+                        "src": "assets/angle_0_0/01/A/01.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1348&q=80",
+                        "name": "角色光影研究 01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/A/02.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1348&q=80",
+                        "name": "角色光影研究 02"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/A/03.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1348&q=80",
+                        "name": "質感色彩練習 03"
+                    }
+                ]
+            },
+            {
+                "name": "概念場景氛圍",
+                "folder": "B/",
+                "items": [
+                    {
+                        "src": "assets/angle_0_0/01/B/01.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80",
+                        "name": "場景概念繪製 01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/B/02.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=1348&q=80",
+                        "name": "幾何厚塗繪圖 02"
+                    }
+                ]
+            }
+        ]
+    },
+    "02": {
+        "title": "日系插畫",
+        "tag": "Anime & Concept",
+        "desc": "動漫人物風格、二次元賽博朋克與角色設計專案",
+        "bgImage": "assets/angle_0_0/02.jpg",
+        "bgFallback": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+        "folder": "assets/angle_0_0/02/",
+        "subcategories": [
+            {
+                "name": "賽博朋克系列",
+                "folder": "A/",
+                "items": [
+                    {
+                        "src": "assets/angle_0_0/02/A/01.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1348&q=80",
+                        "name": "賽博朋克角色 01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/02.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1348&q=80",
+                        "name": "霓虹美學專案 02"
+                    }
+                ]
+            },
+            {
+                "name": "二次元立繪專案",
+                "folder": "B/",
+                "items": [
+                    {
+                        "src": "assets/angle_0_0/02/B/01.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1348&q=80",
+                        "name": "動漫立繪展示 01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/02.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1348&q=80",
+                        "name": "動態視覺設定 02"
+                    }
+                ]
+            }
+        ]
+    },
+    "03": {
+        "title": "設計練習",
+        "tag": "Design Studies",
+        "desc": "速寫研究、色彩實驗、結構造型練習與概念研究",
+        "bgImage": "assets/angle_0_0/03.jpg",
+        "bgFallback": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80",
+        "folder": "assets/angle_0_0/03/",
+        "subcategories": [
+            {
+                "name": "人體與結構速寫",
+                "folder": "A/",
+                "items": [
+                    {
+                        "src": "assets/angle_0_0/03/A/01.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1348&q=80",
+                        "name": "解剖與造型速寫 01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/02.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1348&q=80",
+                        "name": "明暗調子練習 02"
+                    }
+                ]
+            },
+            {
+                "name": "透視與空間實驗",
+                "folder": "B/",
+                "items": [
+                    {
+                        "src": "assets/angle_0_0/03/B/01.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80",
+                        "name": "透視場景研究 01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/02.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1501084291732-13b1ba830ee4?auto=format&fit=crop&w=1348&q=80",
+                        "name": "色彩球體實驗 02"
+                    }
+                ]
+            }
+        ]
+    },
+    "04": {
+        "title": "黑線繪",
+        "tag": "Ink & Line Art",
+        "desc": "精細線稿、黑白點陣風格、漫畫風格線描作品",
+        "bgImage": "assets/angle_0_0/04.jpg",
+        "bgFallback": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80",
+        "folder": "assets/angle_0_0/04/",
+        "subcategories": [
+            {
+                "name": "Spirit Blossom Life",
+                "folder": "A/",
+                "items": [
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 01.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 02.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 02"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 03.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 03"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 04.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 04"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 05.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 05"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 06.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 06"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 07.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 07"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 08.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 08"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 09.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 09"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 11.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 11"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 12.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 12"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 13.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 13"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 14.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 14"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 15.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 15"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 16.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 16"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 17.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 17"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 18.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 18"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 19.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 19"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 21.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 21"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 22.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 22"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/A/Life 23.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "Life 23"
+                    }
+                ]
+            },
+            {
+                "name": "測試",
+                "folder": "B/",
+                "items": [
+                    {
+                        "src": "assets/angle_0_0/04/B/01.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1348&q=80",
+                        "name": "黑白點陣風格 01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/B/02.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1348&q=80",
+                        "name": "漫畫風分鏡稿 02"
+                    }
+                ]
+            }
+        ]
+    }
+}

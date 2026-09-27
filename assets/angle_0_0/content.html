@@ -64,7 +64,6 @@
         <!-- Top Navigation Header -->
         <header class="sticky top-0 z-30 flex items-center justify-between pb-3 mb-4 bg-transparent px-3 md:px-5">
             <div class="flex items-center gap-2">
-                <!-- 移除父層統一的 ml-[100px]，將 Level 1 與 Level 2 的位置徹底解綁 -->
                 <div id="angle00-breadcrumb" class="text-sm font-bold text-white flex items-center gap-1.5">
                     <span class="text-white font-bold ml-[20px]">精選個人作品</span>
                 </div>
@@ -88,7 +87,6 @@
                     </button>
                 </div>
 
-                <!-- 統一使用手機版/標準⬅圖像 -->
                 <button id="angle00-btn-back" 
                         onclick="window.angle00GoBack()" 
                         class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-peach-500/20 hover:border-peach-500/40 transition border border-white/10 shadow-md opacity-0 pointer-events-none"
@@ -104,98 +102,24 @@
             </div>
         </header>
 
-        <!-- ============================================================ -->
-        <!-- REGION: 主題區 (Level 1 Theme Banners Region)                 -->
-        <!-- ============================================================ -->
+        <!-- REGION: 主題區 (Level 1 Theme Banners Region dynamically populated) -->
         <div id="angle00-level1" class="space-y-4 transition-all duration-300 px-3 md:px-5">
-            <!-- Category 1: 厚塗插畫 -->
-            <div onclick="window.angle00OpenCategory('painterly')" 
-                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-peach-500/60 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-peach-500/10 active:scale-[0.99]">
-                <div class="absolute inset-0 bg-cover bg-center opacity-25 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500" 
-                     style="background-image: url('https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80');"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
-                <div class="relative z-10 flex justify-between items-center">
-                    <div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Digital Painting</span>
-                        <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
-                            厚塗插畫
-                        </h3>
-                        <p class="text-xs text-gray-400 mt-1">光影筆觸堆疊、質感細節與氛圍感極佳的厚塗創作</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Category 2: 日系插畫 -->
-            <div onclick="window.angle00OpenCategory('anime')" 
-                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-peach-500/60 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-peach-500/10 active:scale-[0.99]">
-                <div class="absolute inset-0 bg-cover bg-center opacity-25 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500" 
-                     style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80');"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
-                <div class="relative z-10 flex justify-between items-center">
-                    <div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Anime & Concept</span>
-                        <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
-                            日系插畫
-                        </h3>
-                        <p class="text-xs text-gray-400 mt-1">動漫人物風格、二次元賽博朋克與角色設計專案</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Category 3: 練習作品 -->
-            <div onclick="window.angle00OpenCategory('sketches')" 
-                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-peach-500/60 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-peach-500/10 active:scale-[0.99]">
-                <div class="absolute inset-0 bg-cover bg-center opacity-25 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500" 
-                     style="background-image: url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80');"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
-                <div class="relative z-10 flex justify-between items-center">
-                    <div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Studies & Sketches</span>
-                        <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
-                            練習作品
-                        </h3>
-                        <p class="text-xs text-gray-400 mt-1">速寫研究、色彩實驗、結構造型練習與概念研究</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Category 4: 黑線繪 -->
-            <div onclick="window.angle00OpenCategory('lineart')" 
-                 class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-peach-500/60 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-peach-500/10 active:scale-[0.99]">
-                <div class="absolute inset-0 bg-cover bg-center opacity-25 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500" 
-                     style="background-image: url('https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80');"></div>
-                <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
-                <div class="relative z-10 flex justify-between items-center">
-                    <div>
-                        <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">Ink & Line Art</span>
-                        <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
-                            黑線繪
-                        </h3>
-                        <p class="text-xs text-gray-400 mt-1">精細線稿、黑白點陣風格、漫畫風格線描作品</p>
-                    </div>
-                </div>
-            </div>
+            <!-- Dynamic Theme Banners rendered by JS from JSON -->
         </div>
 
-        <!-- ============================================================ -->
-        <!-- REGION: 類別區 (Level 2 Square Thumbnail Grid Region)           -->
-        <!-- 保持固定滿版高度、隱藏捲軸、僅限垂直拖曳滑動                    -->
-        <!-- ============================================================ -->
+        <!-- REGION: 類別區 (Level 2 Square Thumbnail Grid Region) -->
         <div id="angle00-level2" class="hidden transition-all duration-300 overflow-y-auto overflow-x-hidden max-h-[75vh] min-h-[500px] no-scrollbar select-none cursor-grab active:cursor-grabbing px-3 md:px-5">
             <div id="angle00-grid-container" class="grid grid-cols-2 gap-3.5 w-full max-w-full no-scrollbar pb-6">
                 <!-- Dynamically injected 1:1 square crop thumbnails -->
             </div>
         </div>
 
-        <!-- ============================================================ -->
-        <!-- REGION: 大圖展示區 (Level 3 Full Image Lightbox Region)        -->
-        <!-- ============================================================ -->
+        <!-- REGION: 大圖展示區 (Level 3 Full Image Lightbox Region) -->
         <div id="angle00-lightbox" 
              class="fixed inset-0 z-50 bg-charcoal-950/95 backdrop-blur-xl flex flex-col justify-between items-center p-4 opacity-0 pointer-events-none transition-all duration-300 select-none">
             
             <div class="w-full max-w-5xl flex justify-between items-center text-xs text-gray-300 px-3 md:px-5 py-2">
                 <div class="flex items-center gap-2">
-                    <!-- 標題文字改為白色 -->
                     <span id="angle00-lightbox-title" class="font-bold text-white text-sm">全螢幕檢視</span>
                 </div>
                 
@@ -206,7 +130,6 @@
                             title="返回上一層">
                         ⬅
                     </button>
-                    <!-- 新增 ✕ 按鈕 -->
                     <button onclick="window.angle00CloseModal()" 
                             class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-rose-500/20 hover:border-rose-400/50 transition border border-white/10 shadow-md"
                             title="關閉作品面板">
@@ -238,7 +161,6 @@
                 </button>
             </div>
 
-            <!-- 底下正方形縮圖輪播：前後加入緩衝墊區塊，允許拖曳超越第 1 張與最後 1 張，放開時自動吸附中線 -->
             <div class="w-full max-w-5xl py-2 px-1">
                 <div id="angle00-thumb-strip" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 px-0 justify-start cursor-grab active:cursor-grabbing select-none">
                     <!-- Dynamic thumbnails injected here -->
@@ -250,97 +172,116 @@
 
     <script>
         (function() {
-            const DATABASE = {
-                painterly: {
+            // 預設資料庫 (備援素材，當 JSON 讀取失敗或內容空白時自動使用)
+            const DEFAULT_DATABASE = {
+                "01": {
                     title: "厚塗插畫",
-                    folder: "assets/angle_0_0/painterly/",
+                    tag: "Digital Painting",
+                    desc: "光影筆觸堆疊、質感細節與氛圍感極佳的厚塗創作",
+                    bgImage: "assets/angle_0_0/01.jpg",
+                    bgFallback: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                    folder: "assets/angle_0_0/01/",
                     subcategories: [
                         {
                             name: "角色光影研究",
-                            folder: "characters/",
+                            folder: "A/",
                             items: [
-                                { src: "assets/angle_0_0/painterly/characters/01.jpg", fallback: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1348&q=80", name: "角色光影研究 01" },
-                                { src: "assets/angle_0_0/painterly/characters/02.jpg", fallback: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1348&q=80", name: "角色光影研究 02" },
-                                { src: "assets/angle_0_0/painterly/characters/03.jpg", fallback: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1348&q=80", name: "質感色彩練習 03" }
+                                { src: "assets/angle_0_0/01/A/01.jpg", fallback: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1348&q=80", name: "角色光影研究 01" },
+                                { src: "assets/angle_0_0/01/A/02.jpg", fallback: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1348&q=80", name: "角色光影研究 02" },
+                                { src: "assets/angle_0_0/01/A/03.jpg", fallback: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1348&q=80", name: "質感色彩練習 03" }
                             ]
                         },
                         {
                             name: "概念場景氛圍",
-                            folder: "environments/",
+                            folder: "B/",
                             items: [
-                                { src: "assets/angle_0_0/painterly/environments/01.jpg", fallback: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80", name: "場景概念繪製 01" },
-                                { src: "assets/angle_0_0/painterly/environments/02.jpg", fallback: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=1348&q=80", name: "幾何厚塗繪圖 02" }
+                                { src: "assets/angle_0_0/01/B/01.jpg", fallback: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80", name: "場景概念繪製 01" },
+                                { src: "assets/angle_0_0/01/B/02.jpg", fallback: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=1348&q=80", name: "幾何厚塗繪圖 02" }
                             ]
                         }
                     ]
                 },
-                anime: {
+                "02": {
                     title: "日系插畫",
-                    folder: "assets/angle_0_0/anime/",
+                    tag: "Anime & Concept",
+                    desc: "動漫人物風格、二次元賽博朋克與角色設計專案",
+                    bgImage: "assets/angle_0_0/02.jpg",
+                    bgFallback: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+                    folder: "assets/angle_0_0/02/",
                     subcategories: [
                         {
                             name: "賽博朋克系列",
-                            folder: "cyberpunk/",
+                            folder: "A/",
                             items: [
-                                { src: "assets/angle_0_0/anime/cyberpunk/01.jpg", fallback: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1348&q=80", name: "賽博朋克角色 01" },
-                                { src: "assets/angle_0_0/anime/cyberpunk/02.jpg", fallback: "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1348&q=80", name: "霓虹美學專案 02" }
+                                { src: "assets/angle_0_0/02/A/01.jpg", fallback: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1348&q=80", name: "賽博朋克角色 01" },
+                                { src: "assets/angle_0_0/02/A/02.jpg", fallback: "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1348&q=80", name: "霓虹美學專案 02" }
                             ]
                         },
                         {
                             name: "二次元立繪專案",
-                            folder: "portraits/",
+                            folder: "B/",
                             items: [
-                                { src: "assets/angle_0_0/anime/portraits/01.jpg", fallback: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1348&q=80", name: "動漫立繪展示 01" },
-                                { src: "assets/angle_0_0/anime/portraits/02.jpg", fallback: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1348&q=80", name: "動態視覺設定 02" }
+                                { src: "assets/angle_0_0/02/B/01.jpg", fallback: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1348&q=80", name: "動漫立繪展示 01" },
+                                { src: "assets/angle_0_0/02/B/02.jpg", fallback: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1348&q=80", name: "動態視覺設定 02" }
                             ]
                         }
                     ]
                 },
-                sketches: {
+                "03": {
                     title: "練習作品",
-                    folder: "assets/angle_0_0/sketches/",
+                    tag: "Studies & Sketches",
+                    desc: "速寫研究、色彩實驗、結構造型練習與概念研究",
+                    bgImage: "assets/angle_0_0/03.jpg",
+                    bgFallback: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80",
+                    folder: "assets/angle_0_0/03/",
                     subcategories: [
                         {
                             name: "人體與結構速寫",
-                            folder: "anatomy/",
+                            folder: "A/",
                             items: [
-                                { src: "assets/angle_0_0/sketches/anatomy/01.jpg", fallback: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1348&q=80", name: "解剖與造型速寫 01" },
-                                { src: "assets/angle_0_0/sketches/anatomy/02.jpg", fallback: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1348&q=80", name: "明暗調子練習 02" }
+                                { src: "assets/angle_0_0/03/A/01.jpg", fallback: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1348&q=80", name: "解剖與造型速寫 01" },
+                                { src: "assets/angle_0_0/03/A/02.jpg", fallback: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1348&q=80", name: "明暗調子練習 02" }
                             ]
                         },
                         {
                             name: "透視與空間實驗",
-                            folder: "perspective/",
+                            folder: "B/",
                             items: [
-                                { src: "assets/angle_0_0/sketches/perspective/01.jpg", fallback: "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=1348&q=80", name: "透視場景研究 01" },
-                                { src: "assets/angle_0_0/sketches/perspective/02.jpg", fallback: "https://images.unsplash.com/photo-1501084291732-13b1ba830ee4?auto=format&fit=crop&w=1348&q=80", name: "色彩球體實驗 02" }
+                                { src: "assets/angle_0_0/03/B/01.jpg", fallback: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80", name: "透視場景研究 01" },
+                                { src: "assets/angle_0_0/03/B/02.jpg", fallback: "https://images.unsplash.com/photo-1501084291732-13b1ba830ee4?auto=format&fit=crop&w=1348&q=80", name: "色彩球體實驗 02" }
                             ]
                         }
                     ]
                 },
-                lineart: {
+                "04": {
                     title: "黑線繪",
-                    folder: "assets/angle_0_0/lineart/",
+                    tag: "Ink & Line Art",
+                    desc: "精細線稿、黑白點陣風格、漫畫風格線描作品",
+                    bgImage: "assets/angle_0_0/04.jpg",
+                    bgFallback: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=800&q=80",
+                    folder: "assets/angle_0_0/04/",
                     subcategories: [
                         {
                             name: "精細墨線繪圖",
-                            folder: "ink/",
+                            folder: "A/",
                             items: [
-                                { src: "assets/angle_0_0/lineart/ink/01.jpg", fallback: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1348&q=80", name: "精細墨線繪圖 01" },
-                                { src: "assets/angle_0_0/lineart/ink/02.jpg", fallback: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80", name: "結構線描稿 02" }
+                                { src: "assets/angle_0_0/04/A/01.jpg", fallback: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1348&q=80", name: "精細墨線繪圖 01" },
+                                { src: "assets/angle_0_0/04/A/02.jpg", fallback: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80", name: "結構線描稿 02" }
                             ]
                         },
                         {
                             name: "黑白漫畫分鏡",
-                            folder: "manga/",
+                            folder: "B/",
                             items: [
-                                { src: "assets/angle_0_0/lineart/manga/01.jpg", fallback: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1348&q=80", name: "黑白點陣風格 01" },
-                                { src: "assets/angle_0_0/lineart/manga/02.jpg", fallback: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1348&q=80", name: "漫畫風分鏡稿 02" }
+                                { src: "assets/angle_0_0/04/B/01.jpg", fallback: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1348&q=80", name: "黑白點陣風格 01" },
+                                { src: "assets/angle_0_0/04/B/02.jpg", fallback: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1348&q=80", name: "漫畫風分鏡稿 02" }
                             ]
                         }
                     ]
                 }
             };
+
+            let DATABASE = DEFAULT_DATABASE;
 
             let currentLevel = 1;
             let activeCategoryKey = null;
@@ -357,8 +298,23 @@
             let isProgrammaticScroll = false;
             let scrollSnapTimer = null;
 
-            window.initAngle00App = function() {
+            window.initAngle00App = async function() {
                 currentLevel = 1;
+
+                // 嘗試讀取 JSON 檔設定
+                try {
+                    const res = await fetch('assets/angle_0_0/portfolio_data.json');
+                    if (res.ok) {
+                        const jsonData = await res.json();
+                        if (jsonData && Object.keys(jsonData).length > 0) {
+                            DATABASE = jsonData;
+                        }
+                    }
+                } catch (e) {
+                    console.log('未讀取到 assets/angle_0_0/portfolio_data.json，自動切換至預設資料庫。');
+                }
+
+                renderLevel1Banners();
                 updateUILevelState();
                 setupTouchSwiping();
                 setupLevel2MouseDragScroll();
@@ -366,6 +322,39 @@
                 setupThumbStripMouseDrag();
                 setupThumbStripScrollAndSnap();
             };
+
+            function renderLevel1Banners() {
+                const level1Container = document.getElementById('angle00-level1');
+                if (!level1Container) return;
+
+                let html = '';
+                Object.keys(DATABASE).forEach(catKey => {
+                    const cat = DATABASE[catKey];
+                    const bgSrc = cat.bgImage || `assets/angle_0_0/${catKey}.jpg`;
+                    const fallbackSrc = cat.bgFallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80';
+
+                    html += `
+                        <div onclick="window.angle00OpenCategory('${catKey}')" 
+                             class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-peach-500/60 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-peach-500/10 active:scale-[0.99]">
+                            <img src="${bgSrc}" 
+                                 alt="${cat.title}" 
+                                 class="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500 select-none"
+                                 onerror="this.onerror=null; this.src='${fallbackSrc}';">
+                            <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
+                            <div class="relative z-10 flex justify-between items-center">
+                                <div>
+                                    <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">${cat.tag || 'PORTFOLIO'}</span>
+                                    <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
+                                        ${cat.title}
+                                    </h3>
+                                    <p class="text-xs text-gray-400 mt-1">${cat.desc || ''}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                level1Container.innerHTML = html;
+            }
 
             window.angle00SetGridCols = function(cols) {
                 currentCols = cols;
@@ -508,7 +497,6 @@
                 const stripEl = document.getElementById('angle00-thumb-strip');
                 if (!stripEl) return;
 
-                // 前後加入彈性寬度 Spacer，確保第一張與最後一張都可以拖曳超越畫面中線並平滑回彈
                 let html = '<div style="width: calc(50% + 3rem); flex-shrink: 0; height: 1px; pointer-events: none;"></div>';
                 flatImageList.forEach((item, idx) => {
                     const isActive = idx === activeGlobalImageIndex;
@@ -544,7 +532,6 @@
                 });
             }
 
-            // 將當前縮圖位移至正中間 (第 1 張至第 N 張皆精準對齊)
             function centerActiveThumbnail(smooth = true) {
                 requestAnimationFrame(() => {
                     const stripEl = document.getElementById('angle00-thumb-strip');
@@ -567,7 +554,6 @@
                 });
             }
 
-            // 監聽縮圖群滑動：即時偵測中線最接近的縮圖並切換大圖，停止滑動時自動置中對齊
             function setupThumbStripScrollAndSnap() {
                 const stripEl = document.getElementById('angle00-thumb-strip');
                 if (!stripEl) return;
@@ -655,7 +641,6 @@
             };
 
             window.angle00CloseModal = function() {
-                // 關閉作品面板時，重置 content.html 內部狀態回到 Level 1
                 currentLevel = 1;
                 activeCategoryKey = null;
                 updateUILevelState();
@@ -687,7 +672,6 @@
                     if (gridSwitcherEl) gridSwitcherEl.classList.add('hidden');
                     if (lightboxEl) lightboxEl.classList.add('opacity-0', 'pointer-events-none');
                     if (btnBackEl) btnBackEl.classList.add('opacity-0', 'pointer-events-none');
-                    // Level 1 主題區標題：獨立設置邊距 (預設 ml-[20px])
                     if (breadcrumbEl) breadcrumbEl.innerHTML = `<span class="text-white font-bold ml-[20px]">精選個人作品</span>`;
                 } else if (currentLevel === 2) {
                     if (level1El) level1El.classList.add('hidden');
@@ -695,7 +679,6 @@
                     if (gridSwitcherEl) gridSwitcherEl.classList.remove('hidden');
                     if (lightboxEl) lightboxEl.classList.add('opacity-0', 'pointer-events-none');
                     if (btnBackEl) btnBackEl.classList.remove('opacity-0', 'pointer-events-none');
-                    // Level 2 類別區標題：獨立設置邊距 (預設 ml-0，可單獨調整)
                     if (breadcrumbEl) {
                         const catTitle = DATABASE[activeCategoryKey] ? DATABASE[activeCategoryKey].title : '';
                         breadcrumbEl.innerHTML = `<span class="text-white font-bold ml-0">${catTitle}</span>`;
