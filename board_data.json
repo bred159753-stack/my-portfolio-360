@@ -1,0 +1,379 @@
+{
+  "_readme": "index.html 會讀取此檔顯示所有面板。preImages 留空時，會自動掃描 preFolder 內的 jpg/png；都沒有則顯示預設縮圖。",
+  "version": 1,
+  "panels": [
+    {
+      "key": "0-30",
+      "yaw": 0,
+      "pitch": -30,
+      "position": {
+        "yaw": 0,
+        "pitch": -30,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "關於我 & 履歷與聯繫",
+      "category": "關於我",
+      "desc": "個人經歷簡介、設計哲學與專案合作諮詢。",
+      "folder": "assets/angle_0_-30/",
+      "hasCustomHtml": false,
+      "detailFilePath": "assets/angle_0_-30/content.html",
+      "boardLink": "assets/angle_0_-30/",
+      "previewImage": "assets/angle_0_-30/preview.jpg",
+      "previewImageWidth": 208,
+      "previewImageHeight": 208,
+      "previewImageSize": {
+        "width": 208,
+        "height": 208
+      },
+      "thumbSize": 64,
+      "stripWidth": 312,
+      "marginBottom": 26,
+      "maskPercent": 22,
+      "preFolder": "assets/angle_0_-30/pre/",
+      "preImages": [
+        "assets/angle_0_-30/pre/01.jpg",
+        "assets/angle_0_-30/pre/02.jpg",
+        "assets/angle_0_-30/pre/03.jpg",
+        "assets/angle_0_-30/pre/04.jpg",
+        "assets/angle_0_-30/pre/05.jpg"
+      ],
+      "images": []
+    },
+    {
+      "key": "0_0",
+      "yaw": 0,
+      "pitch": 0,
+      "position": {
+        "yaw": 0,
+        "pitch": 0,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "精選個人作品 & 品牌整合",
+      "category": "精選個人作品",
+      "desc": "展示品牌核心視覺與標誌設計案例。融合現代幾何學與沉浸式視覺體驗。",
+      "folder": "assets/angle_0_0/",
+      "hasCustomHtml": true,
+      "detailFilePath": "assets/angle_0_0/content.html",
+      "boardLink": "assets/angle_0_0/",
+      "previewImage": "assets/angle_0_0/preview.jpg",
+      "previewImageWidth": 104,
+      "previewImageHeight": 104,
+      "previewImageSize": {
+        "width": 104,
+        "height": 104
+      },
+      "thumbSize": 104,
+      "stripWidth": 312,
+      "marginBottom": 20,
+      "maskPercent": 22,
+      "preFolder": "assets/angle_0_0/pre/",
+      "preImages": [
+        "assets/angle_0_0/pre/01.jpg",
+        "assets/angle_0_0/pre/02.jpg",
+        "assets/angle_0_0/pre/03.jpg",
+        "assets/angle_0_0/pre/04.jpg",
+        "assets/angle_0_0/pre/05.jpg",
+        "assets/angle_0_0/pre/06.jpg",
+        "assets/angle_0_0/pre/07.jpg",
+        "assets/angle_0_0/pre/08.jpg"
+      ],
+      "images": []
+    },
+    {
+      "key": "90_0",
+      "yaw": 90,
+      "pitch": 0,
+      "position": {
+        "yaw": 90,
+        "pitch": 0,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "Web 應用與互動體驗",
+      "category": "Web 應用",
+      "desc": "包含沉浸式 WebGL 網頁、動態網頁動畫與 3D 產品展示頁。",
+      "folder": "assets/angle_90_0/",
+      "hasCustomHtml": false,
+      "detailFilePath": "assets/angle_90_0/content.html",
+      "boardLink": "assets/angle_90_0/",
+      "previewImage": "assets/angle_90_0/preview.jpg",
+      "previewImageWidth": 208,
+      "previewImageHeight": 208,
+      "previewImageSize": {
+        "width": 208,
+        "height": 208
+      },
+      "thumbSize": 64,
+      "stripWidth": 312,
+      "marginBottom": 26,
+      "maskPercent": 22,
+      "preFolder": "assets/angle_90_0/pre/",
+      "preImages": [
+        "assets/angle_90_0/pre/01.jpg",
+        "assets/angle_90_0/pre/02.jpg",
+        "assets/angle_90_0/pre/03.jpg",
+        "assets/angle_90_0/pre/04.jpg",
+        "assets/angle_90_0/pre/05.jpg"
+      ],
+      "images": []
+    },
+    {
+      "key": "180_0",
+      "yaw": 180,
+      "pitch": 0,
+      "position": {
+        "yaw": 180,
+        "pitch": 0,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "3D 建模與動態視覺",
+      "category": "3D 建模",
+      "desc": "Blender / Cinema4D 產品 Rendering、幾何場景與光影質感設計。",
+      "folder": "assets/angle_180_0/",
+      "hasCustomHtml": false,
+      "detailFilePath": "assets/angle_180_0/content.html",
+      "boardLink": "assets/angle_180_0/",
+      "previewImage": "assets/angle_180_0/preview.jpg",
+      "previewImageWidth": 208,
+      "previewImageHeight": 208,
+      "previewImageSize": {
+        "width": 208,
+        "height": 208
+      },
+      "thumbSize": 64,
+      "stripWidth": 312,
+      "marginBottom": 26,
+      "maskPercent": 22,
+      "preFolder": "assets/angle_180_0/pre/",
+      "preImages": [
+        "assets/angle_180_0/pre/01.jpg",
+        "assets/angle_180_0/pre/02.jpg",
+        "assets/angle_180_0/pre/03.jpg",
+        "assets/angle_180_0/pre/04.jpg",
+        "assets/angle_180_0/pre/05.jpg"
+      ],
+      "images": []
+    },
+    {
+      "key": "270_0",
+      "yaw": 270,
+      "pitch": 0,
+      "position": {
+        "yaw": 270,
+        "pitch": 0,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "生成式藝術 & 實驗專案",
+      "category": "生成藝術",
+      "desc": "Shader 演算法動畫、Generative Art 與聲音感應互動專案。",
+      "folder": "assets/angle_270_0/",
+      "hasCustomHtml": false,
+      "detailFilePath": "assets/angle_270_0/content.html",
+      "boardLink": "assets/angle_270_0/",
+      "previewImage": "assets/angle_270_0/preview.jpg",
+      "previewImageWidth": 208,
+      "previewImageHeight": 208,
+      "previewImageSize": {
+        "width": 208,
+        "height": 208
+      },
+      "thumbSize": 64,
+      "stripWidth": 312,
+      "marginBottom": 26,
+      "maskPercent": 22,
+      "preFolder": "assets/angle_270_0/pre/",
+      "preImages": [
+        "assets/angle_270_0/pre/01.jpg",
+        "assets/angle_270_0/pre/02.jpg",
+        "assets/angle_270_0/pre/03.jpg",
+        "assets/angle_270_0/pre/04.jpg",
+        "assets/angle_270_0/pre/05.jpg"
+      ],
+      "images": []
+    },
+    {
+      "key": "0_30",
+      "yaw": 0,
+      "pitch": 30,
+      "position": {
+        "yaw": 0,
+        "pitch": 30,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "UI / UX 介面設計系統",
+      "category": "UI/UX 介面",
+      "desc": "專注於跨平台 Dashboard 介面與 Component Design System 規範。",
+      "folder": "assets/angle_0_30/",
+      "hasCustomHtml": false,
+      "detailFilePath": "assets/angle_0_30/content.html",
+      "boardLink": "assets/angle_0_30/",
+      "previewImage": "assets/angle_0_30/preview.jpg",
+      "previewImageWidth": 208,
+      "previewImageHeight": 208,
+      "previewImageSize": {
+        "width": 208,
+        "height": 208
+      },
+      "thumbSize": 64,
+      "stripWidth": 312,
+      "marginBottom": 26,
+      "maskPercent": 22,
+      "preFolder": "assets/angle_0_30/pre/",
+      "preImages": [
+        "assets/angle_0_30/pre/01.jpg",
+        "assets/angle_0_30/pre/02.jpg",
+        "assets/angle_0_30/pre/03.jpg",
+        "assets/angle_0_30/pre/04.jpg",
+        "assets/angle_0_30/pre/05.jpg"
+      ],
+      "images": []
+    },
+    {
+      "key": "90_30",
+      "yaw": 90,
+      "pitch": 30,
+      "position": {
+        "yaw": 90,
+        "pitch": 30,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "跨平台 App 開發專案",
+      "category": "App 開發",
+      "desc": "Flutter 與 React Native 跨平台應用程式設計與體驗調優。",
+      "folder": "assets/angle_90_30/",
+      "hasCustomHtml": false,
+      "detailFilePath": "assets/angle_90_30/content.html",
+      "boardLink": "assets/angle_90_30/",
+      "previewImage": "assets/angle_90_30/preview.jpg",
+      "previewImageWidth": 208,
+      "previewImageHeight": 208,
+      "previewImageSize": {
+        "width": 208,
+        "height": 208
+      },
+      "thumbSize": 64,
+      "stripWidth": 312,
+      "marginBottom": 26,
+      "maskPercent": 22,
+      "preFolder": "assets/angle_90_30/pre/",
+      "preImages": [
+        "assets/angle_90_30/pre/01.jpg",
+        "assets/angle_90_30/pre/02.jpg",
+        "assets/angle_90_30/pre/03.jpg",
+        "assets/angle_90_30/pre/04.jpg",
+        "assets/angle_90_30/pre/05.jpg"
+      ],
+      "images": []
+    },
+    {
+      "key": "180_30",
+      "yaw": 180,
+      "pitch": 30,
+      "position": {
+        "yaw": 180,
+        "pitch": 30,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "動態視覺與特效展示",
+      "category": "動態視覺",
+      "desc": "AE 影音後製、粒子特效與 UI 動態微互動設計。",
+      "folder": "assets/angle_180_30/",
+      "hasCustomHtml": false,
+      "detailFilePath": "assets/angle_180_30/content.html",
+      "boardLink": "assets/angle_180_30/",
+      "previewImage": "assets/angle_180_30/preview.jpg",
+      "previewImageWidth": 208,
+      "previewImageHeight": 208,
+      "previewImageSize": {
+        "width": 208,
+        "height": 208
+      },
+      "thumbSize": 64,
+      "stripWidth": 312,
+      "marginBottom": 26,
+      "maskPercent": 22,
+      "preFolder": "assets/angle_180_30/pre/",
+      "preImages": [
+        "assets/angle_180_30/pre/01.jpg",
+        "assets/angle_180_30/pre/02.jpg",
+        "assets/angle_180_30/pre/03.jpg",
+        "assets/angle_180_30/pre/04.jpg",
+        "assets/angle_180_30/pre/05.jpg"
+      ],
+      "images": []
+    },
+    {
+      "key": "270_30",
+      "yaw": 270,
+      "pitch": 30,
+      "position": {
+        "yaw": 270,
+        "pitch": 30,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "音效與聲音互動實驗",
+      "category": "音效互動",
+      "desc": "Web Audio API 聲波視覺化與聲音微程式控制。",
+      "folder": "assets/angle_270_30/",
+      "hasCustomHtml": false,
+      "detailFilePath": "assets/angle_270_30/content.html",
+      "boardLink": "assets/angle_270_30/",
+      "previewImage": "assets/angle_270_30/preview.jpg",
+      "previewImageWidth": 208,
+      "previewImageHeight": 208,
+      "previewImageSize": {
+        "width": 208,
+        "height": 208
+      },
+      "thumbSize": 64,
+      "stripWidth": 312,
+      "marginBottom": 26,
+      "maskPercent": 22,
+      "preFolder": "assets/angle_270_30/pre/",
+      "preImages": [
+        "assets/angle_270_30/pre/01.jpg",
+        "assets/angle_270_30/pre/02.jpg",
+        "assets/angle_270_30/pre/03.jpg",
+        "assets/angle_270_30/pre/04.jpg",
+        "assets/angle_270_30/pre/05.jpg"
+      ],
+      "images": []
+    },
+    {
+      "key": "0_60",
+      "yaw": 0,
+      "pitch": 60,
+      "position": {
+        "yaw": 0,
+        "pitch": 60,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "高階架構 & 全端技術棧",
+      "category": "全端架構",
+      "desc": "包含前後端分離系統、Three.js 演算效能調優與 API 串接。",
+      "folder": "assets/angle_0_60/",
+      "hasCustomHtml": false,
+      "detailFilePath": "assets/angle_0_60/content.html",
+      "boardLink": "assets/angle_0_60/",
+      "previewImage": "assets/angle_0_60/preview.jpg",
+      "previewImageWidth": 208,
+      "previewImageHeight": 208,
+      "previewImageSize": {
+        "width": 208,
+        "height": 208
+      },
+      "thumbSize": 64,
+      "stripWidth": 312,
+      "marginBottom": 26,
+      "maskPercent": 22,
+      "preFolder": "assets/angle_0_60/pre/",
+      "preImages": [
+        "assets/angle_0_60/pre/01.jpg",
+        "assets/angle_0_60/pre/02.jpg",
+        "assets/angle_0_60/pre/03.jpg",
+        "assets/angle_0_60/pre/04.jpg",
+        "assets/angle_0_60/pre/05.jpg"
+      ],
+      "images": []
+    }
+  ]
+}

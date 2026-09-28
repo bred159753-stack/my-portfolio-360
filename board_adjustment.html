@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 面板全功能管理工具 (board_adjustment.html)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- JSZip for packaging all thumbnails into a single zip file -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        peach: {
+                            300: '#fde5be',
+                            400: '#fcd8a0',
+                            500: '#fcd191',
+                            600: '#e0b879',
+                        },
+                        charcoal: {
+                            800: '#2c2c31',
+                            850: '#232327',
+                            900: '#1c1c1f',
+                            950: '#141416',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141416;
+            color: #f3f4f6;
+        }
+        .glass-panel {
+            background: rgba(35, 35, 39, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: linear-gradient(180deg, rgba(35, 35, 39, 0.85) 0%, rgba(35, 35, 39, 0.55) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(252, 209, 145, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Drag & Drop Visual Styles */
+        .tab-dragging {
+            opacity: 0.4;
+            border-style: dashed !important;
+            border-color: #fcd191 !important;
+        }
+        .thumb-dragging {
+            opacity: 0.45;
+            transform: scale(0.95);
+            border-color: #fcd191 !important;
+        }
+
+        /* 預覽面板上方正方形縮圖群展開動畫 */
+        .board-thumbnail-strip-wrapper {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            transform-origin: center center;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+            z-index: 20;
+        }
+
+        .board-thumbnail-strip-wrapper.expanding {
+            transform: translateX(-50%) scaleX(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .thumb-track {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 100%;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            will-change: transform;
+        }
+        .thumb-track:active {
+            cursor: grabbing;
+        }
+        .thumb-item {
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1.5px solid rgba(252, 209, 145, 0.3);
+            background: #1c1c1f;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-charcoal-950 p-3 md:p-6 text-gray-100 flex flex-col">
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-5 right-5 z-50 bg-peach-500 text-charcoal-950 px-4 py-2.5 rounded-xl font-bold text-xs shadow-2xl transition-all duration-300 opacity-0 pointer-events-none -translate-y-2">
+        <span id="toast-message">操作成功！</span>
+    </div>
+
+    <!-- Hidden Input for Importing Local JSON -->
+    <input type="file" id="json-file-input" accept=".json" onchange="handleJsonFileImport(event)" class="hidden">
+    <!-- Hidden Input for Batch Thumbnail Upload -->
+    <input type="file" id="batch-thumb-input" multiple accept="image/*" onchange="handleBatchThumbUpload(event)" class="hidden">
+
+    <div class="max-w-7xl mx-auto w-full flex-1 flex flex-col gap-5">
+        
+        <header class="glass-panel p-4 md:p-5 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 bg-peach-500/20 text-peach-400 border border-peach-500/30 rounded-md text-[11px] font-bold tracking-wider uppercase">Spatial Manager</span>
+                    <h1 class="text-lg md:text-xl font-extrabold text-white">3D 面板全功能管理工具 (board_adjustment.html)</h1>
+                </div>
+                <p class="text-xs text-gray-400 mt-1">按住頁籤拖曳可對調 360 定位角度！支援縮圖導出、拖曳排序與即時滑動預覽。</p>
+            </div>
+            
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+                <button onclick="fetchLocalBoardJson()" class="bg-charcoal-900 hover:bg-white/10 border border-white/10 text-peach-300 font-semibold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+                    載入相鄰 board_data.json
+                </button>
+                <button onclick="triggerJsonImport()" class="bg-charcoal-900 hover:bg-white/10 border border-white/10 text-gray-200 font-semibold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+                    選擇本地 JSON 檔案
+                </button>
+                <button onclick="downloadBoardJsonData()" class="bg-peach-500 hover:bg-peach-400 active:scale-95 text-charcoal-950 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-lg shadow-peach-500/20">
+                    下載 board_data.json
+                </button>
+            </div>
+        </header>
+
+        <!-- Board Selection Navigation Tabs -->
+        <div class="glass-panel p-3 rounded-2xl flex flex-col gap-2">
+            <div class="flex items-center justify-between px-1">
+                <span class="text-xs font-bold text-peach-400 flex items-center gap-1.5">
+                    <span>360 空間面板列表 (按住頁籤可直接「拖曳交換」空間定位角度)</span>
+                </span>
+                <span class="text-[11px] text-gray-400">拖曳改變順序即對調空間 Yaw & Pitch 定位</span>
+            </div>
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="board-tabs-container">
+                <!-- Dynamically injected draggable tabs -->
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1">
+            
+            <!-- Left: Real-time 3D Card Preview -->
+            <div class="lg:col-span-5 flex flex-col gap-4">
+                <div class="glass-panel p-5 rounded-3xl flex flex-col justify-between items-center min-h-[500px] relative overflow-hidden">
+                    <div class="w-full flex justify-between items-center mb-4 border-b border-white/10 pb-3">
+                        <span class="text-xs font-bold text-peach-400">3D 面板卡片即時外觀預覽</span>
+                        <span id="preview-board-key" class="text-[10px] font-mono bg-peach-500/20 text-peach-300 border border-peach-500/30 px-2 py-0.5 rounded-full">Key: 0_0</span>
+                    </div>
+
+                    <div class="w-full flex-1 flex items-center justify-center py-12">
+                        <!-- Real-time Preview Node -->
+                        <div id="preview-card-node" class="relative w-64 p-4 rounded-2xl text-left border border-peach-500/30 glass-card shadow-2xl">
+                            <!-- JS Dynamically rendered preview card -->
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-gray-400 text-center w-full pt-3 border-t border-white/10">
+                        點擊卡片右上角 <span class="text-peach-400 font-bold">▼</span> 按鈕可展開頂部正方形縮圖群，按住可左右滑動檢視所有圖片
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right: Board Parameter Form -->
+            <div class="lg:col-span-7 flex flex-col gap-4">
+                
+                <!-- Main Editor Form -->
+                <div class="glass-panel p-5 rounded-3xl flex-1 flex flex-col gap-4">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                            <span>編輯面板參數數據</span>
+                            <span id="active-board-title-badge" class="text-xs text-peach-300 font-mono">0_0</span>
+                        </h2>
+                        <button onclick="saveCurrentBoardToMemory()" class="bg-peach-500 hover:bg-peach-400 text-charcoal-950 font-bold px-3.5 py-1.5 rounded-xl text-xs transition shadow-md">
+                            套用修改並更新
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div>
+                            <label class="block text-gray-400 mb-1">位置 Key (Yaw_Pitch 組合)</label>
+                            <input type="text" id="edit-board-key" readonly class="w-full bg-charcoal-950 border border-white/10 rounded-xl px-3 py-2 text-peach-400 font-mono opacity-80 cursor-not-allowed">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-1">球面角度 (Yaw / Pitch)</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="edit-board-yaw" oninput="updateLivePreviewFromInput()" class="w-1/2 bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="Yaw (0, 90, 180, 270)">
+                                <input type="number" id="edit-board-pitch" oninput="updateLivePreviewFromInput()" class="w-1/2 bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="Pitch (-30, 0, 30, 60)">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-peach-400 font-bold mb-1">1. 面板標題 Title (黃底黑字標籤內容)</label>
+                            <input type="text" id="edit-board-title" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-peach-500/50 rounded-xl px-3 py-2 text-white font-bold focus:border-peach-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-1">2. 面板分類標籤 (Category)</label>
+                            <input type="text" id="edit-board-category" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-gray-400 mb-1">3. 簡介 Description (面板主要說明文字)</label>
+                            <textarea id="edit-board-desc" rows="2" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none resize-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-1">4. 對應資料夾路徑 (Folder Path)</label>
+                            <input type="text" id="edit-board-folder" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_0_0/">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-1">5. 預覽封面路徑 (previewImage)</label>
+                            <input type="text" id="edit-board-preview-img" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_0_0/preview.jpg">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-gray-400 mb-1">6. 細節頁面/連結路徑 (detailFilePath / link)</label>
+                            <input type="text" id="edit-board-link" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_0_0/content.html">
+                        </div>
+                        
+                        <!-- 7. 面板預覽圖大小 (previewImageSize) -->
+                        <div class="md:col-span-2">
+                            <label class="block text-peach-400 font-bold mb-1">7. 面板預覽圖大小 (previewImageSize)</label>
+                            <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-1.5 w-1/2">
+                                    <span class="text-gray-400 text-xs">寬:</span>
+                                    <input type="number" id="edit-board-preview-w" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="208">
+                                </div>
+                                <span class="text-gray-400 font-bold">×</span>
+                                <div class="flex items-center gap-1.5 w-1/2">
+                                    <span class="text-gray-400 text-xs">高:</span>
+                                    <input type="number" id="edit-board-preview-h" oninput="updateLivePreviewFromInput()" class="w-1/2 bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="208">
+                                </div>
+                                <span class="text-gray-400 text-xs font-mono">px</span>
+                            </div>
+                        </div>
+
+                        <!-- 8. 新增正方形縮圖群進階設定區域 -->
+                        <div class="md:col-span-2 border-t border-white/10 pt-3">
+                            <label class="block text-peach-400 font-bold mb-2">8. 正方形縮圖區域排版設定 (thumbConfig)</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                                <div>
+                                    <label class="block text-gray-400 mb-1" title="單個正方形縮圖邊長">縮圖尺寸 (px)</label>
+                                    <input type="number" id="edit-thumb-size" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="64">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-400 mb-1" title="與面板主體的垂直間距">面板間距 (px)</label>
+                                    <input type="number" id="edit-thumb-margin-bottom" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="26">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-400 mb-1" title="左右兩端漸層羽化百分比">漸層遮罩 (%)</label>
+                                    <input type="number" id="edit-thumb-mask-percent" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="22">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-400 mb-1" title="縮圖橫條容器總寬度">縮圖群寬度 (px)</label>
+                                    <input type="number" id="edit-thumb-strip-width" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="312">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:col-span-2 flex items-center justify-between pt-1 border-t border-white/10">
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" id="edit-board-custom-html" onchange="updateLivePreviewFromInput()" class="w-4 h-4 accent-peach-500 rounded">
+                                <label for="edit-board-custom-html" class="text-gray-300 font-medium">使用獨立 content.html 展示頁面 (hasCustomHtml)</label>
+                            </div>
+                        </div>
+
+                        <!-- preImages List & Batch Thumbnails Manager -->
+                        <div class="md:col-span-2 border-t border-white/10 pt-3 space-y-3">
+                            <div class="flex justify-between items-center flex-wrap gap-2">
+                                <div>
+                                    <label class="text-peach-400 font-bold block">9. 頂部正方形縮圖群管理 (可拖曳圖片調整順序)</label>
+                                    <p class="text-[10.5px] text-gray-400 mt-0.5">預覽縮圖檔名自動對應 01.jpg, 02.jpg...</p>
+                                </div>
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <button onclick="triggerBatchThumbUpload()" class="bg-peach-500/20 hover:bg-peach-500/30 text-peach-300 border border-peach-500/40 text-[11px] px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1">
+                                        ➕ 新增批次縮圖
+                                    </button>
+                                    <button onclick="exportAllThumbnails()" class="bg-charcoal-900 hover:bg-white/10 text-gray-200 border border-white/10 text-[11px] px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1">
+                                        輸出目前所有縮圖
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Drag-and-Drop Thumbnail Cards Grid -->
+                            <div id="preimages-grid-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-64 overflow-y-auto no-scrollbar p-1 border border-white/5 bg-charcoal-950/50 rounded-2xl">
+                                <!-- Dynamic thumbnail cards -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const FALLBACK_THUMB = "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=300&q=80";
+        const LOCAL_STORAGE_KEY = '3D_BOARD_ADJUSTMENT_DATA';
+
+        let BOARD_DATA = {
+            "0_-30": {
+                key: "0_-30", yaw: 0, pitch: -30,
+                title: "關於我 & 履歷與聯繫", category: "關於我",
+                desc: "個人經歷簡介、設計哲學與專案合作諮詢。",
+                folder: "assets/angle_0_-30/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_0_-30/content.html",
+                link: "assets/angle_0_-30/content.html",
+                previewImage: "assets/angle_0_-30/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                preFolder: "assets/angle_0_-30/pre/",
+                preImages: [
+                    "assets/angle_0_-30/pre/01.jpg",
+                    "assets/angle_0_-30/pre/02.jpg",
+                    "assets/angle_0_-30/pre/03.jpg"
+                ],
+                thumbFiles: []
+            },
+            "0_0": {
+                key: "0_0", yaw: 0, pitch: 0,
+                title: "精選個人作品 & 品牌整合", category: "精選個人作品",
+                desc: "展示品牌核心視覺與標誌設計案例。融合現代幾何學與沉浸式視覺體驗。",
+                folder: "assets/angle_0_0/", hasCustomHtml: true,
+                detailFilePath: "assets/angle_0_0/content.html",
+                link: "assets/angle_0_0/content.html",
+                previewImage: "assets/angle_0_0/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                preFolder: "assets/angle_0_0/pre/",
+                preImages: [
+                    "assets/angle_0_0/pre/01.jpg",
+                    "assets/angle_0_0/pre/02.jpg",
+                    "assets/angle_0_0/pre/03.jpg",
+                    "assets/angle_0_0/pre/04.jpg",
+                    "assets/angle_0_0/pre/05.jpg"
+                ],
+                thumbFiles: []
+            },
+            "90_0": {
+                key: "90_0", yaw: 90, pitch: 0,
+                title: "Web 應用與互動體驗", category: "Web 應用",
+                desc: "包含沉浸式 WebGL 網頁、動態網頁動畫與 3D 產品展示頁。",
+                folder: "assets/angle_90_0/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_90_0/content.html",
+                link: "assets/angle_90_0/content.html",
+                previewImage: "assets/angle_90_0/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                preFolder: "assets/angle_90_0/pre/",
+                preImages: [
+                    "assets/angle_90_0/pre/01.jpg",
+                    "assets/angle_90_0/pre/02.jpg",
+                    "assets/angle_90_0/pre/03.jpg"
+                ],
+                thumbFiles: []
+            },
+            "180_0": {
+                key: "180_0", yaw: 180, pitch: 0,
+                title: "3D 建模與動態視覺", category: "3D 建模",
+                desc: "Blender / Cinema4D 產品 Rendering、幾何場景與光影質感設計。",
+                folder: "assets/angle_180_0/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_180_0/content.html",
+                link: "assets/angle_180_0/content.html",
+                previewImage: "assets/angle_180_0/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                preFolder: "assets/angle_180_0/pre/",
+                preImages: [
+                    "assets/angle_180_0/pre/01.jpg",
+                    "assets/angle_180_0/pre/02.jpg",
+                    "assets/angle_180_0/pre/03.jpg"
+                ],
+                thumbFiles: []
+            },
+            "270_0": {
+                key: "270_0", yaw: 270, pitch: 0,
+                title: "生成式藝術 & 實驗專案", category: "生成藝術",
+                desc: "Shader 演算法動畫、Generative Art 與聲音感應互動專案。",
+                folder: "assets/angle_270_0/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_270_0/content.html",
+                link: "assets/angle_270_0/content.html",
+                previewImage: "assets/angle_270_0/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                preFolder: "assets/angle_270_0/pre/",
+                preImages: [
+                    "assets/angle_270_0/pre/01.jpg",
+                    "assets/angle_270_0/pre/02.jpg",
+                    "assets/angle_270_0/pre/03.jpg"
+                ],
+                thumbFiles: []
+            },
+            "0_30": {
+                key: "0_30", yaw: 0, pitch: 30,
+                title: "UI / UX 介面設計系統", category: "UI/UX 介面",
+                desc: "專注於跨平台 Dashboard 介面與 Component Design System 規範。",
+                folder: "assets/angle_0_30/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_0_30/content.html",
+                link: "assets/angle_0_30/content.html",
+                previewImage: "assets/angle_0_30/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                preFolder: "assets/angle_0_30/pre/",
+                preImages: [
+                    "assets/angle_0_30/pre/01.jpg",
+                    "assets/angle_0_30/pre/02.jpg",
+                    "assets/angle_0_30/pre/03.jpg"
+                ],
+                thumbFiles: []
+            },
+            "90_30": {
+                key: "90_30", yaw: 90, pitch: 30,
+                title: "跨平台 App 開態專案", category: "App 開發",
+                desc: "Flutter 與 React Native 跨平台應用程式設計與體驗調優。",
+                folder: "assets/angle_90_30/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_90_30/content.html",
+                link: "assets/angle_90_30/content.html",
+                previewImage: "assets/angle_90_30/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                preFolder: "assets/angle_90_30/pre/",
+                preImages: [
+                    "assets/angle_90_30/pre/01.jpg",
+                    "assets/angle_90_30/pre/02.jpg",
+                    "assets/angle_90_30/pre/03.jpg"
+                ],
+                thumbFiles: []
+            },
+            "180_30": {
+                key: "180_30", yaw: 180, pitch: 30,
+                title: "動態視覺與特效展示", category: "動態視覺",
+                desc: "AE 影音後製、粒子特效與 UI 動態微互動設計。",
+                folder: "assets/angle_180_30/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_180_30/content.html",
+                link: "assets/angle_180_30/content.html",
+                previewImage: "assets/angle_180_30/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                preFolder: "assets/angle_180_30/pre/",
+                preImages: [
+                    "assets/angle_180_30/pre/01.jpg",
+                    "assets/angle_180_30/pre/02.jpg",
+                    "assets/angle_180_30/pre/03.jpg"
+                ],
+                thumbFiles: []
+            },
+            "270_30": {
+                key: "270_30", yaw: 270, pitch: 30,
+                title: "音效與聲音互動實驗", category: "音效互動",
+                desc: "Web Audio API 聲波視覺化與聲音微程式控制。",
+                folder: "assets/angle_270_30/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_270_30/content.html",
+                link: "assets/angle_270_30/content.html",
+                previewImage: "assets/angle_270_30/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                preFolder: "assets/angle_270_30/pre/",
+                preImages: [
+                    "assets/angle_270_30/pre/01.jpg",
+                    "assets/angle_270_30/pre/02.jpg",
+                    "assets/angle_270_30/pre/03.jpg"
+                ],
+                thumbFiles: []
+            },
+            "0_60": {
+                key: "0_60", yaw: 0, pitch: 60,
+                title: "高階架構 & 全端技術棧", category: "全端架構",
+                desc: "包含前後端分離系統、Three.js 演算效能調優與 API 串接。",
+                folder: "assets/angle_0_60/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_0_60/content.html",
+                link: "assets/angle_0_60/content.html",
+                previewImage: "assets/angle_0_60/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                preFolder: "assets/angle_0_60/pre/",
+                preImages: [
+                    "assets/angle_0_60/pre/01.jpg",
+                    "assets/angle_0_60/pre/02.jpg",
+                    "assets/angle_0_60/pre/03.jpg"
+                ],
+                thumbFiles: []
+            }
+        };
+
+        let activeBoardKey = "0_0";
+        let draggedTabKey = null;
+        let draggedThumbIdx = null;
+
+        function renderTabs() {
+            const tabsContainer = document.getElementById('board-tabs-container');
+            if (!tabsContainer) return;
+            let html = '';
+            const keys = Object.keys(BOARD_DATA);
+
+            if (!BOARD_DATA[activeBoardKey]) {
+                activeBoardKey = keys[0] || "0_0";
+            }
+
+            keys.forEach((key) => {
+                const item = BOARD_DATA[key];
+                const isActive = key === activeBoardKey;
+                html += `
+                    <div draggable="true"
+                         data-tab-key="${key}"
+                         ondragstart="handleTabDragStart(event, '${key}')"
+                         ondragover="handleTabDragOver(event)"
+                         ondrop="handleTabDrop(event, '${key}')"
+                         ondragend="handleTabDragEnd(event)"
+                         onclick="switchActiveBoard('${key}')" 
+                         class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex-shrink-0 flex items-center gap-1.5 border select-none cursor-grab active:cursor-grabbing ${isActive ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20' : 'text-gray-300 hover:text-white hover:bg-white/5 border-white/10'}">
+                        <span class="opacity-50 text-[10px]">⋮⋮</span>
+                        <span class="font-mono text-[10px] ${isActive ? 'text-charcoal-950 font-extrabold' : 'text-peach-400'}">[Yaw:${item.yaw}, Pitch:${item.pitch}]</span>
+                        <span>${item.title || key}</span>
+                    </div>
+                `;
+            });
+
+            tabsContainer.innerHTML = html;
+            fillFormValues();
+            updateLivePreviewCard();
+        }
+
+        function handleTabDragStart(e, key) {
+            draggedTabKey = key;
+            e.currentTarget.classList.add('tab-dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleTabDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleTabDrop(e, targetKey) {
+            e.preventDefault();
+            if (!draggedTabKey || draggedTabKey === targetKey) return;
+
+            saveCurrentBoardToMemory(false);
+
+            const sourceBoard = BOARD_DATA[draggedTabKey];
+            const targetBoard = BOARD_DATA[targetKey];
+
+            const tempYaw = sourceBoard.yaw;
+            const tempPitch = sourceBoard.pitch;
+
+            sourceBoard.yaw = targetBoard.yaw;
+            sourceBoard.pitch = targetBoard.pitch;
+            sourceBoard.key = `${sourceBoard.yaw}_${sourceBoard.pitch}`;
+
+            targetBoard.yaw = tempYaw;
+            targetBoard.pitch = tempPitch;
+            targetBoard.key = `${tempYaw}_${tempPitch}`;
+
+            const newBoardData = {};
+            Object.keys(BOARD_DATA).forEach(k => {
+                if (k === draggedTabKey) {
+                    newBoardData[sourceBoard.key] = sourceBoard;
+                } else if (k === targetKey) {
+                    newBoardData[targetBoard.key] = targetBoard;
+                } else {
+                    newBoardData[k] = BOARD_DATA[k];
+                }
+            });
+
+            BOARD_DATA = newBoardData;
+            activeBoardKey = sourceBoard.key;
+
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(BOARD_DATA));
+            } catch(err) {}
+
+            renderTabs();
+            showToast(`🔄 已將「${sourceBoard.title}」與「${targetBoard.title}」之 360 空間定位對調！`);
+        }
+
+        function handleTabDragEnd(e) {
+            e.currentTarget.classList.remove('tab-dragging');
+            draggedTabKey = null;
+        }
+
+        function switchActiveBoard(key) {
+            saveCurrentBoardToMemory(false);
+            activeBoardKey = key;
+            renderTabs();
+        }
+
+        function fillFormValues() {
+            const item = BOARD_DATA[activeBoardKey];
+            if (!item) return;
+
+            document.getElementById('edit-board-key').value = activeBoardKey;
+            document.getElementById('edit-board-yaw').value = item.yaw !== undefined ? item.yaw : '';
+            document.getElementById('edit-board-pitch').value = item.pitch !== undefined ? item.pitch : '';
+            document.getElementById('edit-board-title').value = item.title || '';
+            document.getElementById('edit-board-category').value = item.category || '';
+            document.getElementById('edit-board-desc').value = item.desc || '';
+            document.getElementById('edit-board-preview-img').value = item.previewImage || '';
+            document.getElementById('edit-board-folder').value = item.folder || '';
+            document.getElementById('edit-board-link').value = item.detailFilePath || item.link || '';
+            document.getElementById('edit-board-custom-html').checked = !!item.hasCustomHtml;
+
+            const pw = item.previewImageWidth || (item.previewImageSize && item.previewImageSize.width) || 208;
+            const ph = item.previewImageHeight || (item.previewImageSize && item.previewImageSize.height) || 208;
+            document.getElementById('edit-board-preview-w').value = pw;
+            document.getElementById('edit-board-preview-h').value = ph;
+
+            // 填寫縮圖排版進階參數欄位
+            document.getElementById('edit-thumb-size').value = item.thumbSize !== undefined ? item.thumbSize : 64;
+            document.getElementById('edit-thumb-margin-bottom').value = item.marginBottom !== undefined ? item.marginBottom : 26;
+            document.getElementById('edit-thumb-mask-percent').value = item.maskPercent !== undefined ? item.maskPercent : 22;
+            document.getElementById('edit-thumb-strip-width').value = item.stripWidth !== undefined ? item.stripWidth : 312;
+
+            document.getElementById('preview-board-key').innerText = `Key: ${activeBoardKey}`;
+            document.getElementById('active-board-title-badge').innerText = `${item.title || activeBoardKey}`;
+
+            renderPreImagesGrid();
+        }
+
+        function updateLivePreviewFromInput() {
+            const previewCard = document.getElementById('preview-card-node');
+            if (!previewCard) return;
+
+            const title = document.getElementById('edit-board-title').value;
+            const desc = document.getElementById('edit-board-desc').value;
+
+            const thumbSize = parseInt(document.getElementById('edit-thumb-size').value) || 64;
+            const marginBottom = parseInt(document.getElementById('edit-thumb-margin-bottom').value) || 26;
+            const maskPercent = parseInt(document.getElementById('edit-thumb-mask-percent').value) || 22;
+            const stripWidth = parseInt(document.getElementById('edit-thumb-strip-width').value) || 312;
+
+            const stripHeight = thumbSize + 12;
+
+            const item = BOARD_DATA[activeBoardKey];
+            const preImages = (item && item.preImages && item.preImages.length > 0)
+                ? item.preImages.map((src, idx) => (item.thumbFiles && item.thumbFiles[idx] && item.thumbFiles[idx].previewUrl) ? item.thumbFiles[idx].previewUrl : src)
+                : [FALLBACK_THUMB];
+
+            const wasExpanded = previewCard.querySelector('.board-thumbnail-strip-wrapper')?.classList.contains('expanding');
+
+            let thumbsHTML = preImages.map(imgSrc => `
+                <div class="thumb-item" style="width: ${thumbSize}px; height: ${thumbSize}px;">
+                    <img src="${imgSrc}" class="w-full h-full object-cover select-none pointer-events-none" onerror="this.onerror=null; this.src='${FALLBACK_THUMB}';">
+                </div>
+            `).join('');
+
+            previewCard.innerHTML = `
+                <div class="absolute -top-3 left-3 bg-peach-500 text-charcoal-950 font-extrabold text-[11px] px-2.5 py-0.5 rounded-full shadow-md z-30 pointer-events-none truncate max-w-[170px]">
+                    ${title || 'Board Title'}
+                </div>
+
+                <button class="btn-toggle-preview absolute -top-3 right-3 w-6 h-6 rounded-full bg-charcoal-900 border border-peach-500/50 text-peach-300 hover:text-white hover:bg-peach-500 hover:text-charcoal-950 flex items-center justify-center text-[10px] font-bold shadow-lg z-30 transition cursor-pointer" title="展開預覽縮圖群">
+                    ${wasExpanded ? '▲' : '▼'}
+                </button>
+
+                <!-- 上方正方形縮圖群：即時讀取輸入欄位數值並套用 CSS 樣式 -->
+                <div class="board-thumbnail-strip-wrapper glass-panel rounded-2xl border border-peach-500/40 p-2 shadow-2xl overflow-hidden ${wasExpanded ? 'expanding' : ''}" style="width: ${stripWidth}px; height: ${stripHeight}px; bottom: calc(100% + ${marginBottom}px); -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%);">
+                    <div class="thumb-track">
+                        ${thumbsHTML}
+                    </div>
+                </div>
+
+                <p class="text-gray-200 text-xs line-clamp-3 mb-3 leading-relaxed pt-1 relative z-10">
+                    ${desc || ''}
+                </p>
+
+                <div class="pt-2 border-t border-white/10 text-xs font-semibold relative z-10">
+                    <button class="w-full bg-peach-500 text-charcoal-950 py-1.5 px-3 rounded-xl shadow-lg font-bold">
+                        作品細節
+                    </button>
+                </div>
+            `;
+
+            setupPreviewToggleEvent();
+            setupThumbnailTrackInteraction(previewCard, thumbSize, stripWidth);
+        }
+
+        function updateLivePreviewCard() {
+            updateLivePreviewFromInput();
+        }
+
+        function setupPreviewToggleEvent() {
+            const previewCard = document.getElementById('preview-card-node');
+            const toggleBtn = previewCard?.querySelector('.btn-toggle-preview');
+            const previewStripWrapper = previewCard?.querySelector('.board-thumbnail-strip-wrapper');
+
+            if (toggleBtn && previewStripWrapper) {
+                toggleBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    const isExpanding = previewStripWrapper.classList.contains('expanding');
+                    if (isExpanding) {
+                        previewStripWrapper.classList.remove('expanding');
+                        toggleBtn.innerText = '▼';
+                    } else {
+                        previewStripWrapper.classList.add('expanding');
+                        toggleBtn.innerText = '▲';
+                    }
+                };
+            }
+        }
+
+        function setupThumbnailTrackInteraction(node, thumbSize = 64, stripWidth = 312) {
+            const track = node.querySelector('.thumb-track');
+            const wrapper = node.querySelector('.board-thumbnail-strip-wrapper');
+            if (!track || !wrapper) return;
+
+            let isDragging = false;
+            let startX = 0;
+            let currentTranslateX = 0;
+            let prevTranslateX = 0;
+
+            const thumbPitch = thumbSize + 8; // 縮圖邊長 + gap(8px)
+
+            function getMinMaxTranslate() {
+                const wrapperWidth = wrapper.clientWidth || stripWidth;
+                const trackWidth = track.scrollWidth;
+                
+                if (trackWidth <= wrapperWidth) {
+                    const centerOffset = (wrapperWidth - trackWidth) / 2;
+                    return { min: centerOffset, max: centerOffset };
+                }
+                const maxTranslate = (wrapperWidth / 2) - (thumbSize / 2);
+                const minTranslate = (wrapperWidth / 2) - trackWidth + (thumbSize / 2);
+                return { min: minTranslate, max: maxTranslate };
+            }
+
+            function snapToNearestThumb() {
+                const items = Array.from(track.querySelectorAll('.thumb-item'));
+                if (items.length === 0) return;
+
+                const wrapperCenter = (wrapper.clientWidth || stripWidth) / 2;
+                let closestIndex = 0;
+                let minDiff = Infinity;
+
+                items.forEach((item, index) => {
+                    const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+                    const targetTranslate = wrapperCenter - itemCenter;
+                    const diff = Math.abs(targetTranslate - currentTranslateX);
+
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestIndex = index;
+                    }
+                });
+
+                const targetItem = items[closestIndex];
+                const finalTranslate = wrapperCenter - (targetItem.offsetLeft + targetItem.offsetWidth / 2);
+
+                currentTranslateX = finalTranslate;
+                prevTranslateX = finalTranslate;
+                track.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
+                track.style.transform = `translateX(${currentTranslateX}px)`;
+            }
+
+            setTimeout(() => {
+                const items = track.querySelectorAll('.thumb-item');
+                if (items.length > 0) {
+                    const wrapperCenter = (wrapper.clientWidth || stripWidth) / 2;
+                    const targetIndex = items.length >= 3 ? 2 : (items.length - 1);
+                    const targetCenter = items[targetIndex].offsetLeft + items[targetIndex].offsetWidth / 2;
+                    currentTranslateX = wrapperCenter - targetCenter;
+                    prevTranslateX = currentTranslateX;
+                    track.style.transform = `translateX(${currentTranslateX}px)`;
+                }
+            }, 80);
+
+            track.onpointerdown = function(e) {
+                e.stopPropagation();
+                isDragging = true;
+                startX = e.clientX;
+                track.style.transition = 'none';
+            };
+
+            const onPointerMoveHandler = function(e) {
+                if (!isDragging) return;
+                const deltaX = e.clientX - startX;
+                let nextX = prevTranslateX + deltaX;
+
+                const { min, max } = getMinMaxTranslate();
+
+                if (nextX > max) {
+                    nextX = max + (nextX - max) * 0.3;
+                } else if (nextX < min) {
+                    nextX = min + (nextX - min) * 0.3;
+                }
+
+                currentTranslateX = nextX;
+                track.style.transform = `translateX(${currentTranslateX}px)`;
+            };
+
+            const onPointerUpHandler = function() {
+                if (!isDragging) return;
+                isDragging = false;
+                snapToNearestThumb();
+            };
+
+            document.addEventListener('pointermove', onPointerMoveHandler);
+            document.addEventListener('pointerup', onPointerUpHandler);
+            document.addEventListener('pointercancel', onPointerUpHandler);
+        }
+
+        function autoRenumberThumbPaths(item) {
+            if (!item || !item.preImages) return;
+            const yaw = item.yaw !== undefined ? item.yaw : 0;
+            const pitch = item.pitch !== undefined ? item.pitch : 0;
+            const baseFolder = `assets/angle_${yaw}_${pitch}/pre/`;
+
+            item.preImages = item.preImages.map((src, idx) => {
+                const displayNum = String(idx + 1).padStart(2, '0');
+                return `${baseFolder}${displayNum}.jpg`;
+            });
+        }
+
+        function triggerBatchThumbUpload() {
+            document.getElementById('batch-thumb-input').click();
+        }
+
+        function handleThumbDragStart(e, idx) {
+            draggedThumbIdx = idx;
+            e.currentTarget.classList.add('thumb-dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleThumbDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleThumbDragEnd(e) {
+            e.currentTarget.classList.remove('thumb-dragging');
+            draggedThumbIdx = null;
+        }
+
+        async function exportAllThumbnails() {
+            const item = BOARD_DATA[activeBoardKey];
+            if (!item || !item.preImages || item.preImages.length === 0) {
+                showToast("⚠️ 目前沒有可輸出的縮圖");
+                return;
+            }
+
+            if (typeof JSZip === 'undefined') {
+                showToast("⚠️ JSZip 程式庫正在載入中，請稍後再試");
+                return;
+            }
+
+            ensureThumbFilesSync(item);
+
+            const yaw = item.yaw !== undefined ? item.yaw : 0;
+            const pitch = item.pitch !== undefined ? item.pitch : 0;
+            const thumbSize = item.thumbSize !== undefined ? item.thumbSize : 64;
+
+            showToast("⏳ 正在製作縮圖打包 ZIP 檔案...");
+
+            const zip = new JSZip();
+
+            for (let i = 0; i < item.preImages.length; i++) {
+                const localObj = item.thumbFiles[i];
+                const imgSrc = (localObj && localObj.previewUrl) ? localObj.previewUrl : item.preImages[i];
+                const displayNum = String(i + 1).padStart(2, '0');
+                const fileName = `${displayNum}.jpg`;
+
+                try {
+                    // 依照目前配置的 thumbSize (採用 2x 高解析度繪製) 匯出正方形縮圖
+                    const blob = await fetchSquareBlob(imgSrc, thumbSize * 2);
+                    if (blob) {
+                        zip.file(fileName, blob);
+                    }
+                } catch (e) {}
+            }
+
+            zip.generateAsync({ type: "blob" }).then(function(content) {
+                const zipFileName = `angle_${yaw}_${pitch}_pre_thumbnails.zip`;
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(content);
+                a.download = zipFileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                showToast(`📦 縮圖已成功打包下載為 ${zipFileName}！`);
+
+                setTimeout(() => {
+                    downloadBoardJsonData();
+                }, 500);
+            });
+        }
+
+        function fetchSquareBlob(src, targetSize = 128) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = targetSize;
+                    canvas.height = targetSize;
+                    const ctx = canvas.getContext('2d');
+
+                    ctx.fillStyle = "#1c1c1f";
+                    ctx.fillRect(0, 0, targetSize, targetSize);
+
+                    const aspect = img.width / img.height;
+                    let sw, sh, sx, sy;
+                    if (aspect > 1) {
+                        sh = img.height;
+                        sw = img.height;
+                        sx = (img.width - img.height) / 2;
+                        sy = 0;
+                    } else {
+                        sw = img.width;
+                        sh = img.width;
+                        sx = 0;
+                        sy = (img.height - img.width) / 2;
+                    }
+
+                    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetSize, targetSize);
+
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, 'image/jpeg', 0.92);
+                };
+                img.onerror = function() {
+                    resolve(null);
+                };
+                img.src = src;
+            });
+        }
+
+        async function fetchLocalBoardJson() {
+            const pathsToTry = ['board_data.json', './board_data.json', 'assets/board_data.json'];
+            let loadedData = null;
+            for (const path of pathsToTry) {
+                try {
+                    const res = await fetch(path, { cache: 'no-store' });
+                    if (res.ok) {
+                        loadedData = await res.json();
+                        break;
+                    }
+                } catch (e) {}
+            }
+
+            if (loadedData) {
+                normalizeAndLoadBoardData(loadedData, true);
+                showToast("✅ 已成功載入並統整相鄰 board_data.json！");
+            } else {
+                showToast("⚠️ 未存取到相鄰 JSON，請手動點擊選擇檔案匯入");
+            }
+        }
+
+        function normalizeAndLoadBoardData(rawJson, saveToLocal = false) {
+            if (!rawJson) return;
+
+            let normalized = {};
+            let panelList = Array.isArray(rawJson.panels) ? rawJson.panels : (typeof rawJson === 'object' ? Object.values(rawJson) : []);
+
+            if (panelList.length > 0) {
+                panelList.forEach(p => {
+                    if (typeof p !== 'object' || !p) return;
+                    const key = p.key || `${p.yaw}_${p.pitch}`;
+                    const yaw = p.yaw !== undefined ? p.yaw : Number(key.split('_')[0]);
+                    const pitch = p.pitch !== undefined ? p.pitch : Number(key.split('_')[1]);
+                    const folder = p.folder || `assets/angle_${key}/`;
+                    const preFolder = p.preFolder || `${folder}pre/`;
+
+                    let preImages = Array.isArray(p.preImages) && p.preImages.length > 0
+                        ? p.preImages
+                        : [
+                            `${preFolder}01.jpg`,
+                            `${preFolder}02.jpg`,
+                            `${preFolder}03.jpg`,
+                            `${preFolder}04.jpg`,
+                            `${preFolder}05.jpg`
+                        ];
+
+                    let thumbFiles = Array.isArray(p.thumbFiles) ? p.thumbFiles : [];
+
+                    const pw = p.previewImageWidth || (p.previewImageSize && p.previewImageSize.width) || 208;
+                    const ph = p.previewImageHeight || (p.previewImageSize && p.previewImageSize.height) || 208;
+
+                    normalized[key] = {
+                        key: key,
+                        yaw: yaw,
+                        pitch: pitch,
+                        title: p.title || '',
+                        category: p.category || '',
+                        desc: p.desc || '',
+                        folder: folder,
+                        hasCustomHtml: !!p.hasCustomHtml,
+                        detailFilePath: p.detailFilePath || p.link || `${folder}content.html`,
+                        link: p.link || p.detailFilePath || `${folder}content.html`,
+                        boardLink: p.boardLink || folder,
+                        previewImage: p.previewImage || `${folder}preview.jpg`,
+                        previewImageWidth: pw,
+                        previewImageHeight: ph,
+                        previewImageSize: { width: pw, height: ph },
+                        thumbSize: p.thumbSize !== undefined ? Number(p.thumbSize) : 64,
+                        stripWidth: p.stripWidth !== undefined ? Number(p.stripWidth) : 312,
+                        marginBottom: p.marginBottom !== undefined ? Number(p.marginBottom) : 26,
+                        maskPercent: p.maskPercent !== undefined ? Number(p.maskPercent) : 22,
+                        preFolder: preFolder,
+                        preImages: preImages,
+                        images: Array.isArray(p.images) ? p.images : [],
+                        thumbFiles: thumbFiles
+                    };
+                });
+            }
+
+            if (Object.keys(normalized).length > 0) {
+                BOARD_DATA = normalized;
+                if (saveToLocal) {
+                    try {
+                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(BOARD_DATA));
+                    } catch(e) {}
+                }
+                renderTabs();
+            }
+        }
+
+        function triggerJsonImport() {
+            document.getElementById('json-file-input').click();
+        }
+
+        function handleJsonFileImport(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const jsonData = JSON.parse(evt.target.result);
+                    normalizeAndLoadBoardData(jsonData, true);
+                    showToast("✅ 已成功匯入面板 JSON 資料並更新紀錄！");
+                } catch (err) {
+                    showToast("⚠️ JSON 解析失敗");
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        }
+
+        function ensureThumbFilesSync(item) {
+            if (!item) return;
+            if (!Array.isArray(item.preImages)) item.preImages = [];
+            if (!Array.isArray(item.thumbFiles)) item.thumbFiles = [];
+
+            for (let i = 0; i < item.preImages.length; i++) {
+                if (!item.thumbFiles[i] || !item.thumbFiles[i].previewUrl) {
+                    item.thumbFiles[i] = { previewUrl: item.preImages[i] };
+                }
+            }
+            if (item.thumbFiles.length > item.preImages.length) {
+                item.thumbFiles.length = item.preImages.length;
+            }
+        }
+
+        function renderPreImagesGrid() {
+            const item = BOARD_DATA[activeBoardKey];
+            const container = document.getElementById('preimages-grid-container');
+            if (!item || !container) return;
+
+            if (!Array.isArray(item.preImages)) item.preImages = [];
+            ensureThumbFilesSync(item);
+
+            autoRenumberThumbPaths(item);
+
+            if (item.preImages.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full py-8 text-center text-gray-500 text-xs flex flex-col items-center gap-2">
+                        <span>尚無縮圖作品</span>
+                        <button onclick="triggerBatchThumbUpload()" class="text-peach-300 bg-peach-500/20 border border-peach-500/30 px-3 py-1 rounded-xl hover:bg-peach-500/30 font-bold transition">
+                            點此批次新增本地縮圖
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            item.preImages.forEach((imgSrc, idx) => {
+                const displayNum = String(idx + 1).padStart(2, '0');
+                const localObj = item.thumbFiles[idx];
+                const previewUrl = (localObj && localObj.previewUrl) ? localObj.previewUrl : imgSrc;
+
+                html += `
+                    <div draggable="true"
+                         data-thumb-idx="${idx}"
+                         ondragstart="handleThumbDragStart(event, ${idx})"
+                         ondragover="handleThumbDragOver(event)"
+                         ondrop="handleThumbDrop(event, ${idx})"
+                         ondragend="handleThumbDragEnd(event)"
+                         class="thumb-card group relative bg-charcoal-900 border border-white/10 rounded-xl overflow-hidden p-2 flex flex-col justify-between transition-all duration-200 hover:border-peach-500/60 select-none cursor-grab active:cursor-grabbing">
+                        
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-mono text-[10px] text-peach-400 font-bold">#${displayNum}</span>
+                            <button onclick="removeThumbItem(${idx})" title="刪除這張縮圖" class="p-0.5 hover:bg-rose-500/20 rounded text-rose-400 transition text-[10px]">✕</button>
+                        </div>
+
+                        <div class="aspect-square rounded-lg overflow-hidden bg-black/40 relative mb-1.5">
+                            <img src="${previewUrl}" class="w-full h-full object-cover select-none pointer-events-none" onerror="this.onerror=null; this.src='${FALLBACK_THUMB}';">
+                        </div>
+
+                        <div class="text-[10px] font-mono text-gray-400 truncate" title="${imgSrc}">
+                            ${imgSrc.split('/').pop()}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function handleBatchThumbUpload(e) {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            const item = BOARD_DATA[activeBoardKey];
+            if (!item) return;
+
+            ensureThumbFilesSync(item);
+
+            const yaw = item.yaw !== undefined ? item.yaw : 0;
+            const pitch = item.pitch !== undefined ? item.pitch : 0;
+            const baseFolder = `assets/angle_${yaw}_${pitch}/pre/`;
+
+            let loadedCount = 0;
+            files.forEach((file) => {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const dataUrl = evt.target.result;
+                    const nextIdx = item.preImages.length + 1;
+                    const displayNum = String(nextIdx).padStart(2, '0');
+                    const path = `${baseFolder}${displayNum}.jpg`;
+
+                    item.preImages.push(path);
+                    item.thumbFiles.push({ previewUrl: dataUrl, name: file.name });
+
+                    loadedCount++;
+                    if (loadedCount === files.length) {
+                        renderPreImagesGrid();
+                        updateLivePreviewFromInput();
+                        saveCurrentBoardToMemory(false);
+                        showToast(`已新增 ${files.length} 張縮圖！已更新本地紀錄`);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+
+            e.target.value = '';
+        }
+
+        function handleThumbDrop(e, targetIdx) {
+            e.preventDefault();
+            if (draggedThumbIdx === null || draggedThumbIdx === targetIdx) return;
+
+            const item = BOARD_DATA[activeBoardKey];
+            if (!item) return;
+
+            ensureThumbFilesSync(item);
+
+            const movedImg = item.preImages.splice(draggedThumbIdx, 1)[0];
+            item.preImages.splice(targetIdx, 0, movedImg);
+
+            const movedFile = item.thumbFiles.splice(draggedThumbIdx, 1)[0];
+            item.thumbFiles.splice(targetIdx, 0, movedFile);
+
+            renderPreImagesGrid();
+            updateLivePreviewFromInput();
+            saveCurrentBoardToMemory(false);
+            showToast("已調整縮圖順序並更新紀錄！");
+        }
+
+        function removeThumbItem(idx) {
+            const item = BOARD_DATA[activeBoardKey];
+            if (!item) return;
+
+            ensureThumbFilesSync(item);
+
+            item.preImages.splice(idx, 1);
+            item.thumbFiles.splice(idx, 1);
+
+            renderPreImagesGrid();
+            updateLivePreviewFromInput();
+            saveCurrentBoardToMemory(false);
+            showToast("已刪除該張縮圖並重新編號！");
+        }
+
+        function saveCurrentBoardToMemory(showToastMsg = true) {
+            const item = BOARD_DATA[activeBoardKey];
+            if (!item) return;
+
+            item.title = document.getElementById('edit-board-title').value.trim();
+            item.category = document.getElementById('edit-board-category').value.trim();
+            item.desc = document.getElementById('edit-board-desc').value.trim();
+            item.yaw = parseInt(document.getElementById('edit-board-yaw').value) || 0;
+            item.pitch = parseInt(document.getElementById('edit-board-pitch').value) || 0;
+            item.previewImage = document.getElementById('edit-board-preview-img').value.trim();
+
+            item.previewImageWidth = parseInt(document.getElementById('edit-board-preview-w').value) || 208;
+            item.previewImageHeight = parseInt(document.getElementById('edit-board-preview-h').value) || 208;
+            item.previewImageSize = { width: item.previewImageWidth, height: item.previewImageHeight };
+
+            // 儲存縮圖排版進階參數
+            item.thumbSize = parseInt(document.getElementById('edit-thumb-size').value) || 64;
+            item.marginBottom = parseInt(document.getElementById('edit-thumb-margin-bottom').value) || 26;
+            item.maskPercent = parseInt(document.getElementById('edit-thumb-mask-percent').value) || 22;
+            item.stripWidth = parseInt(document.getElementById('edit-thumb-strip-width').value) || 312;
+
+            item.folder = document.getElementById('edit-board-folder').value.trim();
+            item.detailFilePath = document.getElementById('edit-board-link').value.trim();
+            item.link = item.detailFilePath;
+            item.hasCustomHtml = document.getElementById('edit-board-custom-html').checked;
+
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(BOARD_DATA));
+            } catch (e) {
+                console.warn("LocalStorage 寫入受限:", e);
+            }
+
+            if (showToastMsg) {
+                renderTabs();
+                showToast(`已套用修改並更新本地紀錄：${item.title}`);
+            }
+        }
+
+        function downloadBoardJsonData() {
+            saveCurrentBoardToMemory(false);
+
+            const exportPanels = Object.keys(BOARD_DATA).map(key => {
+                const item = BOARD_DATA[key];
+                const yaw = item.yaw;
+                const pitch = item.pitch;
+                const folder = item.folder || `assets/angle_${key}/`;
+                const preFolder = item.preFolder || `${folder}pre/`;
+
+                const pw = item.previewImageWidth || (item.previewImageSize && item.previewImageSize.width) || 208;
+                const ph = item.previewImageHeight || (item.previewImageSize && item.previewImageSize.height) || 208;
+
+                return {
+                    key: item.key || key,
+                    yaw: yaw,
+                    pitch: pitch,
+                    position: {
+                        yaw: yaw,
+                        pitch: pitch,
+                        note: "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+                    },
+                    title: item.title || '',
+                    category: item.category || '',
+                    desc: item.desc || '',
+                    folder: folder,
+                    hasCustomHtml: !!item.hasCustomHtml,
+                    detailFilePath: item.detailFilePath || `${folder}content.html`,
+                    boardLink: item.boardLink || folder,
+                    previewImage: item.previewImage || `${folder}preview.jpg`,
+                    previewImageWidth: pw,
+                    previewImageHeight: ph,
+                    previewImageSize: {
+                        width: pw,
+                        height: ph
+                    },
+                    thumbSize: item.thumbSize !== undefined ? item.thumbSize : 64,
+                    stripWidth: item.stripWidth !== undefined ? item.stripWidth : 312,
+                    marginBottom: item.marginBottom !== undefined ? item.marginBottom : 26,
+                    maskPercent: item.maskPercent !== undefined ? item.maskPercent : 22,
+                    preFolder: preFolder,
+                    preImages: item.preImages || [],
+                    images: item.images || []
+                };
+            });
+
+            const exportObj = {
+                _readme: "index.html 會讀取此檔顯示所有面板。preImages 留空時，會自動掃描 preFolder 內的 jpg/png；都沒有則顯示預設縮圖。",
+                version: 1,
+                panels: exportPanels
+            };
+
+            const jsonStr = JSON.stringify(exportObj, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'board_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("📄 已成功下載 board_data.json（本地紀錄保持不變）");
+        }
+
+        window.onload = function() {
+            const localSaved = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (localSaved) {
+                try {
+                    const parsed = JSON.parse(localSaved);
+                    if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+                        normalizeAndLoadBoardData(parsed, false);
+                        showToast("✅ 已成功讀取上次儲存的 LocalStorage 狀態！");
+                        return;
+                    }
+                } catch (e) {}
+            }
+
+            fetchLocalBoardJson().then(() => {
+                renderTabs();
+            }).catch(() => {
+                renderTabs();
+            });
+        };
+    </script>
+</body>
+</html>

@@ -82,13 +82,63 @@
             scrollbar-width: none;
         }
         .spatial-node {
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: absolute !important;   /* 固定脫離文件流，位置完全由 translate3d 依 yaw/pitch 投影決定 */
+            top: 0 !important;
+            left: 0 !important;
+            width: 16rem;
+            aspect-ratio: 1 / 2;             /* 1:2 容器，其中心點 = 面板中心點 = yaw/pitch 座標 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             pointer-events: auto;
-            will-change: transform, opacity;
+            will-change: transform;   /* 不可含 opacity：會使 backdrop-filter 只看得到面板自身而失去霧面 */
             transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.15s ease;
             touch-action: none;
+        }
+        /* 縮圖群（項目面板上方展開的正方形橫條縮圖） */
+        .thumb-strip {
+            position: absolute;
+            left: 50%;
+            bottom: 100%;
+            display: none;
+            transform-origin: 50% 50%;
+            will-change: transform, opacity;
+            z-index: 25;
+            touch-action: none;
+            cursor: grab;
+        }
+        .thumb-strip.dragging { cursor: grabbing; }
+        .thumb-viewport {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        .thumb-track {
+            position: absolute;
+            top: 6px;
+            left: 0;
+            display: flex;
+            gap: 8px;
+            will-change: transform;
+        }
+        .thumb-item {
+            flex: 0 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(252, 209, 145, 0.55);
+            background: #1c1c1f;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+            will-change: transform;
+        }
+        .thumb-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+            -webkit-user-drag: none;
+            user-select: none;
         }
     </style>
 </head>
@@ -105,7 +155,7 @@
     <!-- UI Overlay HUD Layer -->
     <div id="ui-hud-overlay" class="relative z-20 pointer-events-none w-full h-full flex flex-col justify-between p-4 md:p-6 transition-opacity duration-300">
         
-        <!-- Top Navigation HUD (已移除左上角當前區域顯示，僅留右上角切換UI按鈕) -->
+        <!-- Top Navigation HUD -->
         <header class="flex justify-end items-center w-full max-w-7xl mx-auto pointer-events-auto">
             <button id="toggle-ui-btn" class="glass-panel px-4 py-2 rounded-2xl text-xs font-semibold text-gray-200 hover:text-white hover:bg-white/10 transition flex items-center gap-2 shadow-xl border border-peach-500/30">
                 <span id="toggle-ui-text">隱藏 UI 介面</span>
@@ -121,7 +171,7 @@
 
             <div id="nav-content-wrapper" class="w-full flex flex-col items-center gap-2 transition-all duration-300 ease-in-out max-h-[350px] opacity-100 overflow-hidden">
                 <div class="text-[11px] text-gray-400 flex items-center gap-1.5 glass-panel px-3.5 py-1 rounded-full border border-white/5">
-                    <span>隨意拖曳 360° 空間，點擊「展開作品」觀看專案細節</span>
+                    <span>隨意拖曳 360° 空間，點擊「作品細節」觀看專案細節</span>
                 </div>
 
                 <div class="glass-panel p-2 rounded-2xl flex flex-wrap justify-center items-center gap-1.5 shadow-2xl max-w-full overflow-x-auto no-scrollbar">
@@ -174,7 +224,6 @@
     <!-- Modal Detail Container -->
     <div id="modal-details" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none hidden transition-opacity duration-300">
         <div class="glass-panel w-full max-w-5xl rounded-3xl p-4 sm:p-6 max-h-[92vh] flex flex-col border border-white/20 shadow-2xl relative overflow-hidden">
-            <!-- 確保此頁面不要有任何卷軸顯示 -->
             <div class="overflow-y-auto no-scrollbar w-full h-full flex-1" id="modal-detail-content">
                 <!-- content.html is injected here cleanly -->
             </div>
@@ -182,108 +231,172 @@
     </div>
 
     <script>
-        const PORTFOLIO_DATA = {
+        // 注意：此物件僅作為「讀不到 board_data.json 時」的預設 fallback 資料。
+        let PORTFOLIO_DATA = {
             "0_-30": {
-                title: "關於我 & 履歷與聯繫",
-                category: "關於我",
+                title: "關於我 & 履歷與聯繫", category: "關於我",
                 desc: "個人經歷簡介、設計哲學與專案合作諮詢。",
-                folder: "assets/angle_0_-30/",
-                hasCustomHtml: false,
-                images: [
-                    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80"
-                ]
+                folder: "assets/angle_0_-30/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_0_-30/content.html",
+                boardLink: "assets/angle_0_-30/", previewImage: "assets/angle_0_-30/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                images: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80"]
             },
             "0_0": {
-                title: "精選個人作品 & 品牌整合",
-                category: "精選個人作品",
+                title: "精選個人作品 & 品牌整合", category: "精選個人作品",
                 desc: "展示品牌核心視覺與標誌設計案例。融合現代幾何學與沉浸式視覺體驗。",
-                folder: "assets/angle_0_0/",
-                hasCustomHtml: true,
-                images: [
-                    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80"
-                ]
+                folder: "assets/angle_0_0/", hasCustomHtml: true,
+                detailFilePath: "assets/angle_0_0/content.html",
+                boardLink: "assets/angle_0_0/", previewImage: "assets/angle_0_0/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                images: ["https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80"]
             },
             "90_0": {
-                title: "Web 應用與互動體驗",
-                category: "Web 應用",
+                title: "Web 應用與互動體驗", category: "Web 應用",
                 desc: "包含沉浸式 WebGL 網頁、動態網頁動畫與 3D 產品展示頁。",
-                folder: "assets/angle_90_0/",
-                hasCustomHtml: false,
-                images: [
-                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80"
-                ]
+                folder: "assets/angle_90_0/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_90_0/content.html",
+                boardLink: "assets/angle_90_0/", previewImage: "assets/angle_90_0/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                images: ["https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80"]
             },
             "180_0": {
-                title: "3D 建模與動態視覺",
-                category: "3D 建模",
+                title: "3D 建模與動態視覺", category: "3D 建模",
                 desc: "Blender / Cinema4D 產品 Rendering、幾何場景與光影質感設計。",
-                folder: "assets/angle_180_0/",
-                hasCustomHtml: false,
-                images: [
-                    "https://images.unsplash.com/photo-1633167606207-d840b5070fc2?auto=format&fit=crop&w=600&q=80"
-                ]
+                folder: "assets/angle_180_0/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_180_0/content.html",
+                boardLink: "assets/angle_180_0/", previewImage: "assets/angle_180_0/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                images: ["https://images.unsplash.com/photo-1633167606207-d840b5070fc2?auto=format&fit=crop&w=600&q=80"]
             },
             "270_0": {
-                title: "生成式藝術 & 實驗專案",
-                category: "生成藝術",
+                title: "生成式藝術 & 實驗專案", category: "生成藝術",
                 desc: "Shader 演算法動畫、Generative Art 與聲音感應互動專案。",
-                folder: "assets/angle_270_0/",
-                hasCustomHtml: false,
-                images: [
-                    "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=600&q=80"
-                ]
+                folder: "assets/angle_270_0/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_270_0/content.html",
+                boardLink: "assets/angle_270_0/", previewImage: "assets/angle_270_0/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                images: ["https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=600&q=80"]
             },
             "0_30": {
-                title: "UI / UX 介面設計系統",
-                category: "UI/UX 介面",
+                title: "UI / UX 介面設計系統", category: "UI/UX 介面",
                 desc: "專注於跨平台 Dashboard 介面與 Component Design System 規範。",
-                folder: "assets/angle_0_30/",
-                hasCustomHtml: false,
-                images: [
-                    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80"
-                ]
+                folder: "assets/angle_0_30/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_0_30/content.html",
+                boardLink: "assets/angle_0_30/", previewImage: "assets/angle_0_30/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                images: ["https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80"]
             },
             "90_30": {
-                title: "跨平台 App 開發專案",
-                category: "App 開發",
+                title: "跨平台 App 開發專案", category: "App 開發",
                 desc: "Flutter 與 React Native 跨平台應用程式設計與體驗調優。",
-                folder: "assets/angle_90_30/",
-                hasCustomHtml: false,
-                images: [
-                    "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80"
-                ]
+                folder: "assets/angle_90_30/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_90_30/content.html",
+                boardLink: "assets/angle_90_30/", previewImage: "assets/angle_90_30/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80"]
             },
             "180_30": {
-                title: "動態視覺與特效展示",
-                category: "動態視覺",
+                title: "動態視覺與特效展示", category: "動態視覺",
                 desc: "AE 影音後製、粒子特效與 UI 動態微互動設計。",
-                folder: "assets/angle_180_30/",
-                hasCustomHtml: false,
-                images: [
-                    "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=600&q=80"
-                ]
+                folder: "assets/angle_180_30/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_180_30/content.html",
+                boardLink: "assets/angle_180_30/", previewImage: "assets/angle_180_30/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                images: ["https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=600&q=80"]
             },
             "270_30": {
-                title: "音效與聲音互動實驗",
-                category: "音效互動",
+                title: "音效與聲音互動實驗", category: "音效互動",
                 desc: "Web Audio API 聲波視覺化與聲音微程式控制。",
-                folder: "assets/angle_270_30/",
-                hasCustomHtml: false,
-                images: [
-                    "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80"
-                ]
+                folder: "assets/angle_270_30/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_270_30/content.html",
+                boardLink: "assets/angle_270_30/", previewImage: "assets/angle_270_30/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                images: ["https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80"]
             },
             "0_60": {
-                title: "高階架構 & 全端技術棧",
-                category: "全端架構",
+                title: "高階架構 & 全端技術棧", category: "全端架構",
                 desc: "包含前後端分離系統、Three.js 演算效能調優與 API 串接。",
-                folder: "assets/angle_0_60/",
-                hasCustomHtml: false,
-                images: [
-                    "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80"
-                ]
+                folder: "assets/angle_0_60/", hasCustomHtml: false,
+                detailFilePath: "assets/angle_0_60/content.html",
+                boardLink: "assets/angle_0_60/", previewImage: "assets/angle_0_60/preview.jpg",
+                previewImageWidth: 208, previewImageHeight: 208,
+                previewImageSize: { width: 208, height: 208 },
+                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
+                images: ["https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80"]
             }
         };
+
+        // 從 board_data.json 讀取面板資料
+        async function loadBoardData() {
+            try {
+                const res = await fetch('board_data.json', { cache: 'no-store' });
+                if (!res.ok) throw new Error('board_data.json not found (HTTP ' + res.status + ')');
+                const json = await res.json();
+
+                let normalized = {};
+                if (Array.isArray(json.panels)) {
+                    json.panels.forEach(p => {
+                        const key = p.key || `${p.yaw}_${p.pitch}`;
+                        normalized[key] = p;
+                    });
+                } else if (json && typeof json === 'object') {
+                    normalized = json;
+                }
+
+                if (Object.keys(normalized).length > 0) {
+                    Object.keys(normalized).forEach(k => {
+                        const it = normalized[k];
+                        const [ky, kp] = k.split('_').map(Number);
+                        if (it.yaw === undefined) it.yaw = ky;
+                        if (it.pitch === undefined) it.pitch = kp;
+                        const base = `assets/angle_${it.yaw}_${it.pitch}/`;
+                        it.folder = it.folder || base;
+                        it.detailFilePath = it.detailFilePath || base + 'content.html';
+                        it.boardLink = it.boardLink || base;
+                        it.previewImage = it.previewImage || base + 'preview.jpg';
+
+                        it.previewImageWidth = it.previewImageWidth || (it.previewImageSize && it.previewImageSize.width) || 208;
+                        it.previewImageHeight = it.previewImageHeight || (it.previewImageSize && it.previewImageSize.height) || 208;
+                        it.previewImageSize = { width: it.previewImageWidth, height: it.previewImageHeight };
+
+                        // 讀取正方形縮圖區域相關欄位 (未填寫則採用預設數值)
+                        it.thumbSize = it.thumbSize !== undefined ? Number(it.thumbSize) : 64;
+                        it.stripWidth = it.stripWidth !== undefined ? Number(it.stripWidth) : 312;
+                        it.marginBottom = it.marginBottom !== undefined ? Number(it.marginBottom) : 26;
+                        it.maskPercent = it.maskPercent !== undefined ? Number(it.maskPercent) : 22;
+
+                        it.preFolder = it.preFolder || base + 'pre/';
+                        it.images = Array.isArray(it.images) ? it.images : [];
+                        it.title = it.title || '';
+                        it.desc = it.desc || '';
+                        it.category = it.category || it.title;
+                    });
+                    PORTFOLIO_DATA = normalized;
+                    console.log('[board_data.json] 已成功讀取面板資料。');
+                }
+            } catch (err) {
+                console.log('[board_data.json] 讀取失敗，改用預設面板資料。原因：', err.message);
+            }
+        }
 
         const YAW_TARGETS = [0, 90, 180, 270];
         const PITCH_TARGETS = [-60, -30, 0, 30, 60];
@@ -300,7 +413,9 @@
 
         const spatialDomNodes = {};
 
-        function init() {
+        async function init() {
+            await loadBoardData();
+
             container = document.getElementById('webgl-container');
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
             scene = new THREE.Scene();
@@ -390,19 +505,20 @@
 
             Object.keys(PORTFOLIO_DATA).forEach(key => {
                 const item = PORTFOLIO_DATA[key];
-                const [yaw, pitch] = key.split('_').map(Number);
+                const [yaw, pitch] = (item.yaw !== undefined && item.pitch !== undefined) ? [Number(item.yaw), Number(item.pitch)] : key.split('_').map(Number);
 
                 const node = document.createElement('div');
-                node.className = 'spatial-node glass-card p-4 rounded-2xl w-64 text-left border border-peach-500/30 hover:border-peach-500 cursor-pointer shadow-2xl';
+                node.className = 'spatial-node w-64 aspect-[1/2] flex items-center justify-center';
                 node.dataset.key = key;
 
                 updateNodeCardHTML(node, item);
 
                 node.addEventListener('pointerdown', (e) => {
-                    if (e.target.closest('.btn-expand-project')) {
+                    if (e.target.closest('.btn-expand-project') || e.target.closest('.btn-toggle-preview')) {
                         e.stopPropagation();
                         return;
                     }
+                    if (e.target.closest('.thumb-strip')) { return; }
                     onPointerDown(e);
                 });
 
@@ -415,9 +531,11 @@
                     });
                 }
 
+                setupThumbStrip(node, key, item, yaw, pitch);
+
                 node.addEventListener('click', (e) => {
                     if (pointerMoveDistance > 8) return;
-                    if (e.target.closest('.btn-expand-project')) return;
+                    if (e.target.closest('.btn-expand-project') || e.target.closest('.btn-toggle-preview') || e.target.closest('.thumb-strip')) return;
 
                     targetLon = Math.floor(lon / 360) * 360 + yaw;
                     targetLat = pitch;
@@ -434,17 +552,267 @@
             });
         }
 
+        function escapeHTML(str) {
+            return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        const ICON_EXPAND = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8l4-4 4 4"/></svg>';
+        const ICON_COLLAPSE = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>';
+
         function updateNodeCardHTML(node, item) {
+            const thumbSize = item.thumbSize !== undefined ? item.thumbSize : 64;
+            const stripWidth = item.stripWidth !== undefined ? item.stripWidth : 312;
+            const marginBottom = item.marginBottom !== undefined ? item.marginBottom : 26;
+            const maskPercent = item.maskPercent !== undefined ? item.maskPercent : 22;
+
+            const stripHeight = thumbSize + 12; // 容器高度預留上下內距
+            const halfStripW = stripWidth / 2;
+
             node.innerHTML = `
-                <p class="text-gray-200 text-xs line-clamp-3 mb-3 leading-relaxed pt-1">
-                    ${item.desc}
-                </p>
-                <div class="pt-2 border-t border-white/10 text-xs font-semibold">
-                    <button class="btn-expand-project w-full bg-peach-500 hover:bg-peach-400 text-charcoal-950 py-1.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-peach-500/20 font-bold">
-                        展開作品
+                <div class="main-card-content glass-card p-4 rounded-2xl w-full text-left border border-peach-500/30 hover:border-peach-500 cursor-pointer shadow-2xl relative z-10">
+                    <div class="absolute -top-3 left-5 bg-peach-500 text-charcoal-950 font-extrabold text-[11px] px-2.5 py-0.5 rounded-full shadow-md z-30 pointer-events-none truncate max-w-[150px]">
+                        ${escapeHTML(item.title)}
+                    </div>
+
+                    <button class="btn-toggle-preview absolute -top-3 right-5 w-6 h-6 rounded-full bg-charcoal-900 border border-peach-500/50 text-peach-300 hover:bg-peach-500 hover:text-charcoal-950 flex items-center justify-center shadow-lg z-30 transition cursor-pointer" title="展開縮圖">
+                        ${ICON_EXPAND}
                     </button>
+
+                    <!-- 上方正方形縮圖群：動態套用 board_data.json 中的尺寸、距離與漸層遮罩 -->
+                    <div class="thumb-strip" style="width: ${stripWidth}px; height: ${stripHeight}px; margin-left: -${halfStripW}px; margin-bottom: ${marginBottom}px;">
+                        <div class="thumb-viewport" style="-webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%);">
+                            <div class="thumb-track"></div>
+                        </div>
+                    </div>
+
+                    <p class="text-gray-200 text-xs line-clamp-3 mb-3 leading-relaxed pt-1 w-full">
+                        ${escapeHTML(item.desc)}
+                    </p>
+                    <div class="pt-2 border-t border-white/10 text-xs font-semibold">
+                        <button class="btn-expand-project w-full bg-peach-500 hover:bg-peach-400 text-charcoal-950 py-1.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-peach-500/20 font-bold">
+                            作品細節
+                        </button>
+                    </div>
                 </div>
             `;
+        }
+
+        // ===== 縮圖群與事件區域動態計算 =====
+        const THUMB_GAP = 8;
+        const DEFAULT_THUMB_COUNT = 5;
+
+        function makeDefaultThumbs() {
+            const hues = [32, 200, 150, 280, 350];
+            return Array.from({ length: DEFAULT_THUMB_COUNT }, (_, i) => {
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${hues[i]},45%,42%)"/><stop offset="1" stop-color="hsl(${hues[i]},40%,18%)"/></linearGradient></defs><rect width="128" height="128" fill="url(#g)"/><text x="64" y="76" font-family="Arial" font-size="40" font-weight="700" fill="rgba(255,255,255,0.85)" text-anchor="middle">${i + 1}</text></svg>`;
+                return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+            });
+        }
+
+        function loadImageOk(url) {
+            return new Promise(resolve => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        }
+
+        const naturalSort = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+
+        async function resolvePreImages(item, yaw, pitch) {
+            const folder = item.preFolder || `assets/angle_${yaw}_${pitch}/pre/`;
+            let candidates = [];
+
+            if (Array.isArray(item.preImages) && item.preImages.length) {
+                candidates = item.preImages.map(n => /^(https?:|data:|\/|assets\/)/.test(n) ? n : folder + n);
+            }
+
+            if (!candidates.length) {
+                try {
+                    const res = await fetch(folder, { cache: 'no-store' });
+                    if (res.ok) {
+                        const text = await res.text();
+                        const re = /href\s*=\s*["']([^"'#?]+\.(?:jpe?g|png))["']/gi;
+                        const found = [];
+                        let m;
+                        while ((m = re.exec(text))) {
+                            const name = decodeURIComponent(m[1]).split('/').pop();
+                            found.push(name);
+                        }
+                        candidates = Array.from(new Set(found)).sort(naturalSort).map(n => folder + encodeURIComponent(n));
+                    }
+                } catch (e) { }
+            }
+
+            if (!candidates.length) {
+                const names = [];
+                for (let i = 1; i <= 12; i++) {
+                    [String(i), String(i).padStart(2, '0')].forEach(b => {
+                        ['jpg', 'png'].forEach(ext => names.push(`${folder}${b}.${ext}`));
+                    });
+                }
+                const ok = await Promise.all(names.map(loadImageOk));
+                candidates = names.filter((_, i) => ok[i]);
+            } else {
+                const ok = await Promise.all(candidates.map(loadImageOk));
+                candidates = candidates.filter((_, i) => ok[i]);
+            }
+
+            return candidates;
+        }
+
+        function setupThumbStrip(node, key, item, yaw, pitch) {
+            const btn = node.querySelector('.btn-toggle-preview');
+            const strip = node.querySelector('.thumb-strip');
+            const track = node.querySelector('.thumb-track');
+            if (!btn || !strip || !track) return;
+
+            // 動態讀取每個面板專屬的縮圖尺寸與寬度
+            const thumbSize = item.thumbSize !== undefined ? item.thumbSize : 64;
+            const stripWidth = item.stripWidth !== undefined ? item.stripWidth : 312;
+            const thumbPitch = thumbSize + THUMB_GAP;
+            const stripCenter = stripWidth / 2;
+
+            const st = {
+                images: null, items: [], pos: 0, target: 0, min: 0, max: 0,
+                dragging: false, raf: 0, open: false, busy: false, anim: null,
+                startX: 0, startPos: 0, lastX: 0, lastT: 0, vel: 0
+            };
+            
+            // 自動偵測面板中心點的偏移行數計算
+            const posFor = i => stripCenter - thumbSize / 2 - i * thumbPitch;
+
+            function render() {
+                track.style.transform = `translate3d(${st.pos.toFixed(2)}px,0,0)`;
+                st.items.forEach((el, i) => {
+                    const c = posFor(i) - st.pos;
+                    const d = Math.min(1, Math.abs(c) / thumbPitch);
+                    el.style.transform = `scale(${(1.08 - 0.12 * d).toFixed(3)})`;
+                });
+            }
+
+            function build(images) {
+                track.innerHTML = '';
+                st.items = images.map(src => {
+                    const el = document.createElement('div');
+                    el.className = 'thumb-item';
+                    el.style.width = `${thumbSize}px`;
+                    el.style.height = `${thumbSize}px`;
+
+                    const img = document.createElement('img');
+                    img.src = src; img.draggable = false; img.alt = '';
+                    el.appendChild(img);
+                    track.appendChild(el);
+                    return el;
+                });
+                st.max = posFor(0);
+                st.min = posFor(images.length - 1);
+                const idx = Math.min(2, images.length - 1);
+                st.pos = st.target = posFor(idx);
+                render();
+            }
+
+            function loop() {
+                st.raf = 0;
+                if (st.dragging) return;
+                const diff = st.target - st.pos;
+                if (Math.abs(diff) < 0.2) { st.pos = st.target; render(); return; }
+                st.pos += diff * 0.18;
+                render();
+                st.raf = requestAnimationFrame(loop);
+            }
+            const kick = () => { if (!st.raf) st.raf = requestAnimationFrame(loop); };
+
+            const rubber = over => 44 * (1 - Math.exp(-over / 110));
+
+            // 精確事件區域偵測：Pointerdown 在動態縮圖區域內時，攔截手勢事件，避免觸發 360 旋轉
+            strip.addEventListener('pointerdown', e => {
+                e.stopPropagation();
+                if (e.button !== undefined && e.button !== 0) return;
+                st.dragging = true;
+                st.startX = st.lastX = e.clientX;
+                st.startPos = st.pos;
+                st.lastT = performance.now();
+                st.vel = 0;
+                strip.classList.add('dragging');
+                try { strip.setPointerCapture(e.pointerId); } catch (_) {}
+            });
+            strip.addEventListener('pointermove', e => {
+                if (!st.dragging) return;
+                e.stopPropagation();
+                const raw = st.startPos + (e.clientX - st.startX);
+                let v = raw;
+                if (raw > st.max) v = st.max + rubber(raw - st.max);
+                else if (raw < st.min) v = st.min - rubber(st.min - raw);
+                st.pos = v;
+                const now = performance.now();
+                const dt = Math.max(1, now - st.lastT);
+                st.vel = 0.8 * st.vel + 0.2 * ((e.clientX - st.lastX) / dt);
+                st.lastX = e.clientX; st.lastT = now;
+                render();
+            });
+            const endDrag = e => {
+                if (!st.dragging) return;
+                st.dragging = false;
+                strip.classList.remove('dragging');
+                try { strip.releasePointerCapture(e.pointerId); } catch (_) {}
+                const proj = Math.max(st.min, Math.min(st.max, st.pos + st.vel * 160));
+                let idx = Math.round((st.max - proj) / thumbPitch);
+                idx = Math.max(0, Math.min(st.items.length - 1, idx));
+                st.target = posFor(idx);
+                kick();
+            };
+            strip.addEventListener('pointerup', e => { e.stopPropagation(); endDrag(e); });
+            strip.addEventListener('pointercancel', endDrag);
+            strip.addEventListener('click', e => e.stopPropagation());
+
+            function setIcon(open) {
+                btn.innerHTML = open ? ICON_COLLAPSE : ICON_EXPAND;
+                btn.title = open ? '收縮縮圖' : '展開縮圖';
+            }
+
+            async function openStrip() {
+                if (!st.images) {
+                    const found = await resolvePreImages(item, yaw, pitch);
+                    st.images = found.length ? found : makeDefaultThumbs();
+                    build(st.images);
+                } else {
+                    const idx = Math.min(2, st.items.length - 1);
+                    st.pos = st.target = posFor(idx);
+                    render();
+                }
+                strip.style.display = 'block';
+                st.open = true;
+                setIcon(true);
+                st.anim = strip.animate([
+                    { transform: 'scale(0, 0.15)', opacity: 0 },
+                    { transform: 'scale(1.12, 1.06)', opacity: 1, offset: 0.62 },
+                    { transform: 'scale(1, 1)', opacity: 1 }
+                ], { duration: 520, easing: 'cubic-bezier(0.22, 0.8, 0.3, 1)', fill: 'forwards' });
+                await st.anim.finished.catch(() => {});
+            }
+
+            async function closeStrip() {
+                st.open = false;
+                setIcon(false);
+                st.anim = strip.animate([
+                    { transform: 'scale(1, 1)', opacity: 1 },
+                    { transform: 'scale(1.1, 1.06)', opacity: 1, offset: 0.28 },
+                    { transform: 'scale(0, 0.15)', opacity: 0 }
+                ], { duration: 460, easing: 'ease-in-out', fill: 'forwards' });
+                await st.anim.finished.catch(() => {});
+                if (!st.open) strip.style.display = 'none';
+            }
+
+            btn.addEventListener('click', async e => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (st.busy) return;
+                st.busy = true;
+                try { st.open ? await closeStrip() : await openStrip(); }
+                finally { st.busy = false; }
+            });
         }
 
         function onPointerDown(event) {
@@ -570,6 +938,8 @@
 
             Object.keys(spatialDomNodes).forEach(key => {
                 const item = spatialDomNodes[key];
+                if (!item.card) item.card = item.element.querySelector('.main-card-content');
+                const cardEl = item.card || item.element;
 
                 const phi = THREE.MathUtils.degToRad(90 - item.pitch);
                 const theta = THREE.MathUtils.degToRad(item.yaw);
@@ -598,10 +968,10 @@
                     const scale = (centerDist < 0.2) ? 1.05 : Math.max(0.75, 1 - centerDist * 0.3);
 
                     item.element.style.transform = `translate3d(${screenX}px, ${screenY}px, 0px) translate(-50%, -50%) scale(${scale.toFixed(3)})`;
-                    item.element.style.opacity = opacity.toFixed(2);
+                    cardEl.style.opacity = opacity.toFixed(2);
                     item.element.style.pointerEvents = opacity > 0.3 ? 'auto' : 'none';
                 } else {
-                    item.element.style.opacity = '0';
+                    cardEl.style.opacity = '0';
                     item.element.style.pointerEvents = 'none';
                 }
             });
@@ -624,6 +994,9 @@
 
         function setupNavigationButtons() {
             document.querySelectorAll('.btn-nav').forEach(btn => {
+                const d = PORTFOLIO_DATA[`${parseInt(btn.dataset.yaw)}_${parseInt(btn.dataset.pitch)}`];
+                if (d && d.category) btn.textContent = d.category;
+
                 btn.addEventListener('click', () => {
                     const y = parseInt(btn.dataset.yaw);
                     const p = parseInt(btn.dataset.pitch);
@@ -682,7 +1055,6 @@
                 modalDetails.classList.remove('opacity-0', 'pointer-events-none', 'hidden');
             }
 
-            // 自動隱藏所有 UI 介面，讓使用者透過霧面透明區塊看到全景底圖
             const hudOverlay = document.getElementById('ui-hud-overlay');
             const spatialPanels = document.getElementById('spatial-panels-container');
             if (hudOverlay) hudOverlay.classList.add('opacity-0');
@@ -694,7 +1066,7 @@
             let loadedCustom = false;
 
             if (data.hasCustomHtml) {
-                const customHtmlPath = `${data.folder}content.html`;
+                const customHtmlPath = data.detailFilePath || `${data.folder}content.html`;
                 try {
                     const response = await fetch(customHtmlPath);
                     if (response.ok) {
@@ -727,9 +1099,9 @@
                     <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
                         <div>
                             <span class="px-2.5 py-0.5 bg-peach-500/20 text-peach-300 text-xs font-semibold rounded-md border border-peach-500/30">
-                                ${data.category}
+                                ${escapeHTML(data.category)}
                             </span>
-                            <h3 class="text-xl font-bold text-white mt-2">${data.title}</h3>
+                            <h3 class="text-xl font-bold text-white mt-2">${escapeHTML(data.title)}</h3>
                         </div>
                         <button onclick="window.closeModalFallback()" class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-rose-500/20 hover:border-rose-400/50 transition border border-white/10 shadow-md">
                             ✕
@@ -742,7 +1114,7 @@
                         作品展示媒體庫：
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${data.images.map(img => `
+                        ${(data.images || []).map(img => `
                             <div class="rounded-2xl overflow-hidden border border-white/10 bg-charcoal-900 group relative">
                                 <img src="${img}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/1c1c1f/fcd191?text=Portfolio+Asset'">
                             </div>
@@ -756,7 +1128,6 @@
             const modalDetails = document.getElementById('modal-details');
             if (modalDetails) modalDetails.classList.add('opacity-0', 'pointer-events-none', 'hidden');
 
-            // 關閉專案面板時恢復顯示 360 UI 介面
             const hudOverlay = document.getElementById('ui-hud-overlay');
             const spatialPanels = document.getElementById('spatial-panels-container');
             if (hudOverlay) {
