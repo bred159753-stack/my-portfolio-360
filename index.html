@@ -66,7 +66,6 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        /* 漸層霧面半透明面板（上80% -> 下40%） */
         .glass-card {
             background: linear-gradient(180deg, rgba(35, 35, 39, 0.80) 0%, rgba(35, 35, 39, 0.40) 100%);
             backdrop-filter: blur(8px);
@@ -82,20 +81,19 @@
             scrollbar-width: none;
         }
         .spatial-node {
-            position: absolute !important;   /* 固定脫離文件流，位置完全由 translate3d 依 yaw/pitch 投影決定 */
+            position: absolute !important;
             top: 0 !important;
             left: 0 !important;
             width: 16rem;
-            aspect-ratio: 1 / 2;             /* 1:2 容器，其中心點 = 面板中心點 = yaw/pitch 座標 */
+            aspect-ratio: 1 / 2;
             display: flex;
             align-items: center;
             justify-content: center;
             pointer-events: auto;
-            will-change: transform;   /* 不可含 opacity：會使 backdrop-filter 只看得到面板自身而失去霧面 */
+            will-change: transform;
             transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.15s ease;
             touch-action: none;
         }
-        /* 縮圖群（項目面板上方展開的正方形橫條縮圖） */
         .thumb-strip {
             position: absolute;
             left: 50%;
@@ -106,6 +104,7 @@
             z-index: 25;
             touch-action: none;
             cursor: grab;
+            pointer-events: auto;
         }
         .thumb-strip.dragging { cursor: grabbing; }
         .thumb-viewport {
@@ -113,6 +112,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+            pointer-events: auto;
         }
         .thumb-track {
             position: absolute;
@@ -121,6 +121,7 @@
             display: flex;
             gap: 8px;
             will-change: transform;
+            pointer-events: auto;
         }
         .thumb-item {
             flex: 0 0 auto;
@@ -130,6 +131,7 @@
             background: #1c1c1f;
             box-shadow: 0 4px 14px rgba(0,0,0,0.5);
             will-change: transform;
+            pointer-events: auto;
         }
         .thumb-item img {
             width: 100%;
@@ -231,7 +233,6 @@
     </div>
 
     <script>
-        // 注意：此物件僅作為「讀不到 board_data.json 時」的預設 fallback 資料。
         let PORTFOLIO_DATA = {
             "0_-30": {
                 title: "關於我 & 履歷與聯繫", category: "關於我",
@@ -345,11 +346,10 @@
             }
         };
 
-        // 從 board_data.json 讀取面板資料
         async function loadBoardData() {
             try {
                 const res = await fetch('board_data.json', { cache: 'no-store' });
-                if (!res.ok) throw new Error('board_data.json not found (HTTP ' + res.status + ')');
+                if (!res.ok) throw new Error('board_data.json not found');
                 const json = await res.json();
 
                 let normalized = {};
@@ -378,7 +378,6 @@
                         it.previewImageHeight = it.previewImageHeight || (it.previewImageSize && it.previewImageSize.height) || 208;
                         it.previewImageSize = { width: it.previewImageWidth, height: it.previewImageHeight };
 
-                        // 讀取正方形縮圖區域相關欄位 (未填寫則採用預設數值)
                         it.thumbSize = it.thumbSize !== undefined ? Number(it.thumbSize) : 64;
                         it.stripWidth = it.stripWidth !== undefined ? Number(it.stripWidth) : 312;
                         it.marginBottom = it.marginBottom !== undefined ? Number(it.marginBottom) : 26;
@@ -391,10 +390,9 @@
                         it.category = it.category || it.title;
                     });
                     PORTFOLIO_DATA = normalized;
-                    console.log('[board_data.json] 已成功讀取面板資料。');
                 }
             } catch (err) {
-                console.log('[board_data.json] 讀取失敗，改用預設面板資料。原因：', err.message);
+                console.log('[board_data.json] 讀取備援模式啟用。');
             }
         }
 
@@ -438,7 +436,7 @@
                 },
                 undefined,
                 function () {
-                    console.log('未讀取到 assets/pano_bg.jpg，使用預設網格背景。');
+                    console.log('使用預設網格全景底圖。');
                 }
             );
 
@@ -518,7 +516,10 @@
                         e.stopPropagation();
                         return;
                     }
-                    if (e.target.closest('.thumb-strip')) { return; }
+                    if (e.target.closest('.thumb-strip')) {
+                        e.stopPropagation();
+                        return;
+                    }
                     onPointerDown(e);
                 });
 
@@ -537,7 +538,7 @@
                     if (pointerMoveDistance > 8) return;
                     if (e.target.closest('.btn-expand-project') || e.target.closest('.btn-toggle-preview') || e.target.closest('.thumb-strip')) return;
 
-                    targetLon = Math.floor(lon / 360) * 360 + yaw;
+                    targetLon = getTargetLonForYaw(lon, yaw);
                     targetLat = pitch;
                     isSnapping = true;
                     updateButtonHighlights(yaw, pitch);
@@ -565,7 +566,7 @@
             const marginBottom = item.marginBottom !== undefined ? item.marginBottom : 26;
             const maskPercent = item.maskPercent !== undefined ? item.maskPercent : 22;
 
-            const stripHeight = thumbSize + 12; // 容器高度預留上下內距
+            const stripHeight = thumbSize + 12;
             const halfStripW = stripWidth / 2;
 
             node.innerHTML = `
@@ -578,7 +579,6 @@
                         ${ICON_EXPAND}
                     </button>
 
-                    <!-- 上方正方形縮圖群：動態套用 board_data.json 中的尺寸、距離與漸層遮罩 -->
                     <div class="thumb-strip" style="width: ${stripWidth}px; height: ${stripHeight}px; margin-left: -${halfStripW}px; margin-bottom: ${marginBottom}px;">
                         <div class="thumb-viewport" style="-webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%);">
                             <div class="thumb-track"></div>
@@ -597,7 +597,6 @@
             `;
         }
 
-        // ===== 縮圖群與事件區域動態計算 =====
         const THUMB_GAP = 8;
         const DEFAULT_THUMB_COUNT = 5;
 
@@ -668,7 +667,6 @@
             const track = node.querySelector('.thumb-track');
             if (!btn || !strip || !track) return;
 
-            // 動態讀取每個面板專屬的縮圖尺寸與寬度
             const thumbSize = item.thumbSize !== undefined ? item.thumbSize : 64;
             const stripWidth = item.stripWidth !== undefined ? item.stripWidth : 312;
             const thumbPitch = thumbSize + THUMB_GAP;
@@ -679,8 +677,7 @@
                 dragging: false, raf: 0, open: false, busy: false, anim: null,
                 startX: 0, startPos: 0, lastX: 0, lastT: 0, vel: 0
             };
-            
-            // 自動偵測面板中心點的偏移行數計算
+
             const posFor = i => stripCenter - thumbSize / 2 - i * thumbPitch;
 
             function render() {
@@ -726,7 +723,6 @@
 
             const rubber = over => 44 * (1 - Math.exp(-over / 110));
 
-            // 精確事件區域偵測：Pointerdown 在動態縮圖區域內時，攔截手勢事件，避免觸發 360 旋轉
             strip.addEventListener('pointerdown', e => {
                 e.stopPropagation();
                 if (e.button !== undefined && e.button !== 0) return;
@@ -736,35 +732,43 @@
                 st.lastT = performance.now();
                 st.vel = 0;
                 strip.classList.add('dragging');
-                try { strip.setPointerCapture(e.pointerId); } catch (_) {}
+
+                const onPointerMove = moveEvt => {
+                    if (!st.dragging) return;
+                    moveEvt.stopPropagation();
+                    const raw = st.startPos + (moveEvt.clientX - st.startX);
+                    let v = raw;
+                    if (raw > st.max) v = st.max + rubber(raw - st.max);
+                    else if (raw < st.min) v = st.min - rubber(st.min - raw);
+                    st.pos = v;
+                    const now = performance.now();
+                    const dt = Math.max(1, now - st.lastT);
+                    st.vel = 0.8 * st.vel + 0.2 * ((moveEvt.clientX - st.lastX) / dt);
+                    st.lastX = moveEvt.clientX;
+                    st.lastT = now;
+                    render();
+                };
+
+                const onPointerUp = upEvt => {
+                    if (!st.dragging) return;
+                    st.dragging = false;
+                    strip.classList.remove('dragging');
+                    document.removeEventListener('pointermove', onPointerMove);
+                    document.removeEventListener('pointerup', onPointerUp);
+                    document.removeEventListener('pointercancel', onPointerUp);
+
+                    const proj = Math.max(st.min, Math.min(st.max, st.pos + st.vel * 160));
+                    let idx = Math.round((st.max - proj) / thumbPitch);
+                    idx = Math.max(0, Math.min(st.items.length - 1, idx));
+                    st.target = posFor(idx);
+                    kick();
+                };
+
+                document.addEventListener('pointermove', onPointerMove);
+                document.addEventListener('pointerup', onPointerUp);
+                document.addEventListener('pointercancel', onPointerUp);
             });
-            strip.addEventListener('pointermove', e => {
-                if (!st.dragging) return;
-                e.stopPropagation();
-                const raw = st.startPos + (e.clientX - st.startX);
-                let v = raw;
-                if (raw > st.max) v = st.max + rubber(raw - st.max);
-                else if (raw < st.min) v = st.min - rubber(st.min - raw);
-                st.pos = v;
-                const now = performance.now();
-                const dt = Math.max(1, now - st.lastT);
-                st.vel = 0.8 * st.vel + 0.2 * ((e.clientX - st.lastX) / dt);
-                st.lastX = e.clientX; st.lastT = now;
-                render();
-            });
-            const endDrag = e => {
-                if (!st.dragging) return;
-                st.dragging = false;
-                strip.classList.remove('dragging');
-                try { strip.releasePointerCapture(e.pointerId); } catch (_) {}
-                const proj = Math.max(st.min, Math.min(st.max, st.pos + st.vel * 160));
-                let idx = Math.round((st.max - proj) / thumbPitch);
-                idx = Math.max(0, Math.min(st.items.length - 1, idx));
-                st.target = posFor(idx);
-                kick();
-            };
-            strip.addEventListener('pointerup', e => { e.stopPropagation(); endDrag(e); });
-            strip.addEventListener('pointercancel', endDrag);
+
             strip.addEventListener('click', e => e.stopPropagation());
 
             function setIcon(open) {
@@ -858,6 +862,24 @@
             snapToNearestAngle();
         }
 
+        /**
+         * 計算從當前經度 (currentLon) 到目標 yaw 的最短旋轉路徑，避免跨越 360° 時全轉一圈或暴跳
+         */
+        function getTargetLonForYaw(currentLon, targetYaw) {
+            let currentNormalized = ((currentLon % 360) + 360) % 360;
+            let diff = targetYaw - currentNormalized;
+            if (diff > 180) diff -= 360;
+            if (diff < -180) diff += 360;
+            return currentLon + diff;
+        }
+
+        function getShortestAngleDiff(from, to) {
+            let diff = (to - from) % 360;
+            if (diff < -180) diff += 360;
+            if (diff > 180) diff -= 360;
+            return diff;
+        }
+
         function snapToNearestAngle() {
             let normalizedLon = ((lon % 360) + 360) % 360;
 
@@ -883,26 +905,11 @@
                 }
             });
 
-            const currentCircle = Math.floor(lon / 360);
-            let candidate1 = currentCircle * 360 + closestYaw;
-            let candidate2 = (currentCircle + 1) * 360 + closestYaw;
-            let candidate3 = (currentCircle - 1) * 360 + closestYaw;
-
-            let candidates = [candidate1, candidate2, candidate3];
-            candidates.sort((a, b) => Math.abs(a - lon) - Math.abs(b - lon));
-
-            targetLon = candidates[0];
+            targetLon = getTargetLonForYaw(lon, closestYaw);
             targetLat = closestPitch;
             isSnapping = true;
 
             updateButtonHighlights(closestYaw, closestPitch);
-        }
-
-        function getShortestAngleDiff(from, to) {
-            let diff = (to - from) % 360;
-            if (diff < -180) diff += 360;
-            if (diff > 180) diff -= 360;
-            return diff;
         }
 
         function animate() {
@@ -1001,7 +1008,7 @@
                     const y = parseInt(btn.dataset.yaw);
                     const p = parseInt(btn.dataset.pitch);
 
-                    targetLon = Math.floor(lon / 360) * 360 + y;
+                    targetLon = getTargetLonForYaw(lon, y);
                     targetLat = p;
                     isSnapping = true;
                     updateButtonHighlights(y, p);

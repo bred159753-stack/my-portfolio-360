@@ -58,7 +58,6 @@
 </head>
 <body class="p-3 md:p-6 min-h-screen bg-charcoal-950 no-scrollbar selection:bg-peach-500 selection:text-charcoal-950 overflow-x-hidden">
 
-    <!-- Angle 0_0 Custom Portfolio Layout Container -->
     <div id="angle00-wrapper" class="relative w-full max-w-5xl mx-auto text-gray-100 overflow-x-hidden">
         
         <!-- Top Navigation Header -->
@@ -102,15 +101,15 @@
             </div>
         </header>
 
-        <!-- REGION: 主題區 (Level 1 Theme Banners Region dynamically populated) -->
+        <!-- REGION: 主題區 (Level 1 Theme Banners Region) -->
         <div id="angle00-level1" class="space-y-4 transition-all duration-300 px-3 md:px-5">
-            <!-- Dynamic Theme Banners rendered by JS from JSON -->
+            <!-- Dynamic Theme Banners rendered by JS -->
         </div>
 
         <!-- REGION: 類別區 (Level 2 Square Thumbnail Grid Region) -->
         <div id="angle00-level2" class="hidden transition-all duration-300 overflow-y-auto overflow-x-hidden max-h-[75vh] min-h-[500px] no-scrollbar select-none cursor-grab active:cursor-grabbing px-3 md:px-5">
             <div id="angle00-grid-container" class="grid grid-cols-2 gap-3.5 w-full max-w-full no-scrollbar pb-6">
-                <!-- Dynamically injected 1:1 square crop thumbnails -->
+                <!-- Dynamically injected thumbnails -->
             </div>
         </div>
 
@@ -172,7 +171,6 @@
 
     <script>
         (function() {
-            // 預設資料庫 (備援素材，當 JSON 讀取失敗或內容空白時自動使用)
             const DEFAULT_DATABASE = {
                 "01": {
                     title: "厚塗插畫",
@@ -297,21 +295,36 @@
 
             let isProgrammaticScroll = false;
             let scrollSnapTimer = null;
+            let inertiaAnimationId = null;
 
             window.initAngle00App = async function() {
                 currentLevel = 1;
 
-                // 嘗試讀取 JSON 檔設定
-                try {
-                    const res = await fetch('assets/angle_0_0/portfolio_data.json');
-                    if (res.ok) {
-                        const jsonData = await res.json();
-                        if (jsonData && Object.keys(jsonData).length > 0) {
-                            DATABASE = jsonData;
+                const pathsToTry = [
+                    'assets/angle_0_0/portfolio_data.json',
+                    'portfolio_data.json',
+                    './portfolio_data.json',
+                    '../portfolio_data.json'
+                ];
+
+                let loadedData = null;
+                for (const path of pathsToTry) {
+                    try {
+                        const res = await fetch(path, { cache: 'no-store' });
+                        if (res.ok) {
+                            const rawJson = await res.json();
+                            if (rawJson && typeof rawJson === 'object' && Object.keys(rawJson).length > 0) {
+                                loadedData = rawJson;
+                                break;
+                            }
                         }
-                    }
-                } catch (e) {
-                    console.log('未讀取到 assets/angle_0_0/portfolio_data.json，自動切換至預設資料庫。');
+                    } catch (e) {}
+                }
+
+                if (loadedData) {
+                    DATABASE = loadedData;
+                } else {
+                    DATABASE = DEFAULT_DATABASE;
                 }
 
                 renderLevel1Banners();
@@ -327,9 +340,17 @@
                 const level1Container = document.getElementById('angle00-level1');
                 if (!level1Container) return;
 
+                const validKeys = Object.keys(DATABASE).filter(k => DATABASE[k] && DATABASE[k].title);
+
+                if (validKeys.length === 0) {
+                    DATABASE = DEFAULT_DATABASE;
+                }
+
                 let html = '';
                 Object.keys(DATABASE).forEach(catKey => {
                     const cat = DATABASE[catKey];
+                    if (!cat || !cat.title) return;
+
                     const bgSrc = cat.bgImage || `assets/angle_0_0/${catKey}.jpg`;
                     const fallbackSrc = cat.bgFallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80';
 
@@ -386,42 +407,46 @@
                 let globalIndex = 0;
                 let gridHTML = "";
 
-                categoryData.subcategories.forEach((subCat) => {
-                    gridHTML += `
-                        <div class="col-span-full mt-4 first:mt-0 pt-2 pb-1 border-b border-white/10 flex items-center justify-between">
-                            <span class="text-xs font-bold text-white">
-                                ${subCat.name}
-                            </span>
-                            <span class="text-[10px] text-white/80 font-mono">
-                                ${subCat.items.length} 張作品
-                            </span>
-                        </div>
-                    `;
-
-                    subCat.items.forEach((item) => {
-                        const currentIndex = globalIndex;
-                        flatImageList.push({
-                            ...item,
-                            subCatName: subCat.name,
-                            globalIndex: currentIndex
-                        });
-
+                if (Array.isArray(categoryData.subcategories)) {
+                    categoryData.subcategories.forEach((subCat) => {
                         gridHTML += `
-                            <div onclick="window.handleLevel2Click(${currentIndex})" 
-                                 class="group relative aspect-square w-full rounded-2xl overflow-hidden bg-charcoal-900 border border-white/10 hover:border-peach-500 cursor-pointer shadow-lg transition-all duration-300 hover:scale-[1.03]">
-                                <img src="${item.src}" 
-                                     alt="${item.name}" 
-                                     draggable="false"
-                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 select-none"
-                                     onerror="this.onerror=null; this.src='${item.fallback}';">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-2.5">
-                                    <span class="text-[11px] text-white font-semibold truncate">${item.name}</span>
-                                </div>
+                            <div class="col-span-full mt-4 first:mt-0 pt-2 pb-1 border-b border-white/10 flex items-center justify-between">
+                                <span class="text-xs font-bold text-white">
+                                    ${subCat.name}
+                                </span>
+                                <span class="text-[10px] text-white/80 font-mono">
+                                    ${subCat.items ? subCat.items.length : 0} 張作品
+                                </span>
                             </div>
                         `;
-                        globalIndex++;
+
+                        if (Array.isArray(subCat.items)) {
+                            subCat.items.forEach((item) => {
+                                const currentIndex = globalIndex;
+                                flatImageList.push({
+                                    ...item,
+                                    subCatName: subCat.name,
+                                    globalIndex: currentIndex
+                                });
+
+                                gridHTML += `
+                                    <div onclick="window.handleLevel2Click(${currentIndex})" 
+                                         class="group relative aspect-square w-full rounded-2xl overflow-hidden bg-charcoal-900 border border-white/10 hover:border-peach-500 cursor-pointer shadow-lg transition-all duration-300 hover:scale-[1.03]">
+                                        <img src="${item.src}" 
+                                             alt="${item.name}" 
+                                             draggable="false"
+                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 select-none"
+                                             onerror="this.onerror=null; this.src='${item.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';">
+                                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-2.5">
+                                            <span class="text-[11px] text-white font-semibold truncate">${item.name}</span>
+                                        </div>
+                                    </div>
+                                `;
+                                globalIndex++;
+                            });
+                        }
                     });
-                });
+                }
 
                 const gridContainer = document.getElementById('angle00-grid-container');
                 if (gridContainer) gridContainer.innerHTML = gridHTML;
@@ -449,10 +474,10 @@
 
             window.angle00NavImage = function(direction) {
                 if (!flatImageList || flatImageList.length === 0) return;
-                const prevSubCat = flatImageList[activeGlobalImageIndex].subCatName;
+                const prevSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
 
                 activeGlobalImageIndex = (activeGlobalImageIndex + direction + flatImageList.length) % flatImageList.length;
-                const newSubCat = flatImageList[activeGlobalImageIndex].subCatName;
+                const newSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
 
                 renderLightboxImage(prevSubCat !== newSubCat);
                 updateThumbStripActiveState();
@@ -464,9 +489,9 @@
                     return;
                 }
                 if (index < 0 || index >= flatImageList.length) return;
-                const prevSubCat = flatImageList[activeGlobalImageIndex].subCatName;
+                const prevSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
                 activeGlobalImageIndex = index;
-                const newSubCat = flatImageList[activeGlobalImageIndex].subCatName;
+                const newSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
                 renderLightboxImage(prevSubCat !== newSubCat);
                 updateThumbStripActiveState();
             };
@@ -483,7 +508,7 @@
                     imgEl.src = currentItem.src;
                     imgEl.onerror = function() {
                         this.onerror = null;
-                        this.src = currentItem.fallback;
+                        this.src = currentItem.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80';
                     };
                 }
 
@@ -504,7 +529,7 @@
                         <div onclick="window.angle00JumpToImage(${idx})" 
                              data-thumb-idx="${idx}"
                              class="thumb-item flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 cursor-pointer transition-all duration-300 ${isActive ? 'border-peach-500 scale-105 shadow-lg shadow-peach-500/20' : 'border-white/20 opacity-60 hover:opacity-100'}">
-                            <img src="${item.src}" draggable="false" class="w-full h-full object-cover select-none" onerror="this.onerror=null; this.src='${item.fallback}';">
+                            <img src="${item.src}" draggable="false" class="w-full h-full object-cover select-none" onerror="this.onerror=null; this.src='${item.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';">
                         </div>
                     `;
                 });
@@ -551,46 +576,6 @@
                     setTimeout(() => {
                         isProgrammaticScroll = false;
                     }, smooth ? 350 : 50);
-                });
-            }
-
-            function setupThumbStripScrollAndSnap() {
-                const stripEl = document.getElementById('angle00-thumb-strip');
-                if (!stripEl) return;
-
-                stripEl.addEventListener('scroll', () => {
-                    if (isProgrammaticScroll) return;
-
-                    const containerWidth = stripEl.clientWidth;
-                    const containerCenter = stripEl.scrollLeft + containerWidth / 2;
-                    const thumbs = stripEl.querySelectorAll('.thumb-item');
-
-                    let closestIdx = activeGlobalImageIndex;
-                    let minDiff = Infinity;
-
-                    thumbs.forEach((el) => {
-                        const idx = parseInt(el.dataset.thumbIdx, 10);
-                        const elCenter = el.offsetLeft + el.clientWidth / 2;
-                        const diff = Math.abs(containerCenter - elCenter);
-                        if (diff < minDiff) {
-                            minDiff = diff;
-                            closestIdx = idx;
-                        }
-                    });
-
-                    if (closestIdx !== activeGlobalImageIndex) {
-                        const prevSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
-                        activeGlobalImageIndex = closestIdx;
-                        const newSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
-
-                        renderLightboxImage(prevSubCat !== newSubCat);
-                        updateThumbOutlineOnly();
-                    }
-
-                    clearTimeout(scrollSnapTimer);
-                    scrollSnapTimer = setTimeout(() => {
-                        snapClosestThumbnailToCenter();
-                    }, 120);
                 });
             }
 
@@ -778,41 +763,128 @@
                 let startX = 0;
                 let scrollLeft = 0;
                 let dragDistance = 0;
+                let velocity = 0;
+                let lastX = 0;
+                let lastTime = 0;
 
                 stripEl.addEventListener('dragstart', (e) => e.preventDefault());
 
+                function stopInertia() {
+                    if (inertiaAnimationId) {
+                        cancelAnimationFrame(inertiaAnimationId);
+                        inertiaAnimationId = null;
+                    }
+                }
+
                 stripEl.addEventListener('mousedown', (e) => {
+                    stopInertia();
                     isMouseDown = true;
                     dragDistance = 0;
                     startX = e.pageX - stripEl.offsetLeft;
                     scrollLeft = stripEl.scrollLeft;
+                    lastX = e.pageX;
+                    lastTime = performance.now();
+                    velocity = 0;
                 });
 
-                stripEl.addEventListener('mouseleave', () => {
-                    if (isMouseDown) {
-                        isMouseDown = false;
-                        snapClosestThumbnailToCenter();
+                function handleRelease() {
+                    if (!isMouseDown) return;
+                    isMouseDown = false;
+                    if (dragDistance > 6) {
+                        isDraggingThumbStrip = true;
+                        setTimeout(() => { isDraggingThumbStrip = false; }, 50);
                     }
-                });
 
-                stripEl.addEventListener('mouseup', () => {
-                    if (isMouseDown) {
-                        isMouseDown = false;
-                        if (dragDistance > 6) {
-                            isDraggingThumbStrip = true;
-                            setTimeout(() => { isDraggingThumbStrip = false; }, 50);
+                    if (Math.abs(velocity) > 0.1) {
+                        let currentVelocity = velocity;
+                        let lastFrameTime = performance.now();
+
+                        function coastStep(now) {
+                            const dt = Math.max(1, now - lastFrameTime);
+                            lastFrameTime = now;
+
+                            stripEl.scrollLeft -= currentVelocity * dt;
+                            currentVelocity *= 0.93;
+
+                            if (Math.abs(currentVelocity) < 0.05) {
+                                stopInertia();
+                                snapClosestThumbnailToCenter();
+                            } else {
+                                inertiaAnimationId = requestAnimationFrame(coastStep);
+                            }
                         }
+
+                        stopInertia();
+                        inertiaAnimationId = requestAnimationFrame(coastStep);
+                    } else {
                         snapClosestThumbnailToCenter();
                     }
-                });
+                }
+
+                stripEl.addEventListener('mouseleave', handleRelease);
+                stripEl.addEventListener('mouseup', handleRelease);
 
                 stripEl.addEventListener('mousemove', (e) => {
                     if (!isMouseDown) return;
                     e.preventDefault();
-                    const x = e.pageX - stripEl.offsetLeft;
+                    
+                    const now = performance.now();
+                    const dt = Math.max(1, now - lastTime);
+                    const currentX = e.pageX;
+                    const deltaX = currentX - lastX;
+
+                    const instVelocity = (deltaX * 1.2) / dt;
+                    velocity = velocity * 0.4 + instVelocity * 0.6;
+
+                    lastX = currentX;
+                    lastTime = now;
+
+                    const x = currentX - stripEl.offsetLeft;
                     const walk = (x - startX) * 1.5;
                     dragDistance = Math.abs(x - startX);
                     stripEl.scrollLeft = scrollLeft - walk;
+                });
+            }
+
+            function setupThumbStripScrollAndSnap() {
+                const stripEl = document.getElementById('angle00-thumb-strip');
+                if (!stripEl) return;
+
+                stripEl.addEventListener('scroll', () => {
+                    if (isProgrammaticScroll) return;
+
+                    const containerWidth = stripEl.clientWidth;
+                    const containerCenter = stripEl.scrollLeft + containerWidth / 2;
+                    const thumbs = stripEl.querySelectorAll('.thumb-item');
+
+                    let closestIdx = activeGlobalImageIndex;
+                    let minDiff = Infinity;
+
+                    thumbs.forEach((el) => {
+                        const idx = parseInt(el.dataset.thumbIdx, 10);
+                        const elCenter = el.offsetLeft + el.clientWidth / 2;
+                        const diff = Math.abs(containerCenter - elCenter);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            closestIdx = idx;
+                        }
+                    });
+
+                    if (closestIdx !== activeGlobalImageIndex) {
+                        const prevSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+                        activeGlobalImageIndex = closestIdx;
+                        const newSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+
+                        renderLightboxImage(prevSubCat !== newSubCat);
+                        updateThumbOutlineOnly();
+                    }
+
+                    if (inertiaAnimationId) return;
+
+                    clearTimeout(scrollSnapTimer);
+                    scrollSnapTimer = setTimeout(() => {
+                        snapClosestThumbnailToCenter();
+                    }, 150);
                 });
             }
 
