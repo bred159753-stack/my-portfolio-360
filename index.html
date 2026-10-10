@@ -225,8 +225,8 @@
 
     <!-- Modal Detail Container -->
     <div id="modal-details" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none hidden transition-opacity duration-300">
-        <div class="glass-panel w-full max-w-5xl rounded-3xl p-4 sm:p-6 max-h-[92vh] flex flex-col border border-white/20 shadow-2xl relative overflow-hidden">
-            <div class="overflow-y-auto no-scrollbar w-full h-full flex-1" id="modal-detail-content">
+        <div class="glass-panel w-full max-w-[1536px] rounded-3xl p-3 sm:p-6 h-[95vh] flex flex-col border border-white/20 shadow-2xl relative overflow-hidden">
+            <div class="overflow-hidden w-full h-full flex-1 relative" id="modal-detail-content">
                 <!-- content.html is injected here cleanly -->
             </div>
         </div>
@@ -1052,8 +1052,8 @@
             const modalContentEl = document.getElementById('modal-detail-content');
             
             modalContentEl.innerHTML = `
-                <div class="flex items-center justify-center py-16 text-peach-400 gap-3">
-                    <span class="text-sm font-semibold">正在讀取專案內容...</span>
+                <div class="flex items-center justify-center h-full text-peach-400 gap-3">
+                    <span class="text-sm font-semibold">正在載入專案大圖展演...</span>
                 </div>
             `;
 

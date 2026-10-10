@@ -8,123 +8,665 @@
         "folder": "assets/angle_0_0/01/",
         "subcategories": [
             {
-                "name": "角色光影研究",
+                "name": "完稿練習",
                 "folder": "A/",
                 "items": [
                     {
-                        "src": "assets/angle_0_0/01/A/01.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1348&q=80",
-                        "name": "角色光影研究 01"
+                        "src": "assets/angle_0_0/01/A/T01.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-雷文&伊瑞莉雅-Sentinel造型"
                     },
                     {
-                        "src": "assets/angle_0_0/01/A/02.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&w=1348&q=80",
-                        "name": "角色光影研究 02"
+                        "src": "assets/angle_0_0/01/A/T02.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "陰陽師-不知火"
                     },
                     {
-                        "src": "assets/angle_0_0/01/A/03.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1348&q=80",
-                        "name": "質感色彩練習 03"
+                        "src": "assets/angle_0_0/01/A/T03.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "初音未來-Sci-fi"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/A/T04.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "影之刃-弦者"
                     }
                 ]
             },
             {
-                "name": "概念場景氛圍",
+                "name": "插畫概念練習",
                 "folder": "B/",
                 "items": [
                     {
-                        "src": "assets/angle_0_0/01/B/01.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80",
-                        "name": "場景概念繪製 01"
+                        "src": "assets/angle_0_0/01/B/T10.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "影之刃-弦者-插畫方案"
                     },
                     {
-                        "src": "assets/angle_0_0/01/B/02.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=1348&q=80",
-                        "name": "幾何厚塗繪圖 02"
+                        "src": "assets/angle_0_0/01/B/T17.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "--插畫方案"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/B/T14.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "超異域公主連結☆Re:Dive-泳裝咲戀-插畫方案"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/B/T12.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-Spirit Blossom Life-插畫方案"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/B/T13.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-Spirit Blossom Life-插畫方案"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/B/T21.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-Spirit Blossom Life-插畫草稿"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/B/T20_0.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-Spirit Blossom Life-插畫草稿"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/B/T20_1.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-Spirit Blossom Life-插畫草稿"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/B/T15.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-黛安娜(Sentinel)-插畫方案"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/B/T16.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-阿卡莉(女巫集會)-插畫方案"
+                    }
+                ]
+            },
+            {
+                "name": "角色概念",
+                "folder": "C/",
+                "items": [
+                    {
+                        "src": "assets/angle_0_0/01/C/T18.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "格鬥火光暗冰-角色概念"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/C/T19.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "果多測試-寇格魔chroma"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/C/T24.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-奧爾-皮膚概念"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/C/T23.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-奧爾-皮膚概念"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/C/T22.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-拉克斯-皮膚概念"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/C/T25.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-艾希-皮膚設計"
+                    },
+                    {
+                        "src": "assets/angle_0_0/01/C/T26.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "外星教主-角色概念"
                     }
                 ]
             }
         ]
     },
     "02": {
-        "title": "日系插畫",
-        "tag": "Anime & Concept",
-        "desc": "動漫人物風格、二次元賽博朋克與角色設計專案",
+        "title": "電繪+AI調整",
+        "tag": "Digital Painting with AI Adjustments",
+        "desc": "將電腦繪圖草稿或完稿，使用ComfyUI為主的AI類工具進行優化與調整",
         "bgImage": "assets/angle_0_0/02.jpg",
         "bgFallback": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
         "folder": "assets/angle_0_0/02/",
         "subcategories": [
             {
-                "name": "賽博朋克系列",
+                "name": "人物頭像",
                 "folder": "A/",
                 "items": [
                     {
-                        "src": "assets/angle_0_0/02/A/01.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1348&q=80",
-                        "name": "賽博朋克角色 01"
+                        "src": "assets/angle_0_0/02/A/001.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-阿璃-THE BADDEST"
                     },
                     {
-                        "src": "assets/angle_0_0/02/A/02.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=1348&q=80",
-                        "name": "霓虹美學專案 02"
+                        "src": "assets/angle_0_0/02/A/003.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-阿卡利-Spirit Blossom"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/004.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-阿璃-Spirit Blossom"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/002.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-凱莎-瀉藍水龍"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/006.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-卡特蓮娜-戰爭女皇"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/005.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-伊澤瑞爾-戰爭學院"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/007.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-犽宿-Spirit Blossom"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/009.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-伊瑞莉雅-Spirit Blossom"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/008.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-犽凝-Spirit Blossom"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/013.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-星朵拉-Spirit Blossom"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/012.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-拉克斯-戰爭學院"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/014.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "英雄聯盟-索拉卡-睡衣守護者"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/020.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "戰爭公主"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/A/015.png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "火龍女"
                     }
                 ]
             },
             {
-                "name": "二次元立繪專案",
+                "name": "角色概念",
                 "folder": "B/",
                 "items": [
                     {
-                        "src": "assets/angle_0_0/02/B/01.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1348&q=80",
-                        "name": "動漫立繪展示 01"
+                        "src": "assets/angle_0_0/02/B/B02.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "冰之魔法師"
                     },
                     {
-                        "src": "assets/angle_0_0/02/B/02.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1348&q=80",
-                        "name": "動態視覺設定 02"
+                        "src": "assets/angle_0_0/02/B/B03.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "星之占卜師"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B04.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "人魚"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B05.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "閻魔"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B06.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "火蝴"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B07.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "光鎧"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B08.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "水之魔法師"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B09.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "水龍宮公主"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B10.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": ""
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B11.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "炎之魔法師"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B21.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "部落女戰士"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B22.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "墨之魔法師"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B12.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "月兔戰錘"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B20.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "闇之召喚師"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B13.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "雙刀女戰士"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B14.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "白鎧騎士"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B15.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "黑鎧騎士"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B16.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "沙悟淨"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B17.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "緋紅女巫-Sci-fi"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B18.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "機甲光龍"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/B/B19.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "機甲趙雲"
+                    }
+                ]
+            },
+            {
+                "name": "場景",
+                "folder": "C/",
+                "items": [
+                    {
+                        "src": "assets/angle_0_0/02/C/3167d2a97c107ec64a1687da5f4b17a9.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/4a8521b3884d6533ad221f3af8980508.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "02"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/8cba8efb52bffbb29b78f20aaebf3993.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "03"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/857cc28ccd1695ce378e8d6021a1b8b9.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "04"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/3a6d0462ac9c0990c2ab31bfc01787dd.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "05"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/26045c86e8ff3928d69de44f5089a397.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "06"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/ca75be791d749216f385a98bfff2eebd.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "07"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/547e44af9a01ef9822ccbcff551345a9.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "08"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/bd817537f34352cf44cbc110ee495ad2.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "09"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/fe5631878187201879ea035c5260c4af.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "10"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/576c577fff0b517bdc49c42c875e30d6.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "11"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/c1164b9382162d88ea7a0830bf785bba.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "12"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/b27758f2fbe5df93789c88268cc8225c.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "13"
+                    },
+                    {
+                        "src": "assets/angle_0_0/02/C/e8bd3197e1158c1f4d0f7ebe86402a9c.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "14"
                     }
                 ]
             }
         ]
     },
     "03": {
-        "title": "設計練習",
-        "tag": "Design Studies",
-        "desc": "速寫研究、色彩實驗、結構造型練習與概念研究",
+        "title": "偏日系電繪",
+        "tag": "Anime-style Illustration",
+        "desc": "用同樣的厚塗方式繪製較無立體感的日系繪塗",
         "bgImage": "assets/angle_0_0/03.jpg",
         "bgFallback": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80",
         "folder": "assets/angle_0_0/03/",
         "subcategories": [
             {
-                "name": "人體與結構速寫",
+                "name": "插畫",
                 "folder": "A/",
                 "items": [
                     {
-                        "src": "assets/angle_0_0/03/A/01.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1348&q=80",
-                        "name": "解剖與造型速寫 01"
+                        "src": "assets/angle_0_0/03/A/日系插畫 (1).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "博麗靈夢"
                     },
                     {
-                        "src": "assets/angle_0_0/03/A/02.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?auto=format&fit=crop&w=1348&q=80",
-                        "name": "明暗調子練習 02"
+                        "src": "assets/angle_0_0/03/A/日系插畫 (2).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "初音未來"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (3).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "FGO01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (25).jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "FGO02"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (4).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "FGO03"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (5).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "FGO04"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (6).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "FGO05"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (7).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "FGO06"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (8).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "FGO07"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (9).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "時之女神"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (10).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "時之女神-方案"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (11).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "庭院散步"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (12).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "公主連結01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (13).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "公主連結02"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (14).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "公主連結03"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (15).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "hololive01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (16).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "hololive02"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (17).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "hololive03"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (18).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "hololive04"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (19).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "hololive05"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (20).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "安妮亞"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (21).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "新世紀福音戰士"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (22).png",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "賽馬娘"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (23).jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "FGO"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (24).jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "FGO"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (26).jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "無題01"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (27).jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "無題02"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (28).jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "無題03"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/A/日系插畫 (29).jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "無題04"
                     }
                 ]
             },
             {
-                "name": "透視與空間實驗",
+                "name": "單體設計練習",
                 "folder": "B/",
                 "items": [
                     {
-                        "src": "assets/angle_0_0/03/B/01.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80",
-                        "name": "透視場景研究 01"
+                        "src": "assets/angle_0_0/03/B/471300541_1114987176830920_7037973112094776942_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "01"
                     },
                     {
-                        "src": "assets/angle_0_0/03/B/02.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1501084291732-13b1ba830ee4?auto=format&fit=crop&w=1348&q=80",
-                        "name": "色彩球體實驗 02"
+                        "src": "assets/angle_0_0/03/B/471487449_1114987313497573_8688005394641479791_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "02"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471465521_1114987500164221_115321812189139874_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "03"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471183797_1114987146830923_5909759392109440687_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "04"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471503593_1114987076830930_6590372533194462303_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "05"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471199910_1114987066830931_4403454851536212453_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "06"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471425005_1114987056830932_7967943718949504561_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "07"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/472098480_1114987013497603_9030566133682405472_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "08"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471619803_1114987156830922_646613526970034131_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "09"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471201938_1114987473497557_9046061671321317677_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "10"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471475943_1114987220164249_2921702297080988029_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "11"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471204751_1114987490164222_4583558828026254621_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "12"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471510065_1114987496830888_2906258023542884227_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "13"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471512875_1114987163497588_923774849346020566_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "14"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/471374203_1114987180164253_8519775722735570970_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "15"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/473015436_1123353075994330_8768599572879595215_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "16"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/470529038_1115591073437197_8047971653685418016_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "17"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/473152772_1123352045994433_2860532979711464847_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "18"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/473100927_1123364642659840_3341099686243769821_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "19"
+                    },
+                    {
+                        "src": "assets/angle_0_0/03/B/473080568_1123905832605721_5541755308055338270_n.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "20"
                     }
                 ]
             }
@@ -250,18 +792,58 @@
                 ]
             },
             {
-                "name": "測試",
+                "name": "藝術解剖練習",
                 "folder": "B/",
                 "items": [
                     {
-                        "src": "assets/angle_0_0/04/B/01.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1348&q=80",
-                        "name": "黑白點陣風格 01"
+                        "src": "assets/angle_0_0/04/B/fadb8705b6208321d4f95509dfaff687.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "01"
                     },
                     {
-                        "src": "assets/angle_0_0/04/B/02.jpg",
-                        "fallback": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1348&q=80",
-                        "name": "漫畫風分鏡稿 02"
+                        "src": "assets/angle_0_0/04/B/fe7d9ba01791a01a3d88a2226e2496e1.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "02"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/B/a6ccbc9e75998d333b3d5fb6f7770fde.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "03"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/B/f04f4ec852c21a7840597da57be8b720.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "04"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/B/4adcc4c2837188898d693612908f9d1e.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "05"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/B/c185aae873c22732c02b1b3188cd7c08.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "06"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/B/b5cc13e5af5fa673bc405d2414b26d9f.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "07"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/B/1da032bc2504ee29f2bf323bbd7767aa.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "08"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/B/8434d0a0cdf4a791b0d0c8be94a5e1ab.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "09"
+                    },
+                    {
+                        "src": "assets/angle_0_0/04/B/c8ed6e0ce3f9632276448c1ad2ea247b.jpg",
+                        "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                        "name": "10"
                     }
                 ]
             }

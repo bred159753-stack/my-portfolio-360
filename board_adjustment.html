@@ -255,7 +255,7 @@
                             </div>
                         </div>
 
-                        <!-- 8. 新增正方形縮圖群進階設定區域 -->
+                        <!-- 8. 正方形縮圖群進階設定區域 -->
                         <div class="md:col-span-2 border-t border-white/10 pt-3">
                             <label class="block text-peach-400 font-bold mb-2">8. 正方形縮圖區域排版設定 (thumbConfig)</label>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
@@ -285,7 +285,6 @@
                             </div>
                         </div>
 
-                        <!-- preImages List & Batch Thumbnails Manager -->
                         <div class="md:col-span-2 border-t border-white/10 pt-3 space-y-3">
                             <div class="flex justify-between items-center flex-wrap gap-2">
                                 <div>
@@ -516,6 +515,21 @@
         let draggedTabKey = null;
         let draggedThumbIdx = null;
 
+        function showToast(msg) {
+            const toastEl = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            if (toastEl && toastMsg) {
+                toastMsg.innerText = msg;
+                toastEl.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
+                toastEl.classList.add('opacity-100', 'translate-y-0');
+
+                setTimeout(() => {
+                    toastEl.classList.remove('opacity-100', 'translate-y-0');
+                    toastEl.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
+                }, 2800);
+            }
+        }
+
         function renderTabs() {
             const tabsContainer = document.getElementById('board-tabs-container');
             if (!tabsContainer) return;
@@ -738,8 +752,6 @@
             let currentTranslateX = 0;
             let prevTranslateX = 0;
 
-            const thumbPitch = thumbSize + 8; // 縮圖邊長 + gap(8px)
-
             function getMinMaxTranslate() {
                 const wrapperWidth = wrapper.clientWidth || stripWidth;
                 const trackWidth = track.scrollWidth;
@@ -858,212 +870,6 @@
         function handleThumbDragEnd(e) {
             e.currentTarget.classList.remove('thumb-dragging');
             draggedThumbIdx = null;
-        }
-
-        async function exportAllThumbnails() {
-            const item = BOARD_DATA[activeBoardKey];
-            if (!item || !item.preImages || item.preImages.length === 0) {
-                showToast("⚠️ 目前沒有可輸出的縮圖");
-                return;
-            }
-
-            if (typeof JSZip === 'undefined') {
-                showToast("⚠️ JSZip 程式庫正在載入中，請稍後再試");
-                return;
-            }
-
-            ensureThumbFilesSync(item);
-
-            const yaw = item.yaw !== undefined ? item.yaw : 0;
-            const pitch = item.pitch !== undefined ? item.pitch : 0;
-            const thumbSize = item.thumbSize !== undefined ? item.thumbSize : 64;
-
-            showToast("⏳ 正在製作縮圖打包 ZIP 檔案...");
-
-            const zip = new JSZip();
-
-            for (let i = 0; i < item.preImages.length; i++) {
-                const localObj = item.thumbFiles[i];
-                const imgSrc = (localObj && localObj.previewUrl) ? localObj.previewUrl : item.preImages[i];
-                const displayNum = String(i + 1).padStart(2, '0');
-                const fileName = `${displayNum}.jpg`;
-
-                try {
-                    // 依照目前配置的 thumbSize (採用 2x 高解析度繪製) 匯出正方形縮圖
-                    const blob = await fetchSquareBlob(imgSrc, thumbSize * 2);
-                    if (blob) {
-                        zip.file(fileName, blob);
-                    }
-                } catch (e) {}
-            }
-
-            zip.generateAsync({ type: "blob" }).then(function(content) {
-                const zipFileName = `angle_${yaw}_${pitch}_pre_thumbnails.zip`;
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(content);
-                a.download = zipFileName;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-
-                showToast(`📦 縮圖已成功打包下載為 ${zipFileName}！`);
-
-                setTimeout(() => {
-                    downloadBoardJsonData();
-                }, 500);
-            });
-        }
-
-        function fetchSquareBlob(src, targetSize = 128) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.crossOrigin = "anonymous";
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = targetSize;
-                    canvas.height = targetSize;
-                    const ctx = canvas.getContext('2d');
-
-                    ctx.fillStyle = "#1c1c1f";
-                    ctx.fillRect(0, 0, targetSize, targetSize);
-
-                    const aspect = img.width / img.height;
-                    let sw, sh, sx, sy;
-                    if (aspect > 1) {
-                        sh = img.height;
-                        sw = img.height;
-                        sx = (img.width - img.height) / 2;
-                        sy = 0;
-                    } else {
-                        sw = img.width;
-                        sh = img.width;
-                        sx = 0;
-                        sy = (img.height - img.width) / 2;
-                    }
-
-                    ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetSize, targetSize);
-
-                    canvas.toBlob((blob) => {
-                        resolve(blob);
-                    }, 'image/jpeg', 0.92);
-                };
-                img.onerror = function() {
-                    resolve(null);
-                };
-                img.src = src;
-            });
-        }
-
-        async function fetchLocalBoardJson() {
-            const pathsToTry = ['board_data.json', './board_data.json', 'assets/board_data.json'];
-            let loadedData = null;
-            for (const path of pathsToTry) {
-                try {
-                    const res = await fetch(path, { cache: 'no-store' });
-                    if (res.ok) {
-                        loadedData = await res.json();
-                        break;
-                    }
-                } catch (e) {}
-            }
-
-            if (loadedData) {
-                normalizeAndLoadBoardData(loadedData, true);
-                showToast("✅ 已成功載入並統整相鄰 board_data.json！");
-            } else {
-                showToast("⚠️ 未存取到相鄰 JSON，請手動點擊選擇檔案匯入");
-            }
-        }
-
-        function normalizeAndLoadBoardData(rawJson, saveToLocal = false) {
-            if (!rawJson) return;
-
-            let normalized = {};
-            let panelList = Array.isArray(rawJson.panels) ? rawJson.panels : (typeof rawJson === 'object' ? Object.values(rawJson) : []);
-
-            if (panelList.length > 0) {
-                panelList.forEach(p => {
-                    if (typeof p !== 'object' || !p) return;
-                    const key = p.key || `${p.yaw}_${p.pitch}`;
-                    const yaw = p.yaw !== undefined ? p.yaw : Number(key.split('_')[0]);
-                    const pitch = p.pitch !== undefined ? p.pitch : Number(key.split('_')[1]);
-                    const folder = p.folder || `assets/angle_${key}/`;
-                    const preFolder = p.preFolder || `${folder}pre/`;
-
-                    let preImages = Array.isArray(p.preImages) && p.preImages.length > 0
-                        ? p.preImages
-                        : [
-                            `${preFolder}01.jpg`,
-                            `${preFolder}02.jpg`,
-                            `${preFolder}03.jpg`,
-                            `${preFolder}04.jpg`,
-                            `${preFolder}05.jpg`
-                        ];
-
-                    let thumbFiles = Array.isArray(p.thumbFiles) ? p.thumbFiles : [];
-
-                    const pw = p.previewImageWidth || (p.previewImageSize && p.previewImageSize.width) || 208;
-                    const ph = p.previewImageHeight || (p.previewImageSize && p.previewImageSize.height) || 208;
-
-                    normalized[key] = {
-                        key: key,
-                        yaw: yaw,
-                        pitch: pitch,
-                        title: p.title || '',
-                        category: p.category || '',
-                        desc: p.desc || '',
-                        folder: folder,
-                        hasCustomHtml: !!p.hasCustomHtml,
-                        detailFilePath: p.detailFilePath || p.link || `${folder}content.html`,
-                        link: p.link || p.detailFilePath || `${folder}content.html`,
-                        boardLink: p.boardLink || folder,
-                        previewImage: p.previewImage || `${folder}preview.jpg`,
-                        previewImageWidth: pw,
-                        previewImageHeight: ph,
-                        previewImageSize: { width: pw, height: ph },
-                        thumbSize: p.thumbSize !== undefined ? Number(p.thumbSize) : 64,
-                        stripWidth: p.stripWidth !== undefined ? Number(p.stripWidth) : 312,
-                        marginBottom: p.marginBottom !== undefined ? Number(p.marginBottom) : 26,
-                        maskPercent: p.maskPercent !== undefined ? Number(p.maskPercent) : 22,
-                        preFolder: preFolder,
-                        preImages: preImages,
-                        images: Array.isArray(p.images) ? p.images : [],
-                        thumbFiles: thumbFiles
-                    };
-                });
-            }
-
-            if (Object.keys(normalized).length > 0) {
-                BOARD_DATA = normalized;
-                if (saveToLocal) {
-                    try {
-                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(BOARD_DATA));
-                    } catch(e) {}
-                }
-                renderTabs();
-            }
-        }
-
-        function triggerJsonImport() {
-            document.getElementById('json-file-input').click();
-        }
-
-        function handleJsonFileImport(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                try {
-                    const jsonData = JSON.parse(evt.target.result);
-                    normalizeAndLoadBoardData(jsonData, true);
-                    showToast("✅ 已成功匯入面板 JSON 資料並更新紀錄！");
-                } catch (err) {
-                    showToast("⚠️ JSON 解析失敗");
-                }
-            };
-            reader.readAsText(file);
-            e.target.value = '';
         }
 
         function ensureThumbFilesSync(item) {
@@ -1212,6 +1018,190 @@
             showToast("已刪除該張縮圖並重新編號！");
         }
 
+        function fetchRawBlob(src) {
+            return new Promise((resolve) => {
+                if (!src) return resolve(null);
+                if (src.startsWith('data:')) {
+                    try {
+                        const parts = src.split(',');
+                        const mime = parts[0].match(/:(.*?);/)?.[1] || 'image/jpeg';
+                        const bstr = atob(parts[1]);
+                        let n = bstr.length;
+                        const u8arr = new Uint8Array(n);
+                        while (n--) {
+                            u8arr[n] = bstr.charCodeAt(n);
+                        }
+                        resolve(new Blob([u8arr], { type: mime }));
+                    } catch(e) {
+                        resolve(null);
+                    }
+                    return;
+                }
+                fetch(src)
+                    .then(res => res.ok ? res.blob() : null)
+                    .then(blob => resolve(blob))
+                    .catch(() => resolve(null));
+            });
+        }
+
+        function createPlaceholderSquareBlob(text, targetSize = 128) {
+            return new Promise((resolve) => {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = targetSize;
+                    canvas.height = targetSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = "#232327";
+                    ctx.fillRect(0, 0, targetSize, targetSize);
+                    ctx.fillStyle = "#fcd191";
+                    ctx.font = `bold ${Math.round(targetSize * 0.22)}px sans-serif`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(text || "Thumb", targetSize / 2, targetSize / 2);
+                    canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.9);
+                } catch(e) {
+                    resolve(null);
+                }
+            });
+        }
+
+        function fetchSquareBlob(src, targetSize = 128) {
+            return new Promise((resolve) => {
+                if (!src) return resolve(null);
+
+                let resolved = false;
+                const safeResolve = (res) => {
+                    if (!resolved) {
+                        resolved = true;
+                        resolve(res);
+                    }
+                };
+
+                // 2.5 秒超時保護，避免跨域或加載失敗時 ZIP 流程卡死
+                const timer = setTimeout(() => {
+                    fetchRawBlob(src).then(blob => {
+                        if (blob) safeResolve(blob);
+                        else createPlaceholderSquareBlob("Thumb", targetSize).then(safeResolve);
+                    });
+                }, 2500);
+
+                const img = new Image();
+                if (!src.startsWith('data:')) {
+                    img.crossOrigin = "anonymous";
+                }
+
+                img.onload = function() {
+                    clearTimeout(timer);
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = targetSize;
+                        canvas.height = targetSize;
+                        const ctx = canvas.getContext('2d');
+
+                        ctx.fillStyle = "#1c1c1f";
+                        ctx.fillRect(0, 0, targetSize, targetSize);
+
+                        const aspect = img.width / Math.max(1, img.height);
+                        let sw, sh, sx, sy;
+                        if (aspect > 1) {
+                            sh = img.height;
+                            sw = img.height;
+                            sx = (img.width - img.height) / 2;
+                            sy = 0;
+                        } else {
+                            sw = img.width;
+                            sh = img.width;
+                            sx = 0;
+                            sy = (img.height - img.width) / 2;
+                        }
+
+                        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, targetSize, targetSize);
+
+                        canvas.toBlob((blob) => {
+                            if (blob) {
+                                safeResolve(blob);
+                            } else {
+                                fetchRawBlob(src).then(safeResolve);
+                            }
+                        }, 'image/jpeg', 0.92);
+                    } catch (e) {
+                        fetchRawBlob(src).then(blob => {
+                            if (blob) safeResolve(blob);
+                            else createPlaceholderSquareBlob("Thumb", targetSize).then(safeResolve);
+                        });
+                    }
+                };
+
+                img.onerror = function() {
+                    clearTimeout(timer);
+                    fetchRawBlob(src).then(blob => {
+                        if (blob) safeResolve(blob);
+                        else createPlaceholderSquareBlob("Thumb", targetSize).then(safeResolve);
+                    });
+                };
+
+                img.src = src;
+            });
+        }
+
+        async function exportAllThumbnails() {
+            const item = BOARD_DATA[activeBoardKey];
+            if (!item || !item.preImages || item.preImages.length === 0) {
+                showToast("⚠️ 目前沒有可輸出的縮圖");
+                return;
+            }
+
+            if (typeof JSZip === 'undefined') {
+                showToast("⚠️ JSZip 程式庫正在載入中，請稍後再試");
+                return;
+            }
+
+            ensureThumbFilesSync(item);
+
+            const yaw = item.yaw !== undefined ? item.yaw : 0;
+            const pitch = item.pitch !== undefined ? item.pitch : 0;
+            const thumbSize = item.thumbSize !== undefined ? item.thumbSize : 64;
+
+            showToast("⏳ 正在製作縮圖打包 ZIP 檔案...");
+
+            try {
+                const zip = new JSZip();
+
+                for (let i = 0; i < item.preImages.length; i++) {
+                    const localObj = item.thumbFiles[i];
+                    const imgSrc = (localObj && localObj.previewUrl) ? localObj.previewUrl : item.preImages[i];
+                    const displayNum = String(i + 1).padStart(2, '0');
+                    const fileName = `${displayNum}.jpg`;
+
+                    let blob = await fetchSquareBlob(imgSrc, thumbSize * 2);
+                    if (!blob) {
+                        blob = await createPlaceholderSquareBlob(`#${displayNum}`, thumbSize * 2);
+                    }
+                    if (blob) {
+                        zip.file(fileName, blob);
+                    }
+                }
+
+                const content = await zip.generateAsync({ type: "blob" });
+                const zipFileName = `angle_${yaw}_${pitch}_pre_thumbnails.zip`;
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(content);
+                a.download = zipFileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                showToast(`📦 縮圖已成功打包下載為 ${zipFileName}！`);
+
+                setTimeout(() => {
+                    downloadBoardJsonData();
+                }, 500);
+            } catch (err) {
+                console.error("Export thumbnails error:", err);
+                showToast("⚠️ 打包縮圖時發生錯誤，請重試");
+            }
+        }
+
         function saveCurrentBoardToMemory(showToastMsg = true) {
             const item = BOARD_DATA[activeBoardKey];
             if (!item) return;
@@ -1227,7 +1217,6 @@
             item.previewImageHeight = parseInt(document.getElementById('edit-board-preview-h').value) || 208;
             item.previewImageSize = { width: item.previewImageWidth, height: item.previewImageHeight };
 
-            // 儲存縮圖排版進階參數
             item.thumbSize = parseInt(document.getElementById('edit-thumb-size').value) || 64;
             item.marginBottom = parseInt(document.getElementById('edit-thumb-margin-bottom').value) || 26;
             item.maskPercent = parseInt(document.getElementById('edit-thumb-mask-percent').value) || 22;
@@ -1313,6 +1302,118 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             showToast("📄 已成功下載 board_data.json（本地紀錄保持不變）");
+        }
+
+        async function fetchLocalBoardJson() {
+            const pathsToTry = ['board_data.json', './board_data.json', 'assets/board_data.json'];
+            let loadedData = null;
+            for (const path of pathsToTry) {
+                try {
+                    const res = await fetch(path, { cache: 'no-store' });
+                    if (res.ok) {
+                        loadedData = await res.json();
+                        break;
+                    }
+                } catch (e) {}
+            }
+
+            if (loadedData) {
+                normalizeAndLoadBoardData(loadedData, true);
+                showToast("✅ 已成功載入並統整相鄰 board_data.json！");
+            } else {
+                showToast("⚠️ 未存取到相鄰 JSON，請手動點擊選擇檔案匯入");
+            }
+        }
+
+        function normalizeAndLoadBoardData(rawJson, saveToLocal = false) {
+            if (!rawJson) return;
+
+            let normalized = {};
+            let panelList = Array.isArray(rawJson.panels) ? rawJson.panels : (typeof rawJson === 'object' ? Object.values(rawJson) : []);
+
+            if (panelList.length > 0) {
+                panelList.forEach(p => {
+                    if (typeof p !== 'object' || !p) return;
+                    const key = p.key || `${p.yaw}_${p.pitch}`;
+                    const yaw = p.yaw !== undefined ? p.yaw : Number(key.split('_')[0]);
+                    const pitch = p.pitch !== undefined ? p.pitch : Number(key.split('_')[1]);
+                    const folder = p.folder || `assets/angle_${key}/`;
+                    const preFolder = p.preFolder || `${folder}pre/`;
+
+                    let preImages = Array.isArray(p.preImages) && p.preImages.length > 0
+                        ? p.preImages
+                        : [
+                            `${preFolder}01.jpg`,
+                            `${preFolder}02.jpg`,
+                            `${preFolder}03.jpg`,
+                            `${preFolder}04.jpg`,
+                            `${preFolder}05.jpg`
+                        ];
+
+                    let thumbFiles = Array.isArray(p.thumbFiles) ? p.thumbFiles : [];
+
+                    const pw = p.previewImageWidth || (p.previewImageSize && p.previewImageSize.width) || 208;
+                    const ph = p.previewImageHeight || (p.previewImageSize && p.previewImageSize.height) || 208;
+
+                    normalized[key] = {
+                        key: key,
+                        yaw: yaw,
+                        pitch: pitch,
+                        title: p.title || '',
+                        category: p.category || '',
+                        desc: p.desc || '',
+                        folder: folder,
+                        hasCustomHtml: !!p.hasCustomHtml,
+                        detailFilePath: p.detailFilePath || p.link || `${folder}content.html`,
+                        link: p.link || p.detailFilePath || `${folder}content.html`,
+                        boardLink: p.boardLink || folder,
+                        previewImage: p.previewImage || `${folder}preview.jpg`,
+                        previewImageWidth: pw,
+                        previewImageHeight: ph,
+                        previewImageSize: { width: pw, height: ph },
+                        thumbSize: p.thumbSize !== undefined ? Number(p.thumbSize) : 64,
+                        stripWidth: p.stripWidth !== undefined ? Number(p.stripWidth) : 312,
+                        marginBottom: p.marginBottom !== undefined ? Number(p.marginBottom) : 26,
+                        maskPercent: p.maskPercent !== undefined ? Number(p.maskPercent) : 22,
+                        preFolder: preFolder,
+                        preImages: preImages,
+                        images: Array.isArray(p.images) ? p.images : [],
+                        thumbFiles: thumbFiles
+                    };
+                });
+            }
+
+            if (Object.keys(normalized).length > 0) {
+                BOARD_DATA = normalized;
+                if (saveToLocal) {
+                    try {
+                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(BOARD_DATA));
+                    } catch(e) {}
+                }
+                renderTabs();
+            }
+        }
+
+        function triggerJsonImport() {
+            document.getElementById('json-file-input').click();
+        }
+
+        function handleJsonFileImport(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const jsonData = JSON.parse(evt.target.result);
+                    normalizeAndLoadBoardData(jsonData, true);
+                    showToast("✅ 已成功匯入面板 JSON 資料並更新紀錄！");
+                } catch (err) {
+                    showToast("⚠️ JSON 解析失敗");
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
         }
 
         window.onload = function() {

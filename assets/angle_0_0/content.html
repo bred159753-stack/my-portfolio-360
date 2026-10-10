@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>精選個人作品 - 專案展演</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -38,8 +36,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #141416;
             color: #f3f4f6;
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow: hidden;
         }
         .glass-panel {
             background: rgba(35, 35, 39, 0.9);
@@ -54,116 +51,93 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* VisionOS 3D Perspective Stage Styles */
+        .pc-3d-stage {
+            perspective: 1200px;
+            perspective-origin: 50% 50%;
+            transform-style: preserve-3d;
+        }
+        .pc-3d-cards-wrapper {
+            transform-style: preserve-3d;
+        }
+        .pc-3d-card {
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease, filter 0.4s ease;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            will-change: transform, opacity, filter;
+        }
     </style>
 </head>
-<body class="p-3 md:p-6 min-h-screen bg-charcoal-950 no-scrollbar selection:bg-peach-500 selection:text-charcoal-950 overflow-x-hidden">
+<body class="p-1 md:p-2 pt-1 md:pt-1 min-h-screen bg-charcoal-950 no-scrollbar selection:bg-peach-500 selection:text-charcoal-950 overflow-hidden">
 
-    <div id="angle00-wrapper" class="relative w-full max-w-5xl mx-auto text-gray-100 overflow-x-hidden">
+    <div id="angle00-wrapper" class="relative w-full h-full max-w-[1536px] mx-auto text-gray-100 flex flex-col justify-between overflow-hidden pt-0">
         
-        <!-- Top Navigation Header -->
-        <header class="sticky top-0 z-30 flex items-center justify-between pb-3 mb-4 bg-transparent px-3 md:px-5">
-            <div class="flex items-center gap-2">
-                <div id="angle00-breadcrumb" class="text-sm font-bold text-white flex items-center gap-1.5">
-                    <span class="text-white font-bold ml-[20px]">精選個人作品</span>
+        <!-- 1. Top Bar: Theme Tags (Centered) & Close Button (Top-Rightmost, Same Height) -->
+        <div class="relative w-full flex items-center justify-between z-40 mb-1 flex-shrink-0 px-1 md:px-2">
+            <!-- Invisible Spacer for visual centering balance -->
+            <div class="w-8 h-8 opacity-0 pointer-events-none hidden sm:block"></div>
+
+            <!-- Theme Navigation Tags -->
+            <div class="glass-panel px-3 py-1 rounded-full border border-peach-500/30 shadow-2xl flex items-center gap-1.5 md:gap-2 overflow-x-auto no-scrollbar max-w-[80vw] md:max-w-[70vw] mx-auto">
+                <div id="angle00-theme-tags" class="flex items-center gap-1.5 md:gap-2">
+                    <!-- Injected dynamically via JS -->
                 </div>
             </div>
 
-            <div class="flex items-center gap-2">
-                <div id="angle00-grid-switcher" class="hidden flex items-center bg-charcoal-900 border border-white/10 rounded-xl p-1 text-xs gap-1">
-                    <button id="btn-grid-2" onclick="window.angle00SetGridCols(2)" 
-                            class="p-1.5 rounded-lg text-charcoal-950 bg-peach-500 font-mono font-bold transition flex items-center justify-center"
-                            title="2x2 檢視模式">
-                        <svg class="w-4 h-4 fill-current" viewBox="0 0 16 16">
-                            <path d="M1 1h6v6H1V1zm8 0h6v6H9V1zM1 9h6v6H1V9zm8 0h6v6H9V9z"/>
-                        </svg>
-                    </button>
-                    <button id="btn-grid-3" onclick="window.angle00SetGridCols(3)" 
-                            class="p-1.5 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition flex items-center justify-center"
-                            title="3x3 檢視模式">
-                        <svg class="w-4 h-4 fill-current" viewBox="0 0 16 16">
-                            <path d="M1 1h4v4H1V1zm5.5 0h4v4h-4V1zM12 1h4v4h-4V1zM1 6.5h4v4H1v-4zm5.5 0h4v4h-4v-4zM12 6.5h4v4h-4v-4zM1 12h4v4H1v-4zm5.5 0h4v4h-4v-4zM12 12h4v4h-4v-4z"/>
-                        </svg>
-                    </button>
+            <!-- Top-Right Close Button (Aligned height with theme tags) -->
+            <button onclick="window.angle00CloseModal()" 
+                    class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-rose-500/20 hover:border-rose-400/50 transition border border-white/10 shadow-md flex-shrink-0 ml-auto sm:ml-0"
+                    title="關閉作品面板">
+                ✕
+            </button>
+        </div>
+
+        <!-- Stage Header Bar: Subcategory Tags (Left) & Counter (Right-Aligned) -->
+        <header class="relative flex items-center justify-between gap-3 pb-1.5 border-b border-white/10 px-2 md:px-4 z-30 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div id="angle00-subcat-tags" class="flex items-center gap-1.5 md:gap-2 overflow-x-auto no-scrollbar py-0.5 max-w-[55vw] md:max-w-[48vw]">
+                    <!-- Subcategory tag buttons injected dynamically via JS -->
                 </div>
+            </div>
 
-                <button id="angle00-btn-back" 
-                        onclick="window.angle00GoBack()" 
-                        class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-peach-500/20 hover:border-peach-500/40 transition border border-white/10 shadow-md opacity-0 pointer-events-none"
-                        title="上一頁">
-                    ⬅
-                </button>
-
-                <button onclick="window.angle00CloseModal()" 
-                        class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-rose-500/20 hover:border-rose-400/50 transition border border-white/10 shadow-md"
-                        title="關閉作品面板">
-                    ✕
-                </button>
+            <!-- Page Counter aligned to the far right -->
+            <div class="flex items-center gap-3 ml-auto">
+                <span id="angle00-lightbox-counter" class="font-mono bg-white/10 px-3 py-1 rounded-full text-xs text-peach-300 font-bold">
+                    1 / 10
+                </span>
             </div>
         </header>
 
-        <!-- REGION: 主題區 (Level 1 Theme Banners Region) -->
-        <div id="angle00-level1" class="space-y-4 transition-all duration-300 px-3 md:px-5">
-            <!-- Dynamic Theme Banners rendered by JS -->
+        <!-- Main 3D Spatial Lightbox Stage -->
+        <div id="angle00-lightbox-stage-container" class="relative flex-1 w-full max-w-[1536px] flex items-center justify-center my-0.5 overflow-hidden cursor-grab active:cursor-grabbing pc-3d-stage">
+            <div id="angle00-lightbox-toast" 
+                 class="absolute top-2 z-40 px-4 py-1.5 rounded-full bg-peach-500 text-charcoal-950 font-bold text-xs shadow-2xl backdrop-blur-md transition-all duration-500 opacity-0 -translate-y-4 pointer-events-none">
+                <span id="angle00-toast-text">已切換主題</span>
+            </div>
+
+            <!-- Mobile Navigation Arrow Left -->
+            <button id="angle00-nav-btn-prev" onclick="event.stopPropagation(); window.angle00NavImage(-1);" 
+                    class="absolute left-2 z-30 w-10 h-10 rounded-full bg-charcoal-900/90 hover:bg-peach-500 hover:text-charcoal-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold">
+                ‹
+            </button>
+
+            <!-- Stage Workspace for VisionOS 3D Spatial Cards -->
+            <div id="angle00-lightbox-cards-wrapper" class="relative w-full h-full flex items-center justify-center pc-3d-cards-wrapper">
+                <!-- Dynamic VisionOS 3D Spatial Glass Cards -->
+            </div>
+
+            <!-- Mobile Navigation Arrow Right -->
+            <button id="angle00-nav-btn-next" onclick="event.stopPropagation(); window.angle00NavImage(1);" 
+                    class="absolute right-2 z-30 w-10 h-10 rounded-full bg-charcoal-900/90 hover:bg-peach-500 hover:text-charcoal-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold">
+                ›
+            </button>
         </div>
 
-        <!-- REGION: 類別區 (Level 2 Square Thumbnail Grid Region) -->
-        <div id="angle00-level2" class="hidden transition-all duration-300 overflow-y-auto overflow-x-hidden max-h-[75vh] min-h-[500px] no-scrollbar select-none cursor-grab active:cursor-grabbing px-3 md:px-5">
-            <div id="angle00-grid-container" class="grid grid-cols-2 gap-3.5 w-full max-w-full no-scrollbar pb-6">
-                <!-- Dynamically injected thumbnails -->
-            </div>
-        </div>
-
-        <!-- REGION: 大圖展示區 (Level 3 Full Image Lightbox Region) -->
-        <div id="angle00-lightbox" 
-             class="fixed inset-0 z-50 bg-charcoal-950/95 backdrop-blur-xl flex flex-col justify-between items-center p-4 opacity-0 pointer-events-none transition-all duration-300 select-none">
-            
-            <div class="w-full max-w-5xl flex justify-between items-center text-xs text-gray-300 px-3 md:px-5 py-2">
-                <div class="flex items-center gap-2">
-                    <span id="angle00-lightbox-title" class="font-bold text-white text-sm">全螢幕檢視</span>
-                </div>
-                
-                <div class="flex items-center gap-2.5">
-                    <span id="angle00-lightbox-counter" class="font-mono bg-white/10 px-2.5 py-1 rounded-full text-xs">1 / 10</span>
-                    <button onclick="window.angle00GoBack()" 
-                            class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-200 hover:text-white hover:bg-peach-500/20 hover:border-peach-500/40 transition border border-white/10 shadow-md active:scale-95"
-                            title="返回上一層">
-                        ⬅
-                    </button>
-                    <button onclick="window.angle00CloseModal()" 
-                            class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-rose-500/20 hover:border-rose-400/50 transition border border-white/10 shadow-md"
-                            title="關閉作品面板">
-                        ✕
-                    </button>
-                </div>
-            </div>
-
-            <div class="relative flex-1 w-full max-w-5xl flex items-center justify-center my-2 overflow-hidden cursor-grab active:cursor-grabbing">
-                <div id="angle00-lightbox-toast" 
-                     class="absolute top-4 z-30 px-4 py-2 rounded-full bg-peach-500 text-charcoal-950 font-bold text-xs shadow-2xl backdrop-blur-md transition-all duration-500 opacity-0 -translate-y-4 pointer-events-none">
-                    <span id="angle00-toast-text">已進入小類別</span>
-                </div>
-
-                <button onclick="event.stopPropagation(); window.angle00NavImage(-1);" 
-                        class="absolute left-2 z-20 w-10 h-10 rounded-full bg-charcoal-900/90 hover:bg-peach-500 hover:text-charcoal-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold">
-                    ‹
-                </button>
-
-                <img id="angle00-lightbox-img" 
-                     src="" 
-                     draggable="false"
-                     class="max-w-full max-h-[66vh] object-contain rounded-xl shadow-2xl transition-transform duration-200 select-none"
-                     alt="Full Artwork Detail">
-
-                <button onclick="event.stopPropagation(); window.angle00NavImage(1);" 
-                        class="absolute right-2 z-20 w-10 h-10 rounded-full bg-charcoal-900/90 hover:bg-peach-500 hover:text-charcoal-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold">
-                    ›
-                </button>
-            </div>
-
-            <div class="w-full max-w-5xl py-2 px-1">
-                <div id="angle00-thumb-strip" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-2 px-0 justify-start cursor-grab active:cursor-grabbing select-none">
-                    <!-- Dynamic thumbnails injected here -->
-                </div>
+        <!-- Bottom Thumbnail Strip Container -->
+        <div class="w-full max-w-[1536px] py-0.5 px-1 flex-shrink-0">
+            <div id="angle00-thumb-strip" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 px-0 justify-start cursor-grab active:cursor-grabbing select-none">
+                <!-- Dynamic thumbnails injected here -->
             </div>
         </div>
 
@@ -194,7 +168,7 @@
                             folder: "B/",
                             items: [
                                 { src: "assets/angle_0_0/01/B/01.jpg", fallback: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=1348&q=80", name: "場景概念繪製 01" },
-                                { src: "assets/angle_0_0/01/B/02.jpg", fallback: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=1348&q=80", name: "幾何厚塗繪圖 02" }
+                                { src: "assets/angle_0_0/01/B/02.jpg", fallback: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?auto=format&fit=crop&w=1348&q=80", name: "幾態厚塗繪圖 02" }
                             ]
                         }
                     ]
@@ -234,7 +208,7 @@
                     folder: "assets/angle_0_0/03/",
                     subcategories: [
                         {
-                            name: "人體與結構速寫",
+                            name: "人態與結構速寫",
                             folder: "A/",
                             items: [
                                 { src: "assets/angle_0_0/03/A/01.jpg", fallback: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1348&q=80", name: "解剖與造型速寫 01" },
@@ -280,26 +254,25 @@
             };
 
             let DATABASE = DEFAULT_DATABASE;
-
-            let currentLevel = 1;
-            let activeCategoryKey = null;
+            let activeCategoryKey = "01";
             let flatImageList = [];
             let activeGlobalImageIndex = 0;
 
+            // Aspect ratio cache for dynamic 3D stage layout calculations
+            const aspectRatioCache = {};
+
             let touchStartX = 0;
             let touchEndX = 0;
-            let currentCols = 2;
-
-            let isDraggingLevel2 = false;
             let isDraggingThumbStrip = false;
-
             let isProgrammaticScroll = false;
             let scrollSnapTimer = null;
             let inertiaAnimationId = null;
 
-            window.initAngle00App = async function() {
-                currentLevel = 1;
+            function isPCView() {
+                return window.innerWidth >= 768;
+            }
 
+            window.initAngle00App = async function() {
                 const pathsToTry = [
                     'assets/angle_0_0/portfolio_data.json',
                     'portfolio_data.json',
@@ -327,150 +300,90 @@
                     DATABASE = DEFAULT_DATABASE;
                 }
 
-                renderLevel1Banners();
-                updateUILevelState();
+                const keys = Object.keys(DATABASE);
+                if (keys.length > 0) {
+                    activeCategoryKey = keys[0];
+                }
+
+                renderThemeTags();
+                switchThemeCategory(activeCategoryKey, false);
+
                 setupTouchSwiping();
-                setupLevel2MouseDragScroll();
                 setupLightboxMouseDrag();
                 setupThumbStripMouseDrag();
                 setupThumbStripScrollAndSnap();
+
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        renderLightboxImage(false);
+                    }, 100);
+                });
             };
 
-            function renderLevel1Banners() {
-                const level1Container = document.getElementById('angle00-level1');
-                if (!level1Container) return;
-
-                const validKeys = Object.keys(DATABASE).filter(k => DATABASE[k] && DATABASE[k].title);
-
-                if (validKeys.length === 0) {
-                    DATABASE = DEFAULT_DATABASE;
-                }
+            function renderThemeTags() {
+                const tagsContainer = document.getElementById('angle00-theme-tags');
+                if (!tagsContainer) return;
 
                 let html = '';
                 Object.keys(DATABASE).forEach(catKey => {
                     const cat = DATABASE[catKey];
                     if (!cat || !cat.title) return;
 
-                    const bgSrc = cat.bgImage || `assets/angle_0_0/${catKey}.jpg`;
-                    const fallbackSrc = cat.bgFallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80';
-
+                    const isActive = catKey === activeCategoryKey;
                     html += `
-                        <div onclick="window.angle00OpenCategory('${catKey}')" 
-                             class="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-peach-500/60 bg-gradient-to-r from-charcoal-900 via-charcoal-850 to-charcoal-900 p-5 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-peach-500/10 active:scale-[0.99]">
-                            <img src="${bgSrc}" 
-                                 alt="${cat.title}" 
-                                 class="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500 select-none"
-                                 onerror="this.onerror=null; this.src='${fallbackSrc}';">
-                            <div class="absolute inset-0 bg-gradient-to-r from-charcoal-950 via-charcoal-950/80 to-transparent"></div>
-                            <div class="relative z-10 flex justify-between items-center">
-                                <div>
-                                    <span class="text-[10px] uppercase font-extrabold tracking-widest text-peach-500">${cat.tag || 'PORTFOLIO'}</span>
-                                    <h3 class="text-lg font-bold text-white group-hover:text-peach-400 transition-colors mt-0.5">
-                                        ${cat.title}
-                                    </h3>
-                                    <p class="text-xs text-gray-400 mt-1">${cat.desc || ''}</p>
-                                </div>
-                            </div>
-                        </div>
+                        <button onclick="window.angle00SelectTheme('${catKey}')" 
+                                class="btn-theme-tag px-3 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border flex-shrink-0 cursor-pointer ${
+                                    isActive 
+                                    ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20 font-extrabold' 
+                                    : 'glass-panel text-gray-300 hover:text-white hover:bg-white/10 border-white/10'
+                                }">
+                            ${cat.title}
+                        </button>
                     `;
                 });
-                level1Container.innerHTML = html;
+                tagsContainer.innerHTML = html;
             }
 
-            window.angle00SetGridCols = function(cols) {
-                currentCols = cols;
-                const gridContainer = document.getElementById('angle00-grid-container');
-                const btn2 = document.getElementById('btn-grid-2');
-                const btn3 = document.getElementById('btn-grid-3');
-
-                if (gridContainer) {
-                    if (cols === 3) {
-                        gridContainer.classList.remove('grid-cols-2');
-                        gridContainer.classList.add('grid-cols-3');
-                        if (btn2) btn2.className = "p-1.5 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition flex items-center justify-center";
-                        if (btn3) btn3.className = "p-1.5 rounded-lg text-charcoal-950 bg-peach-500 font-mono font-bold transition flex items-center justify-center";
-                    } else {
-                        gridContainer.classList.remove('grid-cols-3');
-                        gridContainer.classList.add('grid-cols-2');
-                        if (btn2) btn2.className = "p-1.5 rounded-lg text-charcoal-950 bg-peach-500 font-mono font-bold transition flex items-center justify-center";
-                        if (btn3) btn3.className = "p-1.5 rounded-lg text-gray-400 hover:text-white font-mono font-bold transition flex items-center justify-center";
-                    }
-                }
+            window.angle00SelectTheme = function(catKey) {
+                if (catKey === activeCategoryKey || !DATABASE[catKey]) return;
+                switchThemeCategory(catKey, true);
             };
 
-            window.angle00OpenCategory = function(catKey) {
-                if (!DATABASE[catKey]) return;
+            function switchThemeCategory(catKey, showToast) {
                 activeCategoryKey = catKey;
                 const categoryData = DATABASE[catKey];
+                if (!categoryData) return;
+
+                renderThemeTags();
 
                 flatImageList = [];
                 let globalIndex = 0;
-                let gridHTML = "";
 
                 if (Array.isArray(categoryData.subcategories)) {
                     categoryData.subcategories.forEach((subCat) => {
-                        gridHTML += `
-                            <div class="col-span-full mt-4 first:mt-0 pt-2 pb-1 border-b border-white/10 flex items-center justify-between">
-                                <span class="text-xs font-bold text-white">
-                                    ${subCat.name}
-                                </span>
-                                <span class="text-[10px] text-white/80 font-mono">
-                                    ${subCat.items ? subCat.items.length : 0} 張作品
-                                </span>
-                            </div>
-                        `;
-
                         if (Array.isArray(subCat.items)) {
                             subCat.items.forEach((item) => {
-                                const currentIndex = globalIndex;
                                 flatImageList.push({
                                     ...item,
                                     subCatName: subCat.name,
-                                    globalIndex: currentIndex
+                                    globalIndex: globalIndex
                                 });
-
-                                gridHTML += `
-                                    <div onclick="window.handleLevel2Click(${currentIndex})" 
-                                         class="group relative aspect-square w-full rounded-2xl overflow-hidden bg-charcoal-900 border border-white/10 hover:border-peach-500 cursor-pointer shadow-lg transition-all duration-300 hover:scale-[1.03]">
-                                        <img src="${item.src}" 
-                                             alt="${item.name}" 
-                                             draggable="false"
-                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 select-none"
-                                             onerror="this.onerror=null; this.src='${item.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';">
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-2.5">
-                                            <span class="text-[11px] text-white font-semibold truncate">${item.name}</span>
-                                        </div>
-                                    </div>
-                                `;
                                 globalIndex++;
                             });
                         }
                     });
                 }
 
-                const gridContainer = document.getElementById('angle00-grid-container');
-                if (gridContainer) gridContainer.innerHTML = gridHTML;
-
-                currentLevel = 2;
-                updateUILevelState();
-            };
-
-            window.handleLevel2Click = function(index) {
-                if (isDraggingLevel2) {
-                    isDraggingLevel2 = false;
-                    return;
-                }
-                window.angle00OpenLightbox(index);
-            };
-
-            window.angle00OpenLightbox = function(globalIndex) {
-                if (!flatImageList || flatImageList.length === 0) return;
-                activeGlobalImageIndex = globalIndex;
-                currentLevel = 3;
-                updateUILevelState();
+                activeGlobalImageIndex = 0;
                 renderLightboxImage(false);
                 renderThumbStrip();
-            };
+
+                if (showToast) {
+                    triggerSubcategoryToast(`主題：${categoryData.title}`);
+                }
+            }
 
             window.angle00NavImage = function(direction) {
                 if (!flatImageList || flatImageList.length === 0) return;
@@ -496,24 +409,182 @@
                 updateThumbStripActiveState();
             };
 
+            function renderSubcategoryTags() {
+                const subcatContainer = document.getElementById('angle00-subcat-tags');
+                if (!subcatContainer) return;
+
+                const categoryData = DATABASE[activeCategoryKey];
+                if (!categoryData || !Array.isArray(categoryData.subcategories)) {
+                    subcatContainer.innerHTML = '';
+                    return;
+                }
+
+                const currentItem = flatImageList[activeGlobalImageIndex];
+                const currentSubCatName = currentItem ? currentItem.subCatName : '';
+
+                let html = '';
+                categoryData.subcategories.forEach((subCat) => {
+                    const firstImgIndex = flatImageList.findIndex(img => img.subCatName === subCat.name);
+                    const isActive = (subCat.name === currentSubCatName);
+
+                    if (firstImgIndex !== -1) {
+                        html += `
+                            <button onclick="window.angle00JumpToImage(${firstImgIndex})" 
+                                    class="px-2.5 py-1 rounded-xl text-xs font-bold transition flex-shrink-0 cursor-pointer border ${
+                                        isActive 
+                                        ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20 font-extrabold' 
+                                        : 'glass-panel text-gray-300 hover:text-white hover:bg-white/10 border-white/10'
+                                    }">
+                                ${subCat.name}
+                            </button>
+                        `;
+                    }
+                });
+                subcatContainer.innerHTML = html;
+            }
+
+            function ensureImageAspectRatioLoaded(item, callback) {
+                if (!item || !item.src) return;
+                if (aspectRatioCache[item.src]) {
+                    callback(aspectRatioCache[item.src]);
+                    return;
+                }
+
+                const img = new Image();
+                img.onload = () => {
+                    const ratio = img.naturalWidth / Math.max(1, img.naturalHeight);
+                    aspectRatioCache[item.src] = ratio;
+                    callback(ratio);
+                };
+                img.onerror = () => {
+                    aspectRatioCache[item.src] = 1.0;
+                    callback(1.0);
+                };
+                img.src = item.src;
+            }
+
             function renderLightboxImage(showToast) {
                 const currentItem = flatImageList[activeGlobalImageIndex];
                 if (!currentItem) return;
 
-                const imgEl = document.getElementById('angle00-lightbox-img');
                 const counterEl = document.getElementById('angle00-lightbox-counter');
-                const titleEl = document.getElementById('angle00-lightbox-title');
-
-                if (imgEl) {
-                    imgEl.src = currentItem.src;
-                    imgEl.onerror = function() {
-                        this.onerror = null;
-                        this.src = currentItem.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80';
-                    };
-                }
+                const btnPrev = document.getElementById('angle00-nav-btn-prev');
+                const btnNext = document.getElementById('angle00-nav-btn-next');
+                const cardsWrapper = document.getElementById('angle00-lightbox-cards-wrapper');
 
                 if (counterEl) counterEl.innerText = `${activeGlobalImageIndex + 1} / ${flatImageList.length}`;
-                if (titleEl) titleEl.innerText = currentItem.name;
+
+                renderSubcategoryTags();
+
+                const isPC = isPCView();
+
+                if (isPC) {
+                    if (btnPrev) btnPrev.style.display = 'none';
+                    if (btnNext) btnNext.style.display = 'none';
+
+                    const total = flatImageList.length;
+                    const relativeOffsets = [-2, -1, 0, 1, 2];
+
+                    // Determine active image aspect ratio (default 1.2 if not cached yet)
+                    const activeRatio = aspectRatioCache[currentItem.src] || 1.2;
+
+                    let shiftX1 = 360;
+                    if (activeRatio > 1.25) {
+                        shiftX1 = Math.min(560, Math.round(360 + (activeRatio - 1.25) * 190));
+                    }
+                    const shiftX2 = shiftX1 + 270;
+
+                    let html = '';
+                    relativeOffsets.forEach(offset => {
+                        const targetIdx = activeGlobalImageIndex + offset;
+                        if (targetIdx < 0 || targetIdx >= total) return;
+
+                        const item = flatImageList[targetIdx];
+                        if (!item) return;
+
+                        let transformCss = '';
+                        let zIndex = 10;
+                        let opacity = 1;
+                        let filterCss = '';
+
+                        // VisionOS 3D Spatial Perspective Layout (Darkened side preview cards)
+                        if (offset === 0) {
+                            // Center Primary Card - Full Focus & Brightness
+                            transformCss = 'translateX(0px) translateZ(180px) rotateY(0deg) scale(1.0)';
+                            zIndex = 30;
+                            opacity = 1.0;
+                            filterCss = 'brightness(100%) contrast(100%)';
+                        } else if (offset === -1) {
+                            // Left Adjacent Card (-1) - Darker (45% brightness) to highlight main image
+                            transformCss = `translateX(-${shiftX1}px) translateZ(-20px) rotateY(34deg) scale(0.82)`;
+                            zIndex = 20;
+                            opacity = 0.70;
+                            filterCss = 'brightness(45%) contrast(90%)';
+                        } else if (offset === 1) {
+                            // Right Adjacent Card (+1) - Darker (45% brightness)
+                            transformCss = `translateX(${shiftX1}px) translateZ(-20px) rotateY(-34deg) scale(0.82)`;
+                            zIndex = 20;
+                            opacity = 0.70;
+                            filterCss = 'brightness(45%) contrast(90%)';
+                        } else if (offset === -2) {
+                            // Far Left Card (-2) - Very Dark (25% brightness)
+                            transformCss = `translateX(-${shiftX2}px) translateZ(-200px) rotateY(54deg) scale(0.65)`;
+                            zIndex = 10;
+                            opacity = 0.40;
+                            filterCss = 'brightness(25%) contrast(85%)';
+                        } else if (offset === 2) {
+                            // Far Right Card (+2) - Very Dark (25% brightness)
+                            transformCss = `translateX(${shiftX2}px) translateZ(-200px) rotateY(-54deg) scale(0.65)`;
+                            zIndex = 10;
+                            opacity = 0.40;
+                            filterCss = 'brightness(25%) contrast(85%)';
+                        }
+
+                        html += `
+                            <div onclick="event.stopPropagation(); window.angle00NavImage(${offset});"
+                                 class="pc-3d-card absolute flex flex-col items-center justify-center cursor-pointer select-none"
+                                 style="transform: ${transformCss}; z-index: ${zIndex}; opacity: ${opacity}; filter: ${filterCss};">
+                                
+                                <img src="${item.src}" 
+                                     draggable="false"
+                                     decoding="async"
+                                     class="max-h-[64vh] max-w-[56vw] w-auto h-auto object-contain rounded-2xl shadow-2xl border border-white/20 transition-all duration-300 pointer-events-none select-none"
+                                     onerror="this.onerror=null; this.src='${item.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';">
+
+                                <div class="mt-3 px-3.5 py-1 rounded-full glass-panel border border-white/10 text-center max-w-[360px] shadow-lg truncate">
+                                    <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    cardsWrapper.innerHTML = html;
+
+                    if (!aspectRatioCache[currentItem.src]) {
+                        ensureImageAspectRatioLoaded(currentItem, () => {
+                            renderLightboxImage(false);
+                        });
+                    }
+                } else {
+                    if (btnPrev) btnPrev.style.display = 'flex';
+                    if (btnNext) btnNext.style.display = 'flex';
+
+                    cardsWrapper.innerHTML = `
+                        <div class="flex flex-col items-center justify-center max-h-[70vh]">
+                            <img id="angle00-lightbox-img" 
+                                 src="${currentItem.src}" 
+                                 draggable="false"
+                                 decoding="async"
+                                 class="max-w-full max-h-[60vh] w-auto h-auto object-contain rounded-xl shadow-2xl transition-transform duration-200 select-none border border-white/20"
+                                 onerror="this.onerror=null; this.src='${currentItem.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';"
+                                 alt="Full Artwork Detail">
+
+                            <div class="mt-3 px-3.5 py-1 rounded-full glass-panel border border-white/10 text-center max-w-[300px] shadow-lg truncate">
+                                <h4 class="text-xs font-bold text-white truncate">${currentItem.name}</h4>
+                            </div>
+                        </div>
+                    `;
+                }
 
                 if (showToast) triggerSubcategoryToast(currentItem.subCatName);
             }
@@ -528,8 +599,13 @@
                     html += `
                         <div onclick="window.angle00JumpToImage(${idx})" 
                              data-thumb-idx="${idx}"
-                             class="thumb-item flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 cursor-pointer transition-all duration-300 ${isActive ? 'border-peach-500 scale-105 shadow-lg shadow-peach-500/20' : 'border-white/20 opacity-60 hover:opacity-100'}">
-                            <img src="${item.src}" draggable="false" class="w-full h-full object-cover select-none" onerror="this.onerror=null; this.src='${item.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';">
+                             class="thumb-item flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 cursor-pointer transition-all duration-200 ${isActive ? 'border-peach-500 scale-105 shadow-lg shadow-peach-500/20' : 'border-white/20 opacity-60 hover:opacity-100'}">
+                            <img src="${item.src}" 
+                                 draggable="false" 
+                                 decoding="async" 
+                                 loading="lazy" 
+                                 class="w-full h-full object-cover select-none" 
+                                 onerror="this.onerror=null; this.src='${item.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';">
                         </div>
                     `;
                 });
@@ -550,9 +626,9 @@
                 const thumbs = stripEl.querySelectorAll('.thumb-item');
                 thumbs.forEach((el, idx) => {
                     if (idx === activeGlobalImageIndex) {
-                        el.className = "thumb-item flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 border-peach-500 scale-105 shadow-lg shadow-peach-500/20 cursor-pointer transition-all duration-300";
+                        el.className = "thumb-item flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 border-peach-500 scale-105 shadow-lg shadow-peach-500/20 cursor-pointer transition-all duration-200";
                     } else {
-                        el.className = "thumb-item flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 border-white/20 opacity-60 hover:opacity-100 cursor-pointer transition-all duration-300";
+                        el.className = "thumb-item flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 border-white/20 opacity-60 hover:opacity-100 cursor-pointer transition-all duration-200";
                     }
                 });
             }
@@ -575,7 +651,7 @@
                     });
                     setTimeout(() => {
                         isProgrammaticScroll = false;
-                    }, smooth ? 350 : 50);
+                    }, smooth ? 320 : 40);
                 });
             }
 
@@ -596,15 +672,15 @@
                 });
                 setTimeout(() => {
                     isProgrammaticScroll = false;
-                }, 300);
+                }, 280);
             }
 
-            function triggerSubcategoryToast(subCatName) {
+            function triggerSubcategoryToast(textMsg) {
                 const toastEl = document.getElementById('angle00-lightbox-toast');
                 const toastTextEl = document.getElementById('angle00-toast-text');
 
                 if (toastEl && toastTextEl) {
-                    toastTextEl.innerText = `進入小類別：${subCatName}`;
+                    toastTextEl.innerText = textMsg;
                     toastEl.classList.remove('opacity-0', '-translate-y-4');
                     toastEl.classList.add('opacity-100', 'translate-y-0');
 
@@ -615,21 +691,7 @@
                 }
             }
 
-            window.angle00GoBack = function() {
-                if (currentLevel === 3) {
-                    currentLevel = 2;
-                } else if (currentLevel === 2) {
-                    currentLevel = 1;
-                    activeCategoryKey = null;
-                }
-                updateUILevelState();
-            };
-
             window.angle00CloseModal = function() {
-                currentLevel = 1;
-                activeCategoryKey = null;
-                updateUILevelState();
-
                 const modalDetails = document.getElementById('modal-details');
                 if (modalDetails) {
                     modalDetails.classList.add('opacity-0', 'pointer-events-none', 'hidden');
@@ -643,90 +705,8 @@
                 }
             };
 
-            function updateUILevelState() {
-                const level1El = document.getElementById('angle00-level1');
-                const level2El = document.getElementById('angle00-level2');
-                const lightboxEl = document.getElementById('angle00-lightbox');
-                const btnBackEl = document.getElementById('angle00-btn-back');
-                const breadcrumbEl = document.getElementById('angle00-breadcrumb');
-                const gridSwitcherEl = document.getElementById('angle00-grid-switcher');
-
-                if (currentLevel === 1) {
-                    if (level1El) level1El.classList.remove('hidden');
-                    if (level2El) level2El.classList.add('hidden');
-                    if (gridSwitcherEl) gridSwitcherEl.classList.add('hidden');
-                    if (lightboxEl) lightboxEl.classList.add('opacity-0', 'pointer-events-none');
-                    if (btnBackEl) btnBackEl.classList.add('opacity-0', 'pointer-events-none');
-                    if (breadcrumbEl) breadcrumbEl.innerHTML = `<span class="text-white font-bold ml-[20px]">精選個人作品</span>`;
-                } else if (currentLevel === 2) {
-                    if (level1El) level1El.classList.add('hidden');
-                    if (level2El) level2El.classList.remove('hidden');
-                    if (gridSwitcherEl) gridSwitcherEl.classList.remove('hidden');
-                    if (lightboxEl) lightboxEl.classList.add('opacity-0', 'pointer-events-none');
-                    if (btnBackEl) btnBackEl.classList.remove('opacity-0', 'pointer-events-none');
-                    if (breadcrumbEl) {
-                        const catTitle = DATABASE[activeCategoryKey] ? DATABASE[activeCategoryKey].title : '';
-                        breadcrumbEl.innerHTML = `<span class="text-white font-bold ml-0">${catTitle}</span>`;
-                    }
-                } else if (currentLevel === 3) {
-                    if (lightboxEl) lightboxEl.classList.remove('opacity-0', 'pointer-events-none');
-                    if (btnBackEl) btnBackEl.classList.remove('opacity-0', 'pointer-events-none');
-                }
-            }
-
-            function setupLevel2MouseDragScroll() {
-                const level2El = document.getElementById('angle00-level2');
-                if (!level2El) return;
-
-                let isMouseDown = false;
-                let startY = 0;
-                let scrollTop = 0;
-                let dragDistance = 0;
-
-                level2El.addEventListener('mousedown', (e) => {
-                    isMouseDown = true;
-                    dragDistance = 0;
-                    startY = e.pageY - level2El.offsetTop;
-                    scrollTop = level2El.scrollTop;
-                });
-
-                level2El.addEventListener('mouseleave', () => {
-                    isMouseDown = false;
-                });
-
-                level2El.addEventListener('mouseup', () => {
-                    isMouseDown = false;
-                    if (dragDistance > 6) {
-                        isDraggingLevel2 = true;
-                        setTimeout(() => { isDraggingLevel2 = false; }, 50);
-                    }
-                });
-
-                level2El.addEventListener('mousemove', (e) => {
-                    if (!isMouseDown) return;
-                    e.preventDefault();
-                    const y = e.pageY - level2El.offsetTop;
-                    const walk = (y - startY) * 1.5;
-                    dragDistance = Math.abs(y - startY);
-                    level2El.scrollTop = scrollTop - walk;
-                });
-
-                let touchStartY = 0;
-                level2El.addEventListener('touchstart', (e) => {
-                    touchStartY = e.touches[0].clientY;
-                }, { passive: true });
-
-                level2El.addEventListener('touchend', (e) => {
-                    const touchEndY = e.changedTouches[0].clientY;
-                    if (Math.abs(touchEndY - touchStartY) > 10) {
-                        isDraggingLevel2 = true;
-                        setTimeout(() => { isDraggingLevel2 = false; }, 50);
-                    }
-                }, { passive: true });
-            }
-
             function setupLightboxMouseDrag() {
-                const lightboxEl = document.getElementById('angle00-lightbox');
+                const lightboxEl = document.getElementById('angle00-lightbox-stage-container');
                 if (!lightboxEl) return;
 
                 let isMouseDown = false;
@@ -850,46 +830,55 @@
                 const stripEl = document.getElementById('angle00-thumb-strip');
                 if (!stripEl) return;
 
+                let isTicking = false;
+
                 stripEl.addEventListener('scroll', () => {
                     if (isProgrammaticScroll) return;
 
-                    const containerWidth = stripEl.clientWidth;
-                    const containerCenter = stripEl.scrollLeft + containerWidth / 2;
-                    const thumbs = stripEl.querySelectorAll('.thumb-item');
+                    if (!isTicking) {
+                        requestAnimationFrame(() => {
+                            const containerWidth = stripEl.clientWidth;
+                            const containerCenter = stripEl.scrollLeft + containerWidth / 2;
+                            const thumbs = stripEl.querySelectorAll('.thumb-item');
 
-                    let closestIdx = activeGlobalImageIndex;
-                    let minDiff = Infinity;
+                            let closestIdx = activeGlobalImageIndex;
+                            let minDiff = Infinity;
 
-                    thumbs.forEach((el) => {
-                        const idx = parseInt(el.dataset.thumbIdx, 10);
-                        const elCenter = el.offsetLeft + el.clientWidth / 2;
-                        const diff = Math.abs(containerCenter - elCenter);
-                        if (diff < minDiff) {
-                            minDiff = diff;
-                            closestIdx = idx;
-                        }
-                    });
+                            thumbs.forEach((el) => {
+                                const idx = parseInt(el.dataset.thumbIdx, 10);
+                                const elCenter = el.offsetLeft + el.clientWidth / 2;
+                                const diff = Math.abs(containerCenter - elCenter);
+                                if (diff < minDiff) {
+                                    minDiff = diff;
+                                    closestIdx = idx;
+                                }
+                            });
 
-                    if (closestIdx !== activeGlobalImageIndex) {
-                        const prevSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
-                        activeGlobalImageIndex = closestIdx;
-                        const newSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+                            if (closestIdx !== activeGlobalImageIndex) {
+                                const prevSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+                                activeGlobalImageIndex = closestIdx;
+                                const newSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
 
-                        renderLightboxImage(prevSubCat !== newSubCat);
-                        updateThumbOutlineOnly();
+                                renderLightboxImage(prevSubCat !== newSubCat);
+                                updateThumbOutlineOnly();
+                            }
+
+                            if (!inertiaAnimationId) {
+                                clearTimeout(scrollSnapTimer);
+                                scrollSnapTimer = setTimeout(() => {
+                                    snapClosestThumbnailToCenter();
+                                }, 150);
+                            }
+
+                            isTicking = false;
+                        });
+                        isTicking = true;
                     }
-
-                    if (inertiaAnimationId) return;
-
-                    clearTimeout(scrollSnapTimer);
-                    scrollSnapTimer = setTimeout(() => {
-                        snapClosestThumbnailToCenter();
-                    }, 150);
-                });
+                }, { passive: true });
             }
 
             function setupTouchSwiping() {
-                const lightboxEl = document.getElementById('angle00-lightbox');
+                const lightboxEl = document.getElementById('angle00-lightbox-stage-container');
                 if (!lightboxEl) return;
 
                 lightboxEl.addEventListener('touchstart', (e) => {
