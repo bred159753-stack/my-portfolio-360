@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D 面板全功能管理工具 (board_adjustment.html)</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- JSZip for packaging all thumbnails into a single zip file -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <script>
@@ -62,7 +60,6 @@
             scrollbar-width: none;
         }
 
-        /* Drag & Drop Visual Styles */
         .tab-dragging {
             opacity: 0.4;
             border-style: dashed !important;
@@ -74,7 +71,6 @@
             border-color: #fcd191 !important;
         }
 
-        /* 預覽面板上方正方形縮圖群展開動畫 */
         .board-thumbnail-strip-wrapper {
             position: absolute;
             left: 50%;
@@ -95,7 +91,7 @@
         .thumb-track {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             height: 100%;
             cursor: grab;
             user-select: none;
@@ -109,8 +105,13 @@
             flex-shrink: 0;
             border-radius: 12px;
             overflow: hidden;
-            border: 1.5px solid rgba(252, 209, 145, 0.3);
+            border: 1.5px solid rgba(252, 209, 145, 0.5);
             background: #1c1c1f;
+        }
+
+        .btn-toggle-preview, .btn-expand-project {
+            pointer-events: auto !important;
+            z-index: 40 !important;
         }
     </style>
 </head>
@@ -134,7 +135,7 @@
                     <span class="px-2.5 py-0.5 bg-peach-500/20 text-peach-400 border border-peach-500/30 rounded-md text-[11px] font-bold tracking-wider uppercase">Spatial Manager</span>
                     <h1 class="text-lg md:text-xl font-extrabold text-white">3D 面板全功能管理工具 (board_adjustment.html)</h1>
                 </div>
-                <p class="text-xs text-gray-400 mt-1">按住頁籤拖曳可對調 360 定位角度！支援縮圖導出、拖曳排序與即時滑動預覽。</p>
+                <p class="text-xs text-gray-400 mt-1">支援 Android (Mobile &lt; 600px) 與 平板&PC (>= 600px 雙側漸層連續縮圖) 尺寸分開配置與即時預覽切換。</p>
             </div>
             
             <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
@@ -154,12 +155,12 @@
         <div class="glass-panel p-3 rounded-2xl flex flex-col gap-2">
             <div class="flex items-center justify-between px-1">
                 <span class="text-xs font-bold text-peach-400 flex items-center gap-1.5">
-                    <span>360 空間面板列表 (按住頁籤可直接「拖曳交換」空間定位角度)</span>
+                    <span>360 空間面板列表 (拖曳對調 360 角度定位)</span>
                 </span>
-                <span class="text-[11px] text-gray-400">拖曳改變順序即對調空間 Yaw & Pitch 定位</span>
+                <span class="text-[11px] text-gray-400">拖曳頁籤以交換 Yaw & Pitch 定位</span>
             </div>
             <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="board-tabs-container">
-                <!-- Dynamically injected draggable tabs -->
+                <!-- Draggable tabs -->
             </div>
         </div>
 
@@ -170,18 +171,23 @@
                 <div class="glass-panel p-5 rounded-3xl flex flex-col justify-between items-center min-h-[500px] relative overflow-hidden">
                     <div class="w-full flex justify-between items-center mb-4 border-b border-white/10 pb-3">
                         <span class="text-xs font-bold text-peach-400">3D 面板卡片即時外觀預覽</span>
-                        <span id="preview-board-key" class="text-[10px] font-mono bg-peach-500/20 text-peach-300 border border-peach-500/30 px-2 py-0.5 rounded-full">Key: 0_0</span>
+                        <div class="flex items-center gap-2">
+                            <button id="btn-preview-device-toggle" onclick="togglePreviewDeviceMode()" class="bg-peach-500/20 text-peach-300 border border-peach-500/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold hover:bg-peach-500 hover:text-charcoal-950 transition">
+                                模式: Android (&lt; 600px)
+                            </button>
+                            <span id="preview-board-key" class="text-[10px] font-mono bg-peach-500/20 text-peach-300 border border-peach-500/30 px-2 py-0.5 rounded-full">Key: 0_0</span>
+                        </div>
                     </div>
 
                     <div class="w-full flex-1 flex items-center justify-center py-12">
                         <!-- Real-time Preview Node -->
                         <div id="preview-card-node" class="relative w-64 p-4 rounded-2xl text-left border border-peach-500/30 glass-card shadow-2xl">
-                            <!-- JS Dynamically rendered preview card -->
+                            <!-- Dynamically rendered preview card -->
                         </div>
                     </div>
 
                     <p class="text-[11px] text-gray-400 text-center w-full pt-3 border-t border-white/10">
-                        點擊卡片右上角 <span class="text-peach-400 font-bold">▼</span> 按鈕可展開頂部正方形縮圖群，按住可左右滑動檢視所有圖片
+                        點擊卡片右上角 <span class="text-peach-400 font-bold">▼</span> 按鈕可展開正方形縮圖群，平滑滑動檢視圖集
                     </p>
                 </div>
             </div>
@@ -225,55 +231,49 @@
                             <label class="block text-gray-400 mb-1">3. 簡介 Description (面板主要說明文字)</label>
                             <textarea id="edit-board-desc" rows="2" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none resize-none"></textarea>
                         </div>
-                        <div>
-                            <label class="block text-gray-400 mb-1">4. 對應資料夾路徑 (Folder Path)</label>
-                            <input type="text" id="edit-board-folder" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_0_0/">
-                        </div>
-                        <div>
-                            <label class="block text-gray-400 mb-1">5. 預覽封面路徑 (previewImage)</label>
-                            <input type="text" id="edit-board-preview-img" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_0_0/preview.jpg">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-gray-400 mb-1">6. 細節頁面/連結路徑 (detailFilePath / link)</label>
-                            <input type="text" id="edit-board-link" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_0_0/content.html">
-                        </div>
-                        
-                        <!-- 7. 面板預覽圖大小 (previewImageSize) -->
-                        <div class="md:col-span-2">
-                            <label class="block text-peach-400 font-bold mb-1">7. 面板預覽圖大小 (previewImageSize)</label>
-                            <div class="flex items-center gap-2">
-                                <div class="flex items-center gap-1.5 w-1/2">
-                                    <span class="text-gray-400 text-xs">寬:</span>
-                                    <input type="number" id="edit-board-preview-w" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="208">
+
+                        <!-- 8A. Android (< 600px) 縮圖設定區域 -->
+                        <div class="md:col-span-2 border-t border-peach-500/30 pt-3 bg-peach-500/5 p-3 rounded-2xl">
+                            <label class="block text-peach-400 font-bold mb-2">📱 Android (Mobile &lt; 600px) 正方形縮圖排版設定</label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                                <div>
+                                    <label class="block text-gray-400 mb-1">Android 縮圖尺寸 (px)</label>
+                                    <input type="number" id="edit-thumb-size-mobile" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="64">
                                 </div>
-                                <span class="text-gray-400 font-bold">×</span>
-                                <div class="flex items-center gap-1.5 w-1/2">
-                                    <span class="text-gray-400 text-xs">高:</span>
-                                    <input type="number" id="edit-board-preview-h" oninput="updateLivePreviewFromInput()" class="w-1/2 bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="208">
+                                <div>
+                                    <label class="block text-gray-400 mb-1">Android 面板間距 (px)</label>
+                                    <input type="number" id="edit-thumb-margin-bottom-mobile" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="26">
                                 </div>
-                                <span class="text-gray-400 text-xs font-mono">px</span>
+                                <div>
+                                    <label class="block text-gray-400 mb-1">Android 漸層遮罩 (%)</label>
+                                    <input type="number" id="edit-thumb-mask-percent-mobile" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="22">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-400 mb-1">Android 縮圖寬度 (px)</label>
+                                    <input type="number" id="edit-thumb-strip-width-mobile" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="312">
+                                </div>
                             </div>
                         </div>
 
-                        <!-- 8. 正方形縮圖群進階設定區域 -->
-                        <div class="md:col-span-2 border-t border-white/10 pt-3">
-                            <label class="block text-peach-400 font-bold mb-2">8. 正方形縮圖區域排版設定 (thumbConfig)</label>
+                        <!-- 8B. 平板 & PC (>= 600px) 縮圖設定區域 -->
+                        <div class="md:col-span-2 border-t border-sky-500/30 pt-3 bg-sky-500/5 p-3 rounded-2xl">
+                            <label class="block text-sky-300 font-bold mb-2">💻 平板 & PC (&gt;= 600px) 兩側與中間漸層連續縮圖設定</label>
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
                                 <div>
-                                    <label class="block text-gray-400 mb-1" title="單個正方形縮圖邊長">縮圖尺寸 (px)</label>
-                                    <input type="number" id="edit-thumb-size" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="64">
+                                    <label class="block text-gray-400 mb-1">PC 縮圖尺寸 (px)</label>
+                                    <input type="number" id="edit-thumb-size-desktop" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-sky-400 focus:outline-none" placeholder="128">
                                 </div>
                                 <div>
-                                    <label class="block text-gray-400 mb-1" title="與面板主體的垂直間距">面板間距 (px)</label>
-                                    <input type="number" id="edit-thumb-margin-bottom" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="26">
+                                    <label class="block text-gray-400 mb-1">PC 面板間距 (px)</label>
+                                    <input type="number" id="edit-thumb-margin-bottom-desktop" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-sky-400 focus:outline-none" placeholder="0">
                                 </div>
                                 <div>
-                                    <label class="block text-gray-400 mb-1" title="左右兩端漸層羽化百分比">漸層遮罩 (%)</label>
-                                    <input type="number" id="edit-thumb-mask-percent" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="22">
+                                    <label class="block text-gray-400 mb-1">PC 漸層遮罩 (%)</label>
+                                    <input type="number" id="edit-thumb-mask-percent-desktop" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-sky-400 focus:outline-none" placeholder="22">
                                 </div>
                                 <div>
-                                    <label class="block text-gray-400 mb-1" title="縮圖橫條容器總寬度">縮圖群寬度 (px)</label>
-                                    <input type="number" id="edit-thumb-strip-width" oninput="updateLivePreviewFromInput()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="312">
+                                    <label class="block text-gray-400 mb-1">PC 縮圖橫跨 (螢幕全寬)</label>
+                                    <input type="text" readonly value="全螢幕 100vw 雙端漸層" class="w-full bg-charcoal-950 border border-white/10 rounded-xl px-3 py-2 text-sky-300 font-mono opacity-80 cursor-not-allowed">
                                 </div>
                             </div>
                         </div>
@@ -296,7 +296,7 @@
                                         ➕ 新增批次縮圖
                                     </button>
                                     <button onclick="exportAllThumbnails()" class="bg-charcoal-900 hover:bg-white/10 text-gray-200 border border-white/10 text-[11px] px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1">
-                                        輸出目前所有縮圖
+                                        輸出目前所有縮圖 (PC高清打包)
                                     </button>
                                 </div>
                             </div>
@@ -316,204 +316,23 @@
         const FALLBACK_THUMB = "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=300&q=80";
         const LOCAL_STORAGE_KEY = '3D_BOARD_ADJUSTMENT_DATA';
 
-        let BOARD_DATA = {
-            "0_-30": {
-                key: "0_-30", yaw: 0, pitch: -30,
-                title: "關於我 & 履歷與聯繫", category: "關於我",
-                desc: "個人經歷簡介、設計哲學與專案合作諮詢。",
-                folder: "assets/angle_0_-30/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_0_-30/content.html",
-                link: "assets/angle_0_-30/content.html",
-                previewImage: "assets/angle_0_-30/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                preFolder: "assets/angle_0_-30/pre/",
-                preImages: [
-                    "assets/angle_0_-30/pre/01.jpg",
-                    "assets/angle_0_-30/pre/02.jpg",
-                    "assets/angle_0_-30/pre/03.jpg"
-                ],
-                thumbFiles: []
-            },
-            "0_0": {
-                key: "0_0", yaw: 0, pitch: 0,
-                title: "精選個人作品 & 品牌整合", category: "精選個人作品",
-                desc: "展示品牌核心視覺與標誌設計案例。融合現代幾何學與沉浸式視覺體驗。",
-                folder: "assets/angle_0_0/", hasCustomHtml: true,
-                detailFilePath: "assets/angle_0_0/content.html",
-                link: "assets/angle_0_0/content.html",
-                previewImage: "assets/angle_0_0/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                preFolder: "assets/angle_0_0/pre/",
-                preImages: [
-                    "assets/angle_0_0/pre/01.jpg",
-                    "assets/angle_0_0/pre/02.jpg",
-                    "assets/angle_0_0/pre/03.jpg",
-                    "assets/angle_0_0/pre/04.jpg",
-                    "assets/angle_0_0/pre/05.jpg"
-                ],
-                thumbFiles: []
-            },
-            "90_0": {
-                key: "90_0", yaw: 90, pitch: 0,
-                title: "Web 應用與互動體驗", category: "Web 應用",
-                desc: "包含沉浸式 WebGL 網頁、動態網頁動畫與 3D 產品展示頁。",
-                folder: "assets/angle_90_0/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_90_0/content.html",
-                link: "assets/angle_90_0/content.html",
-                previewImage: "assets/angle_90_0/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                preFolder: "assets/angle_90_0/pre/",
-                preImages: [
-                    "assets/angle_90_0/pre/01.jpg",
-                    "assets/angle_90_0/pre/02.jpg",
-                    "assets/angle_90_0/pre/03.jpg"
-                ],
-                thumbFiles: []
-            },
-            "180_0": {
-                key: "180_0", yaw: 180, pitch: 0,
-                title: "3D 建模與動態視覺", category: "3D 建模",
-                desc: "Blender / Cinema4D 產品 Rendering、幾何場景與光影質感設計。",
-                folder: "assets/angle_180_0/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_180_0/content.html",
-                link: "assets/angle_180_0/content.html",
-                previewImage: "assets/angle_180_0/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                preFolder: "assets/angle_180_0/pre/",
-                preImages: [
-                    "assets/angle_180_0/pre/01.jpg",
-                    "assets/angle_180_0/pre/02.jpg",
-                    "assets/angle_180_0/pre/03.jpg"
-                ],
-                thumbFiles: []
-            },
-            "270_0": {
-                key: "270_0", yaw: 270, pitch: 0,
-                title: "生成式藝術 & 實驗專案", category: "生成藝術",
-                desc: "Shader 演算法動畫、Generative Art 與聲音感應互動專案。",
-                folder: "assets/angle_270_0/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_270_0/content.html",
-                link: "assets/angle_270_0/content.html",
-                previewImage: "assets/angle_270_0/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                preFolder: "assets/angle_270_0/pre/",
-                preImages: [
-                    "assets/angle_270_0/pre/01.jpg",
-                    "assets/angle_270_0/pre/02.jpg",
-                    "assets/angle_270_0/pre/03.jpg"
-                ],
-                thumbFiles: []
-            },
-            "0_30": {
-                key: "0_30", yaw: 0, pitch: 30,
-                title: "UI / UX 介面設計系統", category: "UI/UX 介面",
-                desc: "專注於跨平台 Dashboard 介面與 Component Design System 規範。",
-                folder: "assets/angle_0_30/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_0_30/content.html",
-                link: "assets/angle_0_30/content.html",
-                previewImage: "assets/angle_0_30/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                preFolder: "assets/angle_0_30/pre/",
-                preImages: [
-                    "assets/angle_0_30/pre/01.jpg",
-                    "assets/angle_0_30/pre/02.jpg",
-                    "assets/angle_0_30/pre/03.jpg"
-                ],
-                thumbFiles: []
-            },
-            "90_30": {
-                key: "90_30", yaw: 90, pitch: 30,
-                title: "跨平台 App 開態專案", category: "App 開發",
-                desc: "Flutter 與 React Native 跨平台應用程式設計與體驗調優。",
-                folder: "assets/angle_90_30/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_90_30/content.html",
-                link: "assets/angle_90_30/content.html",
-                previewImage: "assets/angle_90_30/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                preFolder: "assets/angle_90_30/pre/",
-                preImages: [
-                    "assets/angle_90_30/pre/01.jpg",
-                    "assets/angle_90_30/pre/02.jpg",
-                    "assets/angle_90_30/pre/03.jpg"
-                ],
-                thumbFiles: []
-            },
-            "180_30": {
-                key: "180_30", yaw: 180, pitch: 30,
-                title: "動態視覺與特效展示", category: "動態視覺",
-                desc: "AE 影音後製、粒子特效與 UI 動態微互動設計。",
-                folder: "assets/angle_180_30/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_180_30/content.html",
-                link: "assets/angle_180_30/content.html",
-                previewImage: "assets/angle_180_30/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                preFolder: "assets/angle_180_30/pre/",
-                preImages: [
-                    "assets/angle_180_30/pre/01.jpg",
-                    "assets/angle_180_30/pre/02.jpg",
-                    "assets/angle_180_30/pre/03.jpg"
-                ],
-                thumbFiles: []
-            },
-            "270_30": {
-                key: "270_30", yaw: 270, pitch: 30,
-                title: "音效與聲音互動實驗", category: "音效互動",
-                desc: "Web Audio API 聲波視覺化與聲音微程式控制。",
-                folder: "assets/angle_270_30/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_270_30/content.html",
-                link: "assets/angle_270_30/content.html",
-                previewImage: "assets/angle_270_30/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                preFolder: "assets/angle_270_30/pre/",
-                preImages: [
-                    "assets/angle_270_30/pre/01.jpg",
-                    "assets/angle_270_30/pre/02.jpg",
-                    "assets/angle_270_30/pre/03.jpg"
-                ],
-                thumbFiles: []
-            },
-            "0_60": {
-                key: "0_60", yaw: 0, pitch: 60,
-                title: "高階架構 & 全端技術棧", category: "全端架構",
-                desc: "包含前後端分離系統、Three.js 演算效能調優與 API 串接。",
-                folder: "assets/angle_0_60/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_0_60/content.html",
-                link: "assets/angle_0_60/content.html",
-                previewImage: "assets/angle_0_60/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                preFolder: "assets/angle_0_60/pre/",
-                preImages: [
-                    "assets/angle_0_60/pre/01.jpg",
-                    "assets/angle_0_60/pre/02.jpg",
-                    "assets/angle_0_60/pre/03.jpg"
-                ],
-                thumbFiles: []
-            }
-        };
-
+        let previewDeviceMode = 'mobile';
+        let BOARD_DATA = {};
         let activeBoardKey = "0_0";
         let draggedTabKey = null;
         let draggedThumbIdx = null;
+
+        function togglePreviewDeviceMode() {
+            previewDeviceMode = previewDeviceMode === 'mobile' ? 'desktop' : 'mobile';
+            const btn = document.getElementById('btn-preview-device-toggle');
+            if (btn) {
+                btn.innerText = previewDeviceMode === 'mobile' ? '模式: Android (< 600px)' : '模式: 平板&PC (>= 600px 雙側)';
+                btn.className = previewDeviceMode === 'mobile'
+                    ? 'bg-peach-500/20 text-peach-300 border border-peach-500/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold hover:bg-peach-500 hover:text-charcoal-950 transition'
+                    : 'bg-sky-500/20 text-sky-300 border border-sky-500/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold hover:bg-sky-400 hover:text-charcoal-950 transition';
+            }
+            updateLivePreviewFromInput();
+        }
 
         function showToast(msg) {
             const toastEl = document.getElementById('toast');
@@ -528,6 +347,10 @@
                     toastEl.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
                 }, 2800);
             }
+        }
+
+        function updateLivePreviewCard() {
+            updateLivePreviewFromInput();
         }
 
         function renderTabs() {
@@ -638,88 +461,23 @@
             document.getElementById('edit-board-title').value = item.title || '';
             document.getElementById('edit-board-category').value = item.category || '';
             document.getElementById('edit-board-desc').value = item.desc || '';
-            document.getElementById('edit-board-preview-img').value = item.previewImage || '';
-            document.getElementById('edit-board-folder').value = item.folder || '';
-            document.getElementById('edit-board-link').value = item.detailFilePath || item.link || '';
             document.getElementById('edit-board-custom-html').checked = !!item.hasCustomHtml;
 
-            const pw = item.previewImageWidth || (item.previewImageSize && item.previewImageSize.width) || 208;
-            const ph = item.previewImageHeight || (item.previewImageSize && item.previewImageSize.height) || 208;
-            document.getElementById('edit-board-preview-w').value = pw;
-            document.getElementById('edit-board-preview-h').value = ph;
+            // Android (Mobile < 600px)
+            document.getElementById('edit-thumb-size-mobile').value = item.thumbSizeMobile !== undefined ? item.thumbSizeMobile : 64;
+            document.getElementById('edit-thumb-margin-bottom-mobile').value = item.marginBottomMobile !== undefined ? item.marginBottomMobile : 26;
+            document.getElementById('edit-thumb-mask-percent-mobile').value = item.maskPercentMobile !== undefined ? item.maskPercentMobile : 22;
+            document.getElementById('edit-thumb-strip-width-mobile').value = item.stripWidthMobile !== undefined ? item.stripWidthMobile : 312;
 
-            // 填寫縮圖排版進階參數欄位
-            document.getElementById('edit-thumb-size').value = item.thumbSize !== undefined ? item.thumbSize : 64;
-            document.getElementById('edit-thumb-margin-bottom').value = item.marginBottom !== undefined ? item.marginBottom : 26;
-            document.getElementById('edit-thumb-mask-percent').value = item.maskPercent !== undefined ? item.maskPercent : 22;
-            document.getElementById('edit-thumb-strip-width').value = item.stripWidth !== undefined ? item.stripWidth : 312;
+            // 平板 & PC (>= 600px)
+            document.getElementById('edit-thumb-size-desktop').value = item.thumbSizeDesktop !== undefined ? item.thumbSizeDesktop : 128;
+            document.getElementById('edit-thumb-margin-bottom-desktop').value = item.marginBottomDesktop !== undefined ? item.marginBottomDesktop : 0;
+            document.getElementById('edit-thumb-mask-percent-desktop').value = item.maskPercentDesktop !== undefined ? item.maskPercentDesktop : 22;
 
             document.getElementById('preview-board-key').innerText = `Key: ${activeBoardKey}`;
             document.getElementById('active-board-title-badge').innerText = `${item.title || activeBoardKey}`;
 
             renderPreImagesGrid();
-        }
-
-        function updateLivePreviewFromInput() {
-            const previewCard = document.getElementById('preview-card-node');
-            if (!previewCard) return;
-
-            const title = document.getElementById('edit-board-title').value;
-            const desc = document.getElementById('edit-board-desc').value;
-
-            const thumbSize = parseInt(document.getElementById('edit-thumb-size').value) || 64;
-            const marginBottom = parseInt(document.getElementById('edit-thumb-margin-bottom').value) || 26;
-            const maskPercent = parseInt(document.getElementById('edit-thumb-mask-percent').value) || 22;
-            const stripWidth = parseInt(document.getElementById('edit-thumb-strip-width').value) || 312;
-
-            const stripHeight = thumbSize + 12;
-
-            const item = BOARD_DATA[activeBoardKey];
-            const preImages = (item && item.preImages && item.preImages.length > 0)
-                ? item.preImages.map((src, idx) => (item.thumbFiles && item.thumbFiles[idx] && item.thumbFiles[idx].previewUrl) ? item.thumbFiles[idx].previewUrl : src)
-                : [FALLBACK_THUMB];
-
-            const wasExpanded = previewCard.querySelector('.board-thumbnail-strip-wrapper')?.classList.contains('expanding');
-
-            let thumbsHTML = preImages.map(imgSrc => `
-                <div class="thumb-item" style="width: ${thumbSize}px; height: ${thumbSize}px;">
-                    <img src="${imgSrc}" class="w-full h-full object-cover select-none pointer-events-none" onerror="this.onerror=null; this.src='${FALLBACK_THUMB}';">
-                </div>
-            `).join('');
-
-            previewCard.innerHTML = `
-                <div class="absolute -top-3 left-3 bg-peach-500 text-charcoal-950 font-extrabold text-[11px] px-2.5 py-0.5 rounded-full shadow-md z-30 pointer-events-none truncate max-w-[170px]">
-                    ${title || 'Board Title'}
-                </div>
-
-                <button class="btn-toggle-preview absolute -top-3 right-3 w-6 h-6 rounded-full bg-charcoal-900 border border-peach-500/50 text-peach-300 hover:text-white hover:bg-peach-500 hover:text-charcoal-950 flex items-center justify-center text-[10px] font-bold shadow-lg z-30 transition cursor-pointer" title="展開預覽縮圖群">
-                    ${wasExpanded ? '▲' : '▼'}
-                </button>
-
-                <!-- 上方正方形縮圖群：即時讀取輸入欄位數值並套用 CSS 樣式 -->
-                <div class="board-thumbnail-strip-wrapper glass-panel rounded-2xl border border-peach-500/40 p-2 shadow-2xl overflow-hidden ${wasExpanded ? 'expanding' : ''}" style="width: ${stripWidth}px; height: ${stripHeight}px; bottom: calc(100% + ${marginBottom}px); -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%);">
-                    <div class="thumb-track">
-                        ${thumbsHTML}
-                    </div>
-                </div>
-
-                <p class="text-gray-200 text-xs line-clamp-3 mb-3 leading-relaxed pt-1 relative z-10">
-                    ${desc || ''}
-                </p>
-
-                <div class="pt-2 border-t border-white/10 text-xs font-semibold relative z-10">
-                    <button class="w-full bg-peach-500 text-charcoal-950 py-1.5 px-3 rounded-xl shadow-lg font-bold">
-                        作品細節
-                    </button>
-                </div>
-            `;
-
-            setupPreviewToggleEvent();
-            setupThumbnailTrackInteraction(previewCard, thumbSize, stripWidth);
-        }
-
-        function updateLivePreviewCard() {
-            updateLivePreviewFromInput();
         }
 
         function setupPreviewToggleEvent() {
@@ -742,6 +500,79 @@
             }
         }
 
+        function updateLivePreviewFromInput() {
+            const previewCard = document.getElementById('preview-card-node');
+            if (!previewCard) return;
+
+            const title = document.getElementById('edit-board-title').value;
+            const desc = document.getElementById('edit-board-desc').value;
+
+            const isDesktop = previewDeviceMode === 'desktop';
+
+            const thumbSize = isDesktop
+                ? (parseInt(document.getElementById('edit-thumb-size-desktop').value) || 128)
+                : (parseInt(document.getElementById('edit-thumb-size-mobile').value) || 64);
+            const marginBottom = isDesktop
+                ? (parseInt(document.getElementById('edit-thumb-margin-bottom-desktop').value) || 0)
+                : (parseInt(document.getElementById('edit-thumb-margin-bottom-mobile').value) || 26);
+            const maskPercent = isDesktop
+                ? (parseInt(document.getElementById('edit-thumb-mask-percent-desktop').value) || 22)
+                : (parseInt(document.getElementById('edit-thumb-mask-percent-mobile').value) || 22);
+            const stripWidth = isDesktop
+                ? 560
+                : (parseInt(document.getElementById('edit-thumb-strip-width-mobile').value) || 312);
+
+            const stripHeight = thumbSize + 16;
+
+            const item = BOARD_DATA[activeBoardKey];
+            const preImages = (item && item.preImages && item.preImages.length > 0)
+                ? item.preImages.map((src, idx) => (item.thumbFiles && item.thumbFiles[idx] && item.thumbFiles[idx].previewUrl) ? item.thumbFiles[idx].previewUrl : src)
+                : [FALLBACK_THUMB];
+
+            const wasExpanded = previewCard.querySelector('.board-thumbnail-strip-wrapper')?.classList.contains('expanding');
+
+            let thumbsHTML = preImages.map(imgSrc => `
+                <div class="thumb-item" style="width: ${thumbSize}px; height: ${thumbSize}px;">
+                    <img src="${imgSrc}" class="w-full h-full object-cover select-none pointer-events-none" onerror="this.onerror=null; this.src='${FALLBACK_THUMB}';">
+                </div>
+            `).join('');
+
+            // Smooth 100% to 0% edge fade-out mask aligned with index.html
+            const maskCss = isDesktop
+                ? `linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.4) 3%, #000 8%, #000 calc(50% - 150px), transparent calc(50% - 120px), transparent calc(50% + 120px), #000 calc(50% + 150px), #000 92%, rgba(0,0,0,0.4) 97%, transparent 100%)`
+                : `linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%)`;
+
+            previewCard.innerHTML = `
+                <div class="absolute -top-3 left-3 bg-peach-500 text-charcoal-950 font-extrabold text-[11px] px-2.5 py-0.5 rounded-full shadow-md z-40 pointer-events-none truncate max-w-[170px]">
+                    ${title || 'Board Title'}
+                </div>
+
+                <button class="btn-toggle-preview absolute -top-3 right-3 w-6 h-6 rounded-full bg-charcoal-900 border border-peach-500/50 text-peach-300 hover:text-white hover:bg-peach-500 hover:text-charcoal-950 flex items-center justify-center text-[10px] font-bold shadow-lg z-40 transition cursor-pointer pointer-events-auto" title="展開預覽縮圖群">
+                    ${wasExpanded ? '▲' : '▼'}
+                </button>
+
+                <!-- 無框遮罩正方形縮圖預覽區域 -->
+                <div class="board-thumbnail-strip-wrapper overflow-hidden ${wasExpanded ? 'expanding' : ''}" style="width: ${stripWidth}px; height: ${stripHeight}px; ${isDesktop ? 'top: 50%; left: 50%; transform: translate(-50%, -50%);' : `bottom: calc(100% + ${marginBottom}px);`} -webkit-mask-image: ${maskCss}; mask-image: ${maskCss};">
+                    <div class="thumb-track">
+                        ${thumbsHTML}
+                    </div>
+                </div>
+
+                <p class="text-gray-200 text-xs line-clamp-3 mb-3 leading-relaxed pt-1 relative z-10">
+                    ${desc || ''}
+                </p>
+
+                <div class="pt-2 border-t border-white/10 text-xs font-semibold relative z-40">
+                    <button class="btn-expand-project w-full bg-peach-500 hover:bg-peach-400 text-charcoal-950 py-1.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-peach-500/20 font-bold relative z-40 pointer-events-auto">
+                        作品細節
+                    </button>
+                </div>
+            `;
+
+            setupPreviewToggleEvent();
+            setupThumbnailTrackInteraction(previewCard, thumbSize, stripWidth);
+        }
+
         function setupThumbnailTrackInteraction(node, thumbSize = 64, stripWidth = 312) {
             const track = node.querySelector('.thumb-track');
             const wrapper = node.querySelector('.board-thumbnail-strip-wrapper');
@@ -751,6 +582,10 @@
             let startX = 0;
             let currentTranslateX = 0;
             let prevTranslateX = 0;
+            let velocity = 0;
+            let lastX = 0;
+            let lastT = 0;
+            let animRaf = null;
 
             function getMinMaxTranslate() {
                 const wrapperWidth = wrapper.clientWidth || stripWidth;
@@ -760,60 +595,36 @@
                     const centerOffset = (wrapperWidth - trackWidth) / 2;
                     return { min: centerOffset, max: centerOffset };
                 }
-                const maxTranslate = (wrapperWidth / 2) - (thumbSize / 2);
-                const minTranslate = (wrapperWidth / 2) - trackWidth + (thumbSize / 2);
+                const maxTranslate = 24;
+                const minTranslate = wrapperWidth - trackWidth - 24;
                 return { min: minTranslate, max: maxTranslate };
-            }
-
-            function snapToNearestThumb() {
-                const items = Array.from(track.querySelectorAll('.thumb-item'));
-                if (items.length === 0) return;
-
-                const wrapperCenter = (wrapper.clientWidth || stripWidth) / 2;
-                let closestIndex = 0;
-                let minDiff = Infinity;
-
-                items.forEach((item, index) => {
-                    const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-                    const targetTranslate = wrapperCenter - itemCenter;
-                    const diff = Math.abs(targetTranslate - currentTranslateX);
-
-                    if (diff < minDiff) {
-                        minDiff = diff;
-                        closestIndex = index;
-                    }
-                });
-
-                const targetItem = items[closestIndex];
-                const finalTranslate = wrapperCenter - (targetItem.offsetLeft + targetItem.offsetWidth / 2);
-
-                currentTranslateX = finalTranslate;
-                prevTranslateX = finalTranslate;
-                track.style.transition = 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)';
-                track.style.transform = `translateX(${currentTranslateX}px)`;
             }
 
             setTimeout(() => {
                 const items = track.querySelectorAll('.thumb-item');
                 if (items.length > 0) {
-                    const wrapperCenter = (wrapper.clientWidth || stripWidth) / 2;
-                    const targetIndex = items.length >= 3 ? 2 : (items.length - 1);
-                    const targetCenter = items[targetIndex].offsetLeft + items[targetIndex].offsetWidth / 2;
-                    currentTranslateX = wrapperCenter - targetCenter;
+                    currentTranslateX = 24;
                     prevTranslateX = currentTranslateX;
                     track.style.transform = `translateX(${currentTranslateX}px)`;
                 }
             }, 80);
 
-            track.onpointerdown = function(e) {
+            wrapper.onpointerdown = function(e) {
+                if (e.target.closest('.btn-toggle-preview') || e.target.closest('.btn-expand-project')) return;
                 e.stopPropagation();
+                e.preventDefault();
+                if (animRaf) cancelAnimationFrame(animRaf);
+
                 isDragging = true;
-                startX = e.clientX;
+                startX = lastX = e.clientX;
+                lastT = performance.now();
+                velocity = 0;
                 track.style.transition = 'none';
             };
 
             const onPointerMoveHandler = function(e) {
                 if (!isDragging) return;
+                e.preventDefault();
                 const deltaX = e.clientX - startX;
                 let nextX = prevTranslateX + deltaX;
 
@@ -825,14 +636,51 @@
                     nextX = min + (nextX - min) * 0.3;
                 }
 
+                const now = performance.now();
+                const dt = Math.max(1, now - lastT);
+                velocity = 0.6 * velocity + 0.4 * ((e.clientX - lastX) / dt);
+                lastX = e.clientX;
+                lastT = now;
+
                 currentTranslateX = nextX;
                 track.style.transform = `translateX(${currentTranslateX}px)`;
             };
 
-            const onPointerUpHandler = function() {
+            const onPointerUpHandler = function(e) {
                 if (!isDragging) return;
                 isDragging = false;
-                snapToNearestThumb();
+                
+                // Gentle controlled inertia deceleration physics
+                let lastDecelTime = performance.now();
+                function decelLoop() {
+                    const now = performance.now();
+                    const dt = Math.min(32, now - lastDecelTime);
+                    lastDecelTime = now;
+
+                    currentTranslateX += velocity * dt * 0.85;
+                    velocity *= Math.pow(0.88, dt / 16);
+
+                    const { min, max } = getMinMaxTranslate();
+
+                    if (currentTranslateX > max) {
+                        currentTranslateX += (max - currentTranslateX) * 0.18;
+                        velocity *= 0.4;
+                    } else if (currentTranslateX < min) {
+                        currentTranslateX += (min - currentTranslateX) * 0.18;
+                        velocity *= 0.4;
+                    }
+
+                    track.style.transform = `translateX(${currentTranslateX}px)`;
+
+                    if (Math.abs(velocity) > 0.01 || currentTranslateX > max + 0.5 || currentTranslateX < min - 0.5) {
+                        animRaf = requestAnimationFrame(decelLoop);
+                    } else {
+                        currentTranslateX = Math.max(min, Math.min(max, currentTranslateX));
+                        prevTranslateX = currentTranslateX;
+                        track.style.transform = `translateX(${currentTranslateX}px)`;
+                    }
+                }
+                animRaf = requestAnimationFrame(decelLoop);
             };
 
             document.addEventListener('pointermove', onPointerMoveHandler);
@@ -1044,7 +892,7 @@
             });
         }
 
-        function createPlaceholderSquareBlob(text, targetSize = 128) {
+        function createPlaceholderSquareBlob(text, targetSize = 256) {
             return new Promise((resolve) => {
                 try {
                     const canvas = document.createElement('canvas');
@@ -1065,7 +913,7 @@
             });
         }
 
-        function fetchSquareBlob(src, targetSize = 128) {
+        function fetchSquareBlob(src, targetSize = 256) {
             return new Promise((resolve) => {
                 if (!src) return resolve(null);
 
@@ -1077,7 +925,6 @@
                     }
                 };
 
-                // 2.5 秒超時保護，避免跨域或加載失敗時 ZIP 流程卡死
                 const timer = setTimeout(() => {
                     fetchRawBlob(src).then(blob => {
                         if (blob) safeResolve(blob);
@@ -1160,9 +1007,9 @@
 
             const yaw = item.yaw !== undefined ? item.yaw : 0;
             const pitch = item.pitch !== undefined ? item.pitch : 0;
-            const thumbSize = item.thumbSize !== undefined ? item.thumbSize : 64;
+            const pcThumbSize = item.thumbSizeDesktop || 128;
 
-            showToast("⏳ 正在製作縮圖打包 ZIP 檔案...");
+            showToast("⏳ 正在製作 PC 高清縮圖打包 ZIP 檔案...");
 
             try {
                 const zip = new JSZip();
@@ -1173,9 +1020,9 @@
                     const displayNum = String(i + 1).padStart(2, '0');
                     const fileName = `${displayNum}.jpg`;
 
-                    let blob = await fetchSquareBlob(imgSrc, thumbSize * 2);
+                    let blob = await fetchSquareBlob(imgSrc, pcThumbSize * 2);
                     if (!blob) {
-                        blob = await createPlaceholderSquareBlob(`#${displayNum}`, thumbSize * 2);
+                        blob = await createPlaceholderSquareBlob(`#${displayNum}`, pcThumbSize * 2);
                     }
                     if (blob) {
                         zip.file(fileName, blob);
@@ -1183,7 +1030,7 @@
                 }
 
                 const content = await zip.generateAsync({ type: "blob" });
-                const zipFileName = `angle_${yaw}_${pitch}_pre_thumbnails.zip`;
+                const zipFileName = `angle_${yaw}_${pitch}_pre_thumbnails_hd.zip`;
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(content);
                 a.download = zipFileName;
@@ -1191,7 +1038,7 @@
                 a.click();
                 document.body.removeChild(a);
 
-                showToast(`📦 縮圖已成功打包下載為 ${zipFileName}！`);
+                showToast(`📦 縮圖已成功以 PC 高清規格打包下載為 ${zipFileName}！`);
 
                 setTimeout(() => {
                     downloadBoardJsonData();
@@ -1211,21 +1058,18 @@
             item.desc = document.getElementById('edit-board-desc').value.trim();
             item.yaw = parseInt(document.getElementById('edit-board-yaw').value) || 0;
             item.pitch = parseInt(document.getElementById('edit-board-pitch').value) || 0;
-            item.previewImage = document.getElementById('edit-board-preview-img').value.trim();
 
-            item.previewImageWidth = parseInt(document.getElementById('edit-board-preview-w').value) || 208;
-            item.previewImageHeight = parseInt(document.getElementById('edit-board-preview-h').value) || 208;
-            item.previewImageSize = { width: item.previewImageWidth, height: item.previewImageHeight };
+            // 儲存 Android (Mobile < 600px) 參數
+            item.thumbSizeMobile = parseInt(document.getElementById('edit-thumb-size-mobile').value) || 64;
+            item.marginBottomMobile = parseInt(document.getElementById('edit-thumb-margin-bottom-mobile').value) || 26;
+            item.maskPercentMobile = parseInt(document.getElementById('edit-thumb-mask-percent-mobile').value) || 22;
+            item.stripWidthMobile = parseInt(document.getElementById('edit-thumb-strip-width-mobile').value) || 312;
 
-            item.thumbSize = parseInt(document.getElementById('edit-thumb-size').value) || 64;
-            item.marginBottom = parseInt(document.getElementById('edit-thumb-margin-bottom').value) || 26;
-            item.maskPercent = parseInt(document.getElementById('edit-thumb-mask-percent').value) || 22;
-            item.stripWidth = parseInt(document.getElementById('edit-thumb-strip-width').value) || 312;
-
-            item.folder = document.getElementById('edit-board-folder').value.trim();
-            item.detailFilePath = document.getElementById('edit-board-link').value.trim();
-            item.link = item.detailFilePath;
-            item.hasCustomHtml = document.getElementById('edit-board-custom-html').checked;
+            // 儲存 平板 & PC (>= 600px) 參數
+            item.thumbSizeDesktop = parseInt(document.getElementById('edit-thumb-size-desktop').value) || 128;
+            item.marginBottomDesktop = parseInt(document.getElementById('edit-thumb-margin-bottom-desktop').value) || 0;
+            item.maskPercentDesktop = parseInt(document.getElementById('edit-thumb-mask-percent-desktop').value) || 22;
+            item.stripWidthDesktop = window.innerWidth;
 
             try {
                 localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(BOARD_DATA));
@@ -1235,7 +1079,7 @@
 
             if (showToastMsg) {
                 renderTabs();
-                showToast(`已套用修改並更新本地紀錄：${item.title}`);
+                showToast(`已套用修改並更新紀錄：${item.title}`);
             }
         }
 
@@ -1248,9 +1092,6 @@
                 const pitch = item.pitch;
                 const folder = item.folder || `assets/angle_${key}/`;
                 const preFolder = item.preFolder || `${folder}pre/`;
-
-                const pw = item.previewImageWidth || (item.previewImageSize && item.previewImageSize.width) || 208;
-                const ph = item.previewImageHeight || (item.previewImageSize && item.previewImageSize.height) || 208;
 
                 return {
                     key: item.key || key,
@@ -1269,16 +1110,14 @@
                     detailFilePath: item.detailFilePath || `${folder}content.html`,
                     boardLink: item.boardLink || folder,
                     previewImage: item.previewImage || `${folder}preview.jpg`,
-                    previewImageWidth: pw,
-                    previewImageHeight: ph,
-                    previewImageSize: {
-                        width: pw,
-                        height: ph
-                    },
-                    thumbSize: item.thumbSize !== undefined ? item.thumbSize : 64,
-                    stripWidth: item.stripWidth !== undefined ? item.stripWidth : 312,
-                    marginBottom: item.marginBottom !== undefined ? item.marginBottom : 26,
-                    maskPercent: item.maskPercent !== undefined ? item.maskPercent : 22,
+                    thumbSizeMobile: item.thumbSizeMobile !== undefined ? item.thumbSizeMobile : 64,
+                    stripWidthMobile: item.stripWidthMobile !== undefined ? item.stripWidthMobile : 312,
+                    marginBottomMobile: item.marginBottomMobile !== undefined ? item.marginBottomMobile : 26,
+                    maskPercentMobile: item.maskPercentMobile !== undefined ? item.maskPercentMobile : 22,
+                    thumbSizeDesktop: item.thumbSizeDesktop !== undefined ? item.thumbSizeDesktop : 128,
+                    stripWidthDesktop: item.stripWidthDesktop !== undefined ? item.stripWidthDesktop : 624,
+                    marginBottomDesktop: item.marginBottomDesktop !== undefined ? item.marginBottomDesktop : 0,
+                    maskPercentDesktop: item.maskPercentDesktop !== undefined ? item.maskPercentDesktop : 22,
                     preFolder: preFolder,
                     preImages: item.preImages || [],
                     images: item.images || []
@@ -1286,8 +1125,8 @@
             });
 
             const exportObj = {
-                _readme: "index.html 會讀取此檔顯示所有面板。preImages 留空時，會自動掃描 preFolder 內的 jpg/png；都沒有則顯示預設縮圖。",
-                version: 1,
+                _readme: "index.html 會讀取此檔顯示所有面板。包含 Android (<600px) 與 平板&PC (>=600px 雙側展演) 獨立相應設定。",
+                version: 2,
                 panels: exportPanels
             };
 
@@ -1301,7 +1140,7 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast("📄 已成功下載 board_data.json（本地紀錄保持不變）");
+            showToast("📄 已成功下載 board_data.json！");
         }
 
         async function fetchLocalBoardJson() {
@@ -1319,9 +1158,9 @@
 
             if (loadedData) {
                 normalizeAndLoadBoardData(loadedData, true);
-                showToast("✅ 已成功載入並統整相鄰 board_data.json！");
+                showToast("✅ 已成功載入相鄰 board_data.json！");
             } else {
-                showToast("⚠️ 未存取到相鄰 JSON，請手動點擊選擇檔案匯入");
+                showToast("⚠️ 未存取到相鄰 JSON，請手動選擇檔案匯入");
             }
         }
 
@@ -1350,11 +1189,6 @@
                             `${preFolder}05.jpg`
                         ];
 
-                    let thumbFiles = Array.isArray(p.thumbFiles) ? p.thumbFiles : [];
-
-                    const pw = p.previewImageWidth || (p.previewImageSize && p.previewImageSize.width) || 208;
-                    const ph = p.previewImageHeight || (p.previewImageSize && p.previewImageSize.height) || 208;
-
                     normalized[key] = {
                         key: key,
                         yaw: yaw,
@@ -1366,19 +1200,18 @@
                         hasCustomHtml: !!p.hasCustomHtml,
                         detailFilePath: p.detailFilePath || p.link || `${folder}content.html`,
                         link: p.link || p.detailFilePath || `${folder}content.html`,
-                        boardLink: p.boardLink || folder,
                         previewImage: p.previewImage || `${folder}preview.jpg`,
-                        previewImageWidth: pw,
-                        previewImageHeight: ph,
-                        previewImageSize: { width: pw, height: ph },
-                        thumbSize: p.thumbSize !== undefined ? Number(p.thumbSize) : 64,
-                        stripWidth: p.stripWidth !== undefined ? Number(p.stripWidth) : 312,
-                        marginBottom: p.marginBottom !== undefined ? Number(p.marginBottom) : 26,
-                        maskPercent: p.maskPercent !== undefined ? Number(p.maskPercent) : 22,
+                        thumbSizeMobile: p.thumbSizeMobile !== undefined ? Number(p.thumbSizeMobile) : (p.thumbSize || 64),
+                        stripWidthMobile: p.stripWidthMobile !== undefined ? Number(p.stripWidthMobile) : (p.stripWidth || 312),
+                        marginBottomMobile: p.marginBottomMobile !== undefined ? Number(p.marginBottomMobile) : (p.marginBottom || 26),
+                        maskPercentMobile: p.maskPercentMobile !== undefined ? Number(p.maskPercentMobile) : (p.maskPercent || 22),
+                        thumbSizeDesktop: p.thumbSizeDesktop !== undefined ? Number(p.thumbSizeDesktop) : (p.thumbSizeMobile ? p.thumbSizeMobile * 2 : 128),
+                        stripWidthDesktop: p.stripWidthDesktop !== undefined ? Number(p.stripWidthDesktop) : window.innerWidth,
+                        marginBottomDesktop: p.marginBottomDesktop !== undefined ? Number(p.marginBottomDesktop) : 0,
+                        maskPercentDesktop: p.maskPercentDesktop !== undefined ? Number(p.maskPercentDesktop) : 22,
                         preFolder: preFolder,
                         preImages: preImages,
-                        images: Array.isArray(p.images) ? p.images : [],
-                        thumbFiles: thumbFiles
+                        images: Array.isArray(p.images) ? p.images : []
                     };
                 });
             }
@@ -1407,7 +1240,7 @@
                 try {
                     const jsonData = JSON.parse(evt.target.result);
                     normalizeAndLoadBoardData(jsonData, true);
-                    showToast("✅ 已成功匯入面板 JSON 資料並更新紀錄！");
+                    showToast("✅ 已成功匯入 JSON 並更新紀錄！");
                 } catch (err) {
                     showToast("⚠️ JSON 解析失敗");
                 }
@@ -1423,7 +1256,7 @@
                     const parsed = JSON.parse(localSaved);
                     if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
                         normalizeAndLoadBoardData(parsed, false);
-                        showToast("✅ 已成功讀取上次儲存的 LocalStorage 狀態！");
+                        showToast("✅ 已成功讀取 LocalStorage 狀態！");
                         return;
                     }
                 } catch (e) {}

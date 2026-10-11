@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>精選個人作品 - 專案展演</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
@@ -71,74 +72,74 @@
 </head>
 <body class="p-1 md:p-2 pt-1 md:pt-1 min-h-screen bg-charcoal-950 no-scrollbar selection:bg-peach-500 selection:text-charcoal-950 overflow-hidden">
 
-    <div id="angle00-wrapper" class="relative w-full h-full max-w-[1536px] mx-auto text-gray-100 flex flex-col justify-between overflow-hidden pt-0">
+    <div id="angle00-wrapper" class="relative w-full h-full max-w-[1536px] mx-auto text-gray-100 flex flex-col justify-between overflow-hidden pt-0 gap-2">
         
-        <!-- 1. Top Bar: Theme Tags (Centered) & Close Button (Top-Rightmost, Same Height) -->
-        <div class="relative w-full flex items-center justify-between z-40 mb-1 flex-shrink-0 px-1 md:px-2">
-            <!-- Invisible Spacer for visual centering balance -->
-            <div class="w-8 h-8 opacity-0 pointer-events-none hidden sm:block"></div>
-
-            <!-- Theme Navigation Tags -->
-            <div class="glass-panel px-3 py-1 rounded-full border border-peach-500/30 shadow-2xl flex items-center gap-1.5 md:gap-2 overflow-x-auto no-scrollbar max-w-[80vw] md:max-w-[70vw] mx-auto">
-                <div id="angle00-theme-tags" class="flex items-center gap-1.5 md:gap-2">
-                    <!-- Injected dynamically via JS -->
+        <!-- 1. Top Panel: Dedicated Centered Theme Selection Floating Glass Panel -->
+        <div class="w-full flex items-center justify-center relative z-40 flex-shrink-0">
+            <!-- Dedicated Centered Theme Floating Glass Panel -->
+            <div class="glass-panel px-4 py-1.5 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center gap-2">
+                <div id="angle00-theme-tags" class="flex items-center gap-1.5 md:gap-2 overflow-x-auto no-scrollbar">
+                    <!-- Dynamic Theme Buttons Injected via JS -->
                 </div>
             </div>
 
-            <!-- Top-Right Close Button (Aligned height with theme tags) -->
+            <!-- Modal Close Button (Positioned at top right corner) -->
             <button onclick="window.angle00CloseModal()" 
-                    class="w-8 h-8 rounded-xl glass-panel flex items-center justify-center text-xs text-gray-300 hover:text-white hover:bg-rose-500/20 hover:border-rose-400/50 transition border border-white/10 shadow-md flex-shrink-0 ml-auto sm:ml-0"
+                    class="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 rounded-xl bg-charcoal-900/90 hover:bg-rose-500/30 hover:border-rose-400/50 flex items-center justify-center text-xs text-gray-300 hover:text-white transition border border-white/10 shadow-md flex-shrink-0 cursor-pointer"
                     title="關閉作品面板">
                 ✕
             </button>
         </div>
 
-        <!-- Stage Header Bar: Subcategory Tags (Left) & Counter (Right-Aligned) -->
-        <header class="relative flex items-center justify-between gap-3 pb-1.5 border-b border-white/10 px-2 md:px-4 z-30 flex-shrink-0">
-            <div class="flex items-center gap-3">
-                <div id="angle00-subcat-tags" class="flex items-center gap-1.5 md:gap-2 overflow-x-auto no-scrollbar py-0.5 max-w-[55vw] md:max-w-[48vw]">
-                    <!-- Subcategory tag buttons injected dynamically via JS -->
+        <!-- 2. Single Unified Main Panel: Contains Subcategory Header, Stage, and Bottom Thumb Strip -->
+        <div class="glass-panel rounded-3xl p-3 md:p-5 border border-white/10 shadow-2xl flex-1 w-full flex flex-col justify-between overflow-hidden">
+            
+            <!-- Subcategory Header Bar (Max width 48% so it wraps cleanly before centerline) -->
+            <header class="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 z-30 flex-shrink-0">
+                <div id="angle00-subcat-tags" class="flex flex-wrap items-center gap-1.5 max-w-[48%] max-h-20 overflow-y-auto no-scrollbar py-0.5">
+                    <!-- Dynamic Subcategory Tag Buttons Injected via JS -->
+                </div>
+
+                <!-- Page Counter aligned to the right side -->
+                <div class="flex items-center gap-2 ml-auto">
+                    <span id="angle00-lightbox-counter" class="font-mono bg-white/10 px-3 py-1 rounded-full text-xs text-peach-300 font-bold">
+                        1 / 10
+                    </span>
+                </div>
+            </header>
+
+            <!-- Main Stage: Independent Image Display Workspace -->
+            <div id="angle00-lightbox-stage-container" class="relative flex-1 w-full flex items-center justify-center my-1 overflow-hidden cursor-grab active:cursor-grabbing pc-3d-stage">
+                <div id="angle00-lightbox-toast" 
+                     class="absolute top-2 z-40 px-4 py-1.5 rounded-full bg-peach-500 text-charcoal-950 font-bold text-xs shadow-2xl backdrop-blur-md transition-all duration-500 opacity-0 -translate-y-4 pointer-events-none">
+                    <span id="angle00-toast-text">已切換主題</span>
+                </div>
+
+                <!-- Mobile Navigation Arrow Left (Opacity set to 30%) -->
+                <button id="angle00-nav-btn-prev" onclick="event.stopPropagation(); window.angle00NavImage(-1);" 
+                        class="absolute left-2 z-30 w-10 h-10 rounded-full bg-charcoal-900/90 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold opacity-30 hover:opacity-100 active:scale-95">
+                    ‹
+                </button>
+
+                <!-- Stage Workspace for 3D Spatial Cards -->
+                <div id="angle00-lightbox-cards-wrapper" class="relative w-full h-full flex items-center justify-center pc-3d-cards-wrapper">
+                    <!-- Dynamic Glass Cards -->
+                </div>
+
+                <!-- Mobile Navigation Arrow Right (Opacity set to 30%) -->
+                <button id="angle00-nav-btn-next" onclick="event.stopPropagation(); window.angle00NavImage(1);" 
+                        class="absolute right-2 z-30 w-10 h-10 rounded-full bg-charcoal-900/90 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold opacity-30 hover:opacity-100 active:scale-95">
+                    ›
+                </button>
+            </div>
+
+            <!-- Bottom Thumbnail Strip Container (Unified inside the main panel) -->
+            <div class="w-full pt-2 border-t border-white/10 flex-shrink-0">
+                <div id="angle00-thumb-strip" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 px-0 justify-start cursor-grab active:cursor-grabbing select-none">
+                    <!-- Dynamic thumbnails -->
                 </div>
             </div>
 
-            <!-- Page Counter aligned to the far right -->
-            <div class="flex items-center gap-3 ml-auto">
-                <span id="angle00-lightbox-counter" class="font-mono bg-white/10 px-3 py-1 rounded-full text-xs text-peach-300 font-bold">
-                    1 / 10
-                </span>
-            </div>
-        </header>
-
-        <!-- Main 3D Spatial Lightbox Stage -->
-        <div id="angle00-lightbox-stage-container" class="relative flex-1 w-full max-w-[1536px] flex items-center justify-center my-0.5 overflow-hidden cursor-grab active:cursor-grabbing pc-3d-stage">
-            <div id="angle00-lightbox-toast" 
-                 class="absolute top-2 z-40 px-4 py-1.5 rounded-full bg-peach-500 text-charcoal-950 font-bold text-xs shadow-2xl backdrop-blur-md transition-all duration-500 opacity-0 -translate-y-4 pointer-events-none">
-                <span id="angle00-toast-text">已切換主題</span>
-            </div>
-
-            <!-- Mobile Navigation Arrow Left -->
-            <button id="angle00-nav-btn-prev" onclick="event.stopPropagation(); window.angle00NavImage(-1);" 
-                    class="absolute left-2 z-30 w-10 h-10 rounded-full bg-charcoal-900/90 hover:bg-peach-500 hover:text-charcoal-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold">
-                ‹
-            </button>
-
-            <!-- Stage Workspace for VisionOS 3D Spatial Cards -->
-            <div id="angle00-lightbox-cards-wrapper" class="relative w-full h-full flex items-center justify-center pc-3d-cards-wrapper">
-                <!-- Dynamic VisionOS 3D Spatial Glass Cards -->
-            </div>
-
-            <!-- Mobile Navigation Arrow Right -->
-            <button id="angle00-nav-btn-next" onclick="event.stopPropagation(); window.angle00NavImage(1);" 
-                    class="absolute right-2 z-30 w-10 h-10 rounded-full bg-charcoal-900/90 hover:bg-peach-500 hover:text-charcoal-950 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold">
-                ›
-            </button>
-        </div>
-
-        <!-- Bottom Thumbnail Strip Container -->
-        <div class="w-full max-w-[1536px] py-0.5 px-1 flex-shrink-0">
-            <div id="angle00-thumb-strip" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 px-0 justify-start cursor-grab active:cursor-grabbing select-none">
-                <!-- Dynamic thumbnails injected here -->
-            </div>
         </div>
 
     </div>
@@ -258,7 +259,6 @@
             let flatImageList = [];
             let activeGlobalImageIndex = 0;
 
-            // Aspect ratio cache for dynamic 3D stage layout calculations
             const aspectRatioCache = {};
 
             let touchStartX = 0;
@@ -485,7 +485,6 @@
                     const total = flatImageList.length;
                     const relativeOffsets = [-2, -1, 0, 1, 2];
 
-                    // Determine active image aspect ratio (default 1.2 if not cached yet)
                     const activeRatio = aspectRatioCache[currentItem.src] || 1.2;
 
                     let shiftX1 = 360;
@@ -507,33 +506,27 @@
                         let opacity = 1;
                         let filterCss = '';
 
-                        // VisionOS 3D Spatial Perspective Layout (Darkened side preview cards)
                         if (offset === 0) {
-                            // Center Primary Card - Full Focus & Brightness
                             transformCss = 'translateX(0px) translateZ(180px) rotateY(0deg) scale(1.0)';
                             zIndex = 30;
                             opacity = 1.0;
                             filterCss = 'brightness(100%) contrast(100%)';
                         } else if (offset === -1) {
-                            // Left Adjacent Card (-1) - Darker (45% brightness) to highlight main image
                             transformCss = `translateX(-${shiftX1}px) translateZ(-20px) rotateY(34deg) scale(0.82)`;
                             zIndex = 20;
                             opacity = 0.70;
                             filterCss = 'brightness(45%) contrast(90%)';
                         } else if (offset === 1) {
-                            // Right Adjacent Card (+1) - Darker (45% brightness)
                             transformCss = `translateX(${shiftX1}px) translateZ(-20px) rotateY(-34deg) scale(0.82)`;
                             zIndex = 20;
                             opacity = 0.70;
                             filterCss = 'brightness(45%) contrast(90%)';
                         } else if (offset === -2) {
-                            // Far Left Card (-2) - Very Dark (25% brightness)
                             transformCss = `translateX(-${shiftX2}px) translateZ(-200px) rotateY(54deg) scale(0.65)`;
                             zIndex = 10;
                             opacity = 0.40;
                             filterCss = 'brightness(25%) contrast(85%)';
                         } else if (offset === 2) {
-                            // Far Right Card (+2) - Very Dark (25% brightness)
                             transformCss = `translateX(${shiftX2}px) translateZ(-200px) rotateY(-54deg) scale(0.65)`;
                             zIndex = 10;
                             opacity = 0.40;

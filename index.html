@@ -94,44 +94,65 @@
             transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.15s ease;
             touch-action: none;
         }
+
+        /* Frameless Thumbnail Strip Overlay Styles */
         .thumb-strip {
             position: absolute;
-            left: 50%;
-            bottom: 100%;
             display: none;
-            transform-origin: 50% 50%;
             will-change: transform, opacity;
-            z-index: 25;
+            z-index: 35;
             touch-action: none;
             cursor: grab;
-            pointer-events: auto;
+            pointer-events: auto !important;
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            overflow: hidden;
         }
+        
+        .thumb-strip.is-mobile {
+            left: 50%;
+            bottom: 100%;
+            transform-origin: 50% 100%;
+        }
+
+        .thumb-strip.is-desktop {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+
         .thumb-strip.dragging { cursor: grabbing; }
+        
         .thumb-viewport {
             position: relative;
             width: 100%;
             height: 100%;
             overflow: hidden;
-            pointer-events: auto;
+            pointer-events: auto !important;
+            touch-action: none;
         }
         .thumb-track {
             position: absolute;
             top: 6px;
             left: 0;
             display: flex;
-            gap: 8px;
+            gap: 12px;
             will-change: transform;
-            pointer-events: auto;
+            pointer-events: auto !important;
+            touch-action: none;
         }
         .thumb-item {
             flex: 0 0 auto;
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
-            border: 1px solid rgba(252, 209, 145, 0.55);
+            border: 1.5px solid rgba(252, 209, 145, 0.6);
             background: #1c1c1f;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
             will-change: transform;
-            pointer-events: auto;
+            pointer-events: auto !important;
+            touch-action: none;
         }
         .thumb-item img {
             width: 100%;
@@ -173,7 +194,7 @@
 
             <div id="nav-content-wrapper" class="w-full flex flex-col items-center gap-2 transition-all duration-300 ease-in-out max-h-[350px] opacity-100 overflow-hidden">
                 <div class="text-[11px] text-gray-400 flex items-center gap-1.5 glass-panel px-3.5 py-1 rounded-full border border-white/5">
-                    <span>隨意拖曳 360° 空間，點擊「作品細節」觀看專案細節</span>
+                    <span>隨意拖曳 360° 空間，自動開啟當前主題預覽圖</span>
                 </div>
 
                 <div class="glass-panel p-2 rounded-2xl flex flex-wrap justify-center items-center gap-1.5 shadow-2xl max-w-full overflow-x-auto no-scrollbar">
@@ -225,126 +246,42 @@
 
     <!-- Modal Detail Container -->
     <div id="modal-details" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none hidden transition-opacity duration-300">
-        <div class="glass-panel w-full max-w-[1536px] rounded-3xl p-3 sm:p-6 h-[95vh] flex flex-col border border-white/20 shadow-2xl relative overflow-hidden">
-            <div class="overflow-hidden w-full h-full flex-1 relative" id="modal-detail-content">
-                <!-- content.html is injected here cleanly -->
-            </div>
+        <div class="w-full max-w-[1536px] h-[95vh] flex flex-col relative overflow-hidden" id="modal-detail-content">
+            <!-- content.html is injected here cleanly -->
         </div>
     </div>
 
     <script>
-        let PORTFOLIO_DATA = {
-            "0_-30": {
-                title: "關於我 & 履歷與聯繫", category: "關於我",
-                desc: "個人經歷簡介、設計哲學與專案合作諮詢。",
-                folder: "assets/angle_0_-30/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_0_-30/content.html",
-                boardLink: "assets/angle_0_-30/", previewImage: "assets/angle_0_-30/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                images: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80"]
-            },
-            "0_0": {
-                title: "精選個人作品 & 品牌整合", category: "精選個人作品",
-                desc: "展示品牌核心視覺與標誌設計案例。融合現代幾何學與沉浸式視覺體驗。",
-                folder: "assets/angle_0_0/", hasCustomHtml: true,
-                detailFilePath: "assets/angle_0_0/content.html",
-                boardLink: "assets/angle_0_0/", previewImage: "assets/angle_0_0/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                images: ["https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80"]
-            },
-            "90_0": {
-                title: "Web 應用與互動體驗", category: "Web 應用",
-                desc: "包含沉浸式 WebGL 網頁、動態網頁動畫與 3D 產品展示頁。",
-                folder: "assets/angle_90_0/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_90_0/content.html",
-                boardLink: "assets/angle_90_0/", previewImage: "assets/angle_90_0/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                images: ["https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80"]
-            },
-            "180_0": {
-                title: "3D 建模與動態視覺", category: "3D 建模",
-                desc: "Blender / Cinema4D 產品 Rendering、幾何場景與光影質感設計。",
-                folder: "assets/angle_180_0/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_180_0/content.html",
-                boardLink: "assets/angle_180_0/", previewImage: "assets/angle_180_0/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                images: ["https://images.unsplash.com/photo-1633167606207-d840b5070fc2?auto=format&fit=crop&w=600&q=80"]
-            },
-            "270_0": {
-                title: "生成式藝術 & 實驗專案", category: "生成藝術",
-                desc: "Shader 演算法動畫、Generative Art 與聲音感應互動專案。",
-                folder: "assets/angle_270_0/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_270_0/content.html",
-                boardLink: "assets/angle_270_0/", previewImage: "assets/angle_270_0/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                images: ["https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=600&q=80"]
-            },
-            "0_30": {
-                title: "UI / UX 介面設計系統", category: "UI/UX 介面",
-                desc: "專注於跨平台 Dashboard 介面與 Component Design System 規範。",
-                folder: "assets/angle_0_30/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_0_30/content.html",
-                boardLink: "assets/angle_0_30/", previewImage: "assets/angle_0_30/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                images: ["https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80"]
-            },
-            "90_30": {
-                title: "跨平台 App 開發專案", category: "App 開發",
-                desc: "Flutter 與 React Native 跨平台應用程式設計與體驗調優。",
-                folder: "assets/angle_90_30/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_90_30/content.html",
-                boardLink: "assets/angle_90_30/", previewImage: "assets/angle_90_30/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                images: ["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80"]
-            },
-            "180_30": {
-                title: "動態視覺與特效展示", category: "動態視覺",
-                desc: "AE 影音後製、粒子特效與 UI 動態微互動設計。",
-                folder: "assets/angle_180_30/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_180_30/content.html",
-                boardLink: "assets/angle_180_30/", previewImage: "assets/angle_180_30/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                images: ["https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=600&q=80"]
-            },
-            "270_30": {
-                title: "音效與聲音互動實驗", category: "音效互動",
-                desc: "Web Audio API 聲波視覺化與聲音微程式控制。",
-                folder: "assets/angle_270_30/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_270_30/content.html",
-                boardLink: "assets/angle_270_30/", previewImage: "assets/angle_270_30/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                images: ["https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80"]
-            },
-            "0_60": {
-                title: "高階架構 & 全端技術棧", category: "全端架構",
-                desc: "包含前後端分離系統、Three.js 演算效能調優與 API 串接。",
-                folder: "assets/angle_0_60/", hasCustomHtml: false,
-                detailFilePath: "assets/angle_0_60/content.html",
-                boardLink: "assets/angle_0_60/", previewImage: "assets/angle_0_60/preview.jpg",
-                previewImageWidth: 208, previewImageHeight: 208,
-                previewImageSize: { width: 208, height: 208 },
-                thumbSize: 64, stripWidth: 312, marginBottom: 26, maskPercent: 22,
-                images: ["https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80"]
-            }
-        };
+        let PORTFOLIO_DATA = {};
+        const YAW_TARGETS = [0, 90, 180, 270];
+        const PITCH_TARGETS = [-60, -30, 0, 30, 60];
+        const THUMB_GAP = 12;
+
+        let container, scene, camera, renderer, sphereMesh;
+        let isUserInteracting = false;
+        let onPointerDownPointerX = 0, onPointerDownPointerY = 0;
+        let onPointerDownLon = 0, onPointerDownLat = 0;
+        let pointerMoveDistance = 0;
+
+        let lon = 0, lat = 0;
+        let targetLon = 0, targetLat = 0;
+        let isSnapping = false;
+
+        let activePanelKey = "0_0";
+
+        const spatialDomNodes = {};
+
+        function isDesktopViewport() {
+            return window.innerWidth >= 600;
+        }
+
+        function makeDefaultThumbs() {
+            return [
+                'https://placehold.co/300x300/1c1c1f/fcd191?text=Preview+01',
+                'https://placehold.co/300x300/1c1c1f/fcd191?text=Preview+02',
+                'https://placehold.co/300x300/1c1c1f/fcd191?text=Preview+03'
+            ];
+        }
 
         async function loadBoardData() {
             try {
@@ -378,10 +315,15 @@
                         it.previewImageHeight = it.previewImageHeight || (it.previewImageSize && it.previewImageSize.height) || 208;
                         it.previewImageSize = { width: it.previewImageWidth, height: it.previewImageHeight };
 
-                        it.thumbSize = it.thumbSize !== undefined ? Number(it.thumbSize) : 64;
-                        it.stripWidth = it.stripWidth !== undefined ? Number(it.stripWidth) : 312;
-                        it.marginBottom = it.marginBottom !== undefined ? Number(it.marginBottom) : 26;
-                        it.maskPercent = it.maskPercent !== undefined ? Number(it.maskPercent) : 22;
+                        it.thumbSizeMobile = it.thumbSizeMobile !== undefined ? Number(it.thumbSizeMobile) : (it.thumbSize || 64);
+                        it.stripWidthMobile = it.stripWidthMobile !== undefined ? Number(it.stripWidthMobile) : (it.stripWidth || 312);
+                        it.marginBottomMobile = it.marginBottomMobile !== undefined ? Number(it.marginBottomMobile) : (it.marginBottom || 26);
+                        it.maskPercentMobile = it.maskPercentMobile !== undefined ? Number(it.maskPercentMobile) : (it.maskPercent || 22);
+
+                        it.thumbSizeDesktop = it.thumbSizeDesktop !== undefined ? Number(it.thumbSizeDesktop) : (it.thumbSizeMobile * 2);
+                        it.stripWidthDesktop = it.stripWidthDesktop !== undefined ? Number(it.stripWidthDesktop) : window.innerWidth;
+                        it.marginBottomDesktop = it.marginBottomDesktop !== undefined ? Number(it.marginBottomDesktop) : 0;
+                        it.maskPercentDesktop = it.maskPercentDesktop !== undefined ? Number(it.maskPercentDesktop) : 22;
 
                         it.preFolder = it.preFolder || base + 'pre/';
                         it.images = Array.isArray(it.images) ? it.images : [];
@@ -392,24 +334,9 @@
                     PORTFOLIO_DATA = normalized;
                 }
             } catch (err) {
-                console.log('[board_data.json] 讀取備援模式啟用。');
+                console.log('[board_data.json] 使用預設全景與面板設定。');
             }
         }
-
-        const YAW_TARGETS = [0, 90, 180, 270];
-        const PITCH_TARGETS = [-60, -30, 0, 30, 60];
-
-        let container, scene, camera, renderer, sphereMesh;
-        let isUserInteracting = false;
-        let onPointerDownPointerX = 0, onPointerDownPointerY = 0;
-        let onPointerDownLon = 0, onPointerDownLat = 0;
-        let pointerMoveDistance = 0;
-
-        let lon = 0, lat = 0;
-        let targetLon = 0, targetLat = 0;
-        let isSnapping = false;
-
-        const spatialDomNodes = {};
 
         async function init() {
             await loadBoardData();
@@ -498,8 +425,46 @@
             return canvas;
         }
 
+        function escapeHTML(str) {
+            return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        const ICON_EXPAND = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8l4-4 4 4"/></svg>';
+        const ICON_COLLAPSE = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>';
+
+        function updateNodeCardHTML(node, item) {
+            node.innerHTML = `
+                <div class="main-card-content glass-card p-4 rounded-2xl w-full text-left border border-peach-500/30 hover:border-peach-500 cursor-pointer shadow-2xl relative z-10">
+                    <div class="absolute -top-3 left-5 bg-peach-500 text-charcoal-950 font-extrabold text-[11px] px-2.5 py-0.5 rounded-full shadow-md z-40 pointer-events-none truncate max-w-[150px]">
+                        ${escapeHTML(item.title)}
+                    </div>
+
+                    <button class="btn-toggle-preview absolute -top-3 right-5 w-6 h-6 rounded-full bg-charcoal-900 border border-peach-500/50 text-peach-300 hover:bg-peach-500 hover:text-charcoal-950 flex items-center justify-center shadow-lg z-40 transition cursor-pointer pointer-events-auto" title="展開縮圖">
+                        ${ICON_EXPAND}
+                    </button>
+
+                    <!-- Thumbnail Strip Container -->
+                    <div class="thumb-strip">
+                        <div class="thumb-viewport">
+                            <div class="thumb-track"></div>
+                        </div>
+                    </div>
+
+                    <p class="text-gray-200 text-xs line-clamp-3 mb-3 leading-relaxed pt-1 w-full">
+                        ${escapeHTML(item.desc)}
+                    </p>
+                    <div class="pt-2 border-t border-white/10 text-xs font-semibold relative z-40">
+                        <button class="btn-expand-project w-full bg-peach-500 hover:bg-peach-400 text-charcoal-950 py-1.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-peach-500/20 font-bold relative z-40 pointer-events-auto">
+                            作品細節
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
         function createSpatialPanelElements() {
             const containerOverlay = document.getElementById('spatial-panels-container');
+            containerOverlay.innerHTML = '';
 
             Object.keys(PORTFOLIO_DATA).forEach(key => {
                 const item = PORTFOLIO_DATA[key];
@@ -512,11 +477,7 @@
                 updateNodeCardHTML(node, item);
 
                 node.addEventListener('pointerdown', (e) => {
-                    if (e.target.closest('.btn-expand-project') || e.target.closest('.btn-toggle-preview')) {
-                        e.stopPropagation();
-                        return;
-                    }
-                    if (e.target.closest('.thumb-strip')) {
+                    if (e.target.closest('.btn-expand-project') || e.target.closest('.btn-toggle-preview') || e.target.closest('.thumb-strip')) {
                         e.stopPropagation();
                         return;
                     }
@@ -525,6 +486,7 @@
 
                 const expandBtn = node.querySelector('.btn-expand-project');
                 if (expandBtn) {
+                    expandBtn.addEventListener('pointerdown', (e) => e.stopPropagation());
                     expandBtn.addEventListener('click', (e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -532,7 +494,7 @@
                     });
                 }
 
-                setupThumbStrip(node, key, item, yaw, pitch);
+                setupThumbStripController(node, key, item, yaw, pitch);
 
                 node.addEventListener('click', (e) => {
                     if (pointerMoveDistance > 8) return;
@@ -541,7 +503,7 @@
                     targetLon = getTargetLonForYaw(lon, yaw);
                     targetLat = pitch;
                     isSnapping = true;
-                    updateButtonHighlights(yaw, pitch);
+                    updateActivePanelAndPreviews(key, yaw, pitch);
                 });
 
                 containerOverlay.appendChild(node);
@@ -550,61 +512,6 @@
                     yaw: yaw,
                     pitch: pitch
                 };
-            });
-        }
-
-        function escapeHTML(str) {
-            return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-        }
-
-        const ICON_EXPAND = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8l4-4 4 4"/></svg>';
-        const ICON_COLLAPSE = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l4 4 4-4"/></svg>';
-
-        function updateNodeCardHTML(node, item) {
-            const thumbSize = item.thumbSize !== undefined ? item.thumbSize : 64;
-            const stripWidth = item.stripWidth !== undefined ? item.stripWidth : 312;
-            const marginBottom = item.marginBottom !== undefined ? item.marginBottom : 26;
-            const maskPercent = item.maskPercent !== undefined ? item.maskPercent : 22;
-
-            const stripHeight = thumbSize + 12;
-            const halfStripW = stripWidth / 2;
-
-            node.innerHTML = `
-                <div class="main-card-content glass-card p-4 rounded-2xl w-full text-left border border-peach-500/30 hover:border-peach-500 cursor-pointer shadow-2xl relative z-10">
-                    <div class="absolute -top-3 left-5 bg-peach-500 text-charcoal-950 font-extrabold text-[11px] px-2.5 py-0.5 rounded-full shadow-md z-30 pointer-events-none truncate max-w-[150px]">
-                        ${escapeHTML(item.title)}
-                    </div>
-
-                    <button class="btn-toggle-preview absolute -top-3 right-5 w-6 h-6 rounded-full bg-charcoal-900 border border-peach-500/50 text-peach-300 hover:bg-peach-500 hover:text-charcoal-950 flex items-center justify-center shadow-lg z-30 transition cursor-pointer" title="展開縮圖">
-                        ${ICON_EXPAND}
-                    </button>
-
-                    <div class="thumb-strip" style="width: ${stripWidth}px; height: ${stripHeight}px; margin-left: -${halfStripW}px; margin-bottom: ${marginBottom}px;">
-                        <div class="thumb-viewport" style="-webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0%, #000 ${maskPercent}%, #000 ${100 - maskPercent}%, transparent 100%);">
-                            <div class="thumb-track"></div>
-                        </div>
-                    </div>
-
-                    <p class="text-gray-200 text-xs line-clamp-3 mb-3 leading-relaxed pt-1 w-full">
-                        ${escapeHTML(item.desc)}
-                    </p>
-                    <div class="pt-2 border-t border-white/10 text-xs font-semibold">
-                        <button class="btn-expand-project w-full bg-peach-500 hover:bg-peach-400 text-charcoal-950 py-1.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-peach-500/20 font-bold">
-                            作品細節
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        const THUMB_GAP = 8;
-        const DEFAULT_THUMB_COUNT = 5;
-
-        function makeDefaultThumbs() {
-            const hues = [32, 200, 150, 280, 350];
-            return Array.from({ length: DEFAULT_THUMB_COUNT }, (_, i) => {
-                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${hues[i]},45%,42%)"/><stop offset="1" stop-color="hsl(${hues[i]},40%,18%)"/></linearGradient></defs><rect width="128" height="128" fill="url(#g)"/><text x="64" y="76" font-family="Arial" font-size="40" font-weight="700" fill="rgba(255,255,255,0.85)" text-anchor="middle">${i + 1}</text></svg>`;
-                return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
             });
         }
 
@@ -661,73 +568,144 @@
             return candidates;
         }
 
-        function setupThumbStrip(node, key, item, yaw, pitch) {
+        function setupThumbStripController(node, key, item, yaw, pitch) {
             const btn = node.querySelector('.btn-toggle-preview');
             const strip = node.querySelector('.thumb-strip');
+            const viewport = node.querySelector('.thumb-viewport');
             const track = node.querySelector('.thumb-track');
-            if (!btn || !strip || !track) return;
-
-            const thumbSize = item.thumbSize !== undefined ? item.thumbSize : 64;
-            const stripWidth = item.stripWidth !== undefined ? item.stripWidth : 312;
-            const thumbPitch = thumbSize + THUMB_GAP;
-            const stripCenter = stripWidth / 2;
+            if (!btn || !strip || !viewport || !track) return;
 
             const st = {
                 images: null, items: [], pos: 0, target: 0, min: 0, max: 0,
-                dragging: false, raf: 0, open: false, busy: false, anim: null,
-                startX: 0, startPos: 0, lastX: 0, lastT: 0, vel: 0
+                dragging: false, open: false, busy: false, anim: null, animRaf: null,
+                startX: 0, startPos: 0, lastX: 0, lastT: 0, vel: 0,
+                openStrip: null, closeStrip: null, rebuildLayout: null
             };
 
-            const posFor = i => stripCenter - thumbSize / 2 - i * thumbPitch;
+            function stopInertiaAnimation() {
+                if (st.animRaf) {
+                    cancelAnimationFrame(st.animRaf);
+                    st.animRaf = null;
+                }
+            }
+
+            function updateDimensionsAndLayout() {
+                const isDesktop = isDesktopViewport();
+                const thumbSize = isDesktop ? (item.thumbSizeDesktop || 128) : (item.thumbSizeMobile || 64);
+                const stripWidthMobile = item.stripWidthMobile || 312;
+                const marginBottomMobile = item.marginBottomMobile || 26;
+                const maskPercentMobile = item.maskPercentMobile || 22;
+                const stripHeight = thumbSize + 16;
+
+                if (isDesktop) {
+                    strip.classList.remove('is-mobile');
+                    strip.classList.add('is-desktop');
+                    
+                    strip.style.top = '50%';
+                    strip.style.bottom = 'auto';
+                    strip.style.left = '50%';
+                    strip.style.transform = 'translate(-50%, -50%)';
+                    strip.style.width = '100vw';
+                    strip.style.height = `${stripHeight}px`;
+                    strip.style.marginBottom = '0px';
+                    strip.style.marginLeft = '0px';
+
+                    // Smooth 100% to 0% fade-out gradient mask at screen left and right boundaries
+                    const maskCss = `linear-gradient(90deg, 
+                        transparent 0%, 
+                        rgba(0,0,0,0.4) 3%,
+                        #000 8%, 
+                        #000 calc(50% - 180px), 
+                        transparent calc(50% - 135px), 
+                        transparent calc(50% + 135px), 
+                        #000 calc(50% + 180px), 
+                        #000 92%, 
+                        rgba(0,0,0,0.4) 97%,
+                        transparent 100%)`;
+                    viewport.style.webkitMaskImage = maskCss;
+                    viewport.style.maskImage = maskCss;
+                } else {
+                    strip.classList.remove('is-desktop');
+                    strip.classList.add('is-mobile');
+
+                    strip.style.top = 'auto';
+                    strip.style.bottom = '100%';
+                    strip.style.left = '50%';
+                    strip.style.transform = 'translateX(-50%)';
+                    strip.style.width = `${stripWidthMobile}px`;
+                    strip.style.height = `${stripHeight}px`;
+                    strip.style.marginBottom = `${marginBottomMobile}px`;
+                    strip.style.marginLeft = '0px';
+
+                    // Mobile smooth 100% to 0% edge fade-out mask
+                    const maskCss = `linear-gradient(90deg, transparent 0%, #000 ${maskPercentMobile}%, #000 ${100 - maskPercentMobile}%, transparent 100%)`;
+                    viewport.style.webkitMaskImage = maskCss;
+                    viewport.style.maskImage = maskCss;
+                }
+
+                return { isDesktop, thumbSize, stripHeight };
+            }
 
             function render() {
-                track.style.transform = `translate3d(${st.pos.toFixed(2)}px,0,0)`;
-                st.items.forEach((el, i) => {
-                    const c = posFor(i) - st.pos;
-                    const d = Math.min(1, Math.abs(c) / thumbPitch);
-                    el.style.transform = `scale(${(1.08 - 0.12 * d).toFixed(3)})`;
-                });
+                track.style.transform = `translate3d(${st.pos.toFixed(2)}px, 0, 0)`;
+            }
+
+            function createThumbElem(src, size) {
+                const el = document.createElement('div');
+                el.className = 'thumb-item';
+                el.style.width = `${size}px`;
+                el.style.height = `${size}px`;
+                const img = document.createElement('img');
+                img.src = src; img.draggable = false; img.alt = '';
+                el.appendChild(img);
+                return el;
             }
 
             function build(images) {
+                const { isDesktop, thumbSize } = updateDimensionsAndLayout();
                 track.innerHTML = '';
                 st.items = images.map(src => {
-                    const el = document.createElement('div');
-                    el.className = 'thumb-item';
-                    el.style.width = `${thumbSize}px`;
-                    el.style.height = `${thumbSize}px`;
-
-                    const img = document.createElement('img');
-                    img.src = src; img.draggable = false; img.alt = '';
-                    el.appendChild(img);
+                    const el = createThumbElem(src, thumbSize);
                     track.appendChild(el);
                     return el;
                 });
+
+                const containerWidth = isDesktop ? window.innerWidth : (item.stripWidthMobile || 312);
+                const centerScreen = containerWidth / 2;
+
+                const posFor = (i) => centerScreen - (i * (thumbSize + THUMB_GAP) + thumbSize / 2);
+
                 st.max = posFor(0);
                 st.min = posFor(images.length - 1);
-                const idx = Math.min(2, images.length - 1);
-                st.pos = st.target = posFor(idx);
+                
+                const defaultIdx = Math.min(2, images.length - 1);
+                st.pos = st.target = posFor(defaultIdx);
                 render();
             }
 
-            function loop() {
-                st.raf = 0;
-                if (st.dragging) return;
-                const diff = st.target - st.pos;
-                if (Math.abs(diff) < 0.2) { st.pos = st.target; render(); return; }
-                st.pos += diff * 0.18;
-                render();
-                st.raf = requestAnimationFrame(loop);
-            }
-            const kick = () => { if (!st.raf) st.raf = requestAnimationFrame(loop); };
+            st.rebuildLayout = function() {
+                updateDimensionsAndLayout();
+                if (st.open) {
+                    if (st.images) {
+                        build(st.images);
+                    }
+                }
+            };
 
             const rubber = over => 44 * (1 - Math.exp(-over / 110));
 
-            strip.addEventListener('pointerdown', e => {
+            const handlePointerStart = e => {
+                if (e.target.closest('.btn-toggle-preview') || e.target.closest('.btn-expand-project')) {
+                    return;
+                }
                 e.stopPropagation();
+                if (e.cancelable) e.preventDefault();
                 if (e.button !== undefined && e.button !== 0) return;
+
+                stopInertiaAnimation();
+
                 st.dragging = true;
-                st.startX = st.lastX = e.clientX;
+                st.startX = st.lastX = e.clientX || (e.touches && e.touches[0].clientX) || 0;
                 st.startPos = st.pos;
                 st.lastT = performance.now();
                 st.vel = 0;
@@ -736,87 +714,153 @@
                 const onPointerMove = moveEvt => {
                     if (!st.dragging) return;
                     moveEvt.stopPropagation();
-                    const raw = st.startPos + (moveEvt.clientX - st.startX);
+                    if (moveEvt.cancelable) moveEvt.preventDefault();
+
+                    const currentX = moveEvt.clientX || (moveEvt.touches && moveEvt.touches[0].clientX) || 0;
+                    const raw = st.startPos + (currentX - st.startX);
                     let v = raw;
                     if (raw > st.max) v = st.max + rubber(raw - st.max);
                     else if (raw < st.min) v = st.min - rubber(st.min - raw);
                     st.pos = v;
+                    
                     const now = performance.now();
                     const dt = Math.max(1, now - st.lastT);
-                    st.vel = 0.8 * st.vel + 0.2 * ((moveEvt.clientX - st.lastX) / dt);
-                    st.lastX = moveEvt.clientX;
+                    // Smoothed touch velocity calculation
+                    st.vel = 0.6 * st.vel + 0.4 * ((currentX - st.lastX) / dt);
+                    st.lastX = currentX;
                     st.lastT = now;
                     render();
                 };
 
                 const onPointerUp = upEvt => {
                     if (!st.dragging) return;
+                    upEvt.stopPropagation();
+                    if (upEvt.cancelable) upEvt.preventDefault();
                     st.dragging = false;
                     strip.classList.remove('dragging');
                     document.removeEventListener('pointermove', onPointerMove);
                     document.removeEventListener('pointerup', onPointerUp);
                     document.removeEventListener('pointercancel', onPointerUp);
+                    document.removeEventListener('touchmove', onPointerMove);
+                    document.removeEventListener('touchend', onPointerUp);
 
-                    const proj = Math.max(st.min, Math.min(st.max, st.pos + st.vel * 160));
-                    let idx = Math.round((st.max - proj) / thumbPitch);
-                    idx = Math.max(0, Math.min(st.items.length - 1, idx));
-                    st.target = posFor(idx);
-                    kick();
+                    // Gentle, refined inertia deceleration (No explosive sudden momentum)
+                    let lastInertiaTime = performance.now();
+                    function inertiaStep() {
+                        const now = performance.now();
+                        const dt = Math.min(32, now - lastInertiaTime);
+                        lastInertiaTime = now;
+
+                        // Controlled fluid movement without sudden jumps
+                        st.pos += st.vel * dt * 0.85;
+                        st.vel *= Math.pow(0.88, dt / 16);
+
+                        // Bounce back gently if moved beyond boundary limits
+                        if (st.pos > st.max) {
+                            st.pos += (st.max - st.pos) * 0.18;
+                            st.vel *= 0.4;
+                        } else if (st.pos < st.min) {
+                            st.pos += (st.min - st.pos) * 0.18;
+                            st.vel *= 0.4;
+                        }
+
+                        render();
+
+                        if (Math.abs(st.vel) > 0.005 || st.pos > st.max + 0.5 || st.pos < st.min - 0.5) {
+                            st.animRaf = requestAnimationFrame(inertiaStep);
+                        } else {
+                            st.pos = Math.max(st.min, Math.min(st.max, st.pos));
+                            render();
+                            st.animRaf = null;
+                        }
+                    }
+
+                    if (Math.abs(st.vel) > 0.01 || st.pos > st.max || st.pos < st.min) {
+                        st.animRaf = requestAnimationFrame(inertiaStep);
+                    }
                 };
 
-                document.addEventListener('pointermove', onPointerMove);
-                document.addEventListener('pointerup', onPointerUp);
-                document.addEventListener('pointercancel', onPointerUp);
-            });
+                document.addEventListener('pointermove', onPointerMove, { passive: false });
+                document.addEventListener('pointerup', onPointerUp, { passive: false });
+                document.addEventListener('pointercancel', onPointerUp, { passive: false });
+                document.addEventListener('touchmove', onPointerMove, { passive: false });
+                document.addEventListener('touchend', onPointerUp, { passive: false });
+            };
 
-            strip.addEventListener('click', e => e.stopPropagation());
+            strip.addEventListener('pointerdown', handlePointerStart, { passive: false });
+            strip.addEventListener('touchstart', handlePointerStart, { passive: false });
+            strip.addEventListener('mousedown', e => e.stopPropagation());
+            strip.addEventListener('click', e => { e.stopPropagation(); e.preventDefault(); });
 
             function setIcon(open) {
                 btn.innerHTML = open ? ICON_COLLAPSE : ICON_EXPAND;
                 btn.title = open ? '收縮縮圖' : '展開縮圖';
             }
 
-            async function openStrip() {
+            st.openStrip = async function() {
+                if (st.open) return;
+                const isDesktop = isDesktopViewport();
+                updateDimensionsAndLayout();
+
                 if (!st.images) {
                     const found = await resolvePreImages(item, yaw, pitch);
                     st.images = found.length ? found : makeDefaultThumbs();
                     build(st.images);
                 } else {
-                    const idx = Math.min(2, st.items.length - 1);
-                    st.pos = st.target = posFor(idx);
-                    render();
+                    build(st.images);
                 }
+
                 strip.style.display = 'block';
                 st.open = true;
                 setIcon(true);
-                st.anim = strip.animate([
-                    { transform: 'scale(0, 0.15)', opacity: 0 },
-                    { transform: 'scale(1.12, 1.06)', opacity: 1, offset: 0.62 },
-                    { transform: 'scale(1, 1)', opacity: 1 }
-                ], { duration: 520, easing: 'cubic-bezier(0.22, 0.8, 0.3, 1)', fill: 'forwards' });
-                await st.anim.finished.catch(() => {});
-            }
 
-            async function closeStrip() {
+                const baseTransform = isDesktop ? 'translate(-50%, -50%)' : 'translateX(-50%)';
+
+                st.anim = strip.animate([
+                    { transform: `${baseTransform} scale(0, 0.15)`, opacity: 0 },
+                    { transform: `${baseTransform} scale(1.04, 1.02)`, opacity: 1, offset: 0.62 },
+                    { transform: `${baseTransform} scale(1, 1)`, opacity: 1 }
+                ], { duration: 400, easing: 'cubic-bezier(0.22, 0.8, 0.3, 1)', fill: 'forwards' });
+
+                await st.anim.finished.catch(() => {});
+            };
+
+            st.closeStrip = async function() {
+                if (!st.open) return;
+                stopInertiaAnimation();
                 st.open = false;
                 setIcon(false);
+                const isDesktop = isDesktopViewport();
+                const baseTransform = isDesktop ? 'translate(-50%, -50%)' : 'translateX(-50%)';
+
                 st.anim = strip.animate([
-                    { transform: 'scale(1, 1)', opacity: 1 },
-                    { transform: 'scale(1.1, 1.06)', opacity: 1, offset: 0.28 },
-                    { transform: 'scale(0, 0.15)', opacity: 0 }
-                ], { duration: 460, easing: 'ease-in-out', fill: 'forwards' });
+                    { transform: `${baseTransform} scale(1, 1)`, opacity: 1 },
+                    { transform: `${baseTransform} scale(1.02, 1.02)`, opacity: 1, offset: 0.28 },
+                    { transform: `${baseTransform} scale(0, 0.15)`, opacity: 0 }
+                ], { duration: 320, easing: 'ease-in-out', fill: 'forwards' });
+
                 await st.anim.finished.catch(() => {});
                 if (!st.open) strip.style.display = 'none';
-            }
+            };
+
+            btn.addEventListener('pointerdown', e => e.stopPropagation());
+            btn.addEventListener('mousedown', e => e.stopPropagation());
+            btn.addEventListener('touchstart', e => e.stopPropagation());
 
             btn.addEventListener('click', async e => {
                 e.preventDefault();
                 e.stopPropagation();
                 if (st.busy) return;
                 st.busy = true;
-                try { st.open ? await closeStrip() : await openStrip(); }
-                finally { st.busy = false; }
+                try { 
+                    st.open ? await st.closeStrip() : await st.openStrip(); 
+                } finally { 
+                    st.busy = false; 
+                }
             });
+
+            spatialDomNodes[key] = spatialDomNodes[key] || {};
+            spatialDomNodes[key].controller = st;
         }
 
         function onPointerDown(event) {
@@ -862,9 +906,6 @@
             snapToNearestAngle();
         }
 
-        /**
-         * 計算從當前經度 (currentLon) 到目標 yaw 的最短旋轉路徑，避免跨越 360° 時全轉一圈或暴跳
-         */
         function getTargetLonForYaw(currentLon, targetYaw) {
             let currentNormalized = ((currentLon % 360) + 360) % 360;
             let diff = targetYaw - currentNormalized;
@@ -909,7 +950,29 @@
             targetLat = closestPitch;
             isSnapping = true;
 
-            updateButtonHighlights(closestYaw, closestPitch);
+            const key = `${closestYaw}_${closestPitch}`;
+            updateActivePanelAndPreviews(key, closestYaw, closestPitch);
+        }
+
+        // Auto open thumbnails when focused on active panel, close others
+        function updateActivePanelAndPreviews(activeKey, yaw, pitch) {
+            activePanelKey = activeKey;
+            updateButtonHighlights(yaw, pitch);
+
+            Object.keys(spatialDomNodes).forEach(k => {
+                const item = spatialDomNodes[k];
+                if (item && item.controller) {
+                    if (k === activeKey) {
+                        if (!item.controller.open) {
+                            item.controller.openStrip();
+                        }
+                    } else {
+                        if (item.controller.open) {
+                            item.controller.closeStrip();
+                        }
+                    }
+                }
+            });
         }
 
         function animate() {
@@ -1001,17 +1064,17 @@
 
         function setupNavigationButtons() {
             document.querySelectorAll('.btn-nav').forEach(btn => {
-                const d = PORTFOLIO_DATA[`${parseInt(btn.dataset.yaw)}_${parseInt(btn.dataset.pitch)}`];
+                const y = parseInt(btn.dataset.yaw);
+                const p = parseInt(btn.dataset.pitch);
+                const key = `${y}_${p}`;
+                const d = PORTFOLIO_DATA[key];
                 if (d && d.category) btn.textContent = d.category;
 
                 btn.addEventListener('click', () => {
-                    const y = parseInt(btn.dataset.yaw);
-                    const p = parseInt(btn.dataset.pitch);
-
                     targetLon = getTargetLonForYaw(lon, y);
                     targetLat = p;
                     isSnapping = true;
-                    updateButtonHighlights(y, p);
+                    updateActivePanelAndPreviews(key, y, p);
                 });
             });
         }
@@ -1043,6 +1106,17 @@
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
+
+            Object.keys(spatialDomNodes).forEach(k => {
+                const item = spatialDomNodes[k];
+                if (item && item.controller) {
+                    if (item.controller.rebuildLayout) {
+                        item.controller.rebuildLayout();
+                    } else if (item.controller.open) {
+                        item.controller.openStrip();
+                    }
+                }
+            });
         }
 
         async function openProjectDetailModal(key) {
@@ -1115,7 +1189,7 @@
                         </button>
                     </div>
 
-                    <p class="text-sm text-gray-200 leading-relaxed mb-6">${data.desc}</p>
+                    <p class="text-sm text-gray-200 leading-relaxed mb-6">${escapeHTML(data.desc)}</p>
                     
                     <h4 class="text-sm font-bold text-white pt-2 border-t border-white/10 flex items-center gap-2 mb-4">
                         作品展示媒體庫：
