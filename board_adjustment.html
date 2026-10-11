@@ -1069,7 +1069,7 @@
             item.thumbSizeDesktop = parseInt(document.getElementById('edit-thumb-size-desktop').value) || 128;
             item.marginBottomDesktop = parseInt(document.getElementById('edit-thumb-margin-bottom-desktop').value) || 0;
             item.maskPercentDesktop = parseInt(document.getElementById('edit-thumb-mask-percent-desktop').value) || 22;
-            item.stripWidthDesktop = window.innerWidth;
+            item.stripWidthDesktop = item.stripWidthDesktop !== undefined ? item.stripWidthDesktop : 0;
 
             try {
                 localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(BOARD_DATA));
@@ -1115,7 +1115,7 @@
                     marginBottomMobile: item.marginBottomMobile !== undefined ? item.marginBottomMobile : 26,
                     maskPercentMobile: item.maskPercentMobile !== undefined ? item.maskPercentMobile : 22,
                     thumbSizeDesktop: item.thumbSizeDesktop !== undefined ? item.thumbSizeDesktop : 128,
-                    stripWidthDesktop: item.stripWidthDesktop !== undefined ? item.stripWidthDesktop : 624,
+                    stripWidthDesktop: item.stripWidthDesktop !== undefined ? item.stripWidthDesktop : 0,
                     marginBottomDesktop: item.marginBottomDesktop !== undefined ? item.marginBottomDesktop : 0,
                     maskPercentDesktop: item.maskPercentDesktop !== undefined ? item.maskPercentDesktop : 22,
                     preFolder: preFolder,
@@ -1140,7 +1140,7 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast("📄 已成功下載 board_data.json！");
+            showToast("📄 已成功下載最新 Version 2 規格之 board_data.json！");
         }
 
         async function fetchLocalBoardJson() {
@@ -1206,7 +1206,7 @@
                         marginBottomMobile: p.marginBottomMobile !== undefined ? Number(p.marginBottomMobile) : (p.marginBottom || 26),
                         maskPercentMobile: p.maskPercentMobile !== undefined ? Number(p.maskPercentMobile) : (p.maskPercent || 22),
                         thumbSizeDesktop: p.thumbSizeDesktop !== undefined ? Number(p.thumbSizeDesktop) : (p.thumbSizeMobile ? p.thumbSizeMobile * 2 : 128),
-                        stripWidthDesktop: p.stripWidthDesktop !== undefined ? Number(p.stripWidthDesktop) : window.innerWidth,
+                        stripWidthDesktop: p.stripWidthDesktop !== undefined ? Number(p.stripWidthDesktop) : 0,
                         marginBottomDesktop: p.marginBottomDesktop !== undefined ? Number(p.marginBottomDesktop) : 0,
                         maskPercentDesktop: p.maskPercentDesktop !== undefined ? Number(p.maskPercentDesktop) : 22,
                         preFolder: preFolder,

@@ -73,6 +73,14 @@
             border: 1px solid rgba(252, 209, 145, 0.25);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
         }
+        /* 開啟作品面板時，解除全域 touch-action:none，讓面板內的縮圖列可以原生橫向滑動 */
+        html.modal-open, html.modal-open body {
+            touch-action: auto;
+        }
+        #modal-details {
+            touch-action: manipulation;
+            overscroll-behavior: contain;
+        }
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -245,8 +253,9 @@
     </div>
 
     <!-- Modal Detail Container -->
-    <div id="modal-details" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none hidden transition-opacity duration-300">
-        <div class="w-full max-w-[1536px] h-[95vh] flex flex-col relative overflow-hidden" id="modal-detail-content">
+    <!-- 高度用 JS 量到的「實際可視高度」(--app-h)，避免 Android 網址列蓋住頂部按鈕 -->
+    <div id="modal-details" style="height: var(--app-h, 100dvh); bottom: auto;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none hidden transition-opacity duration-300">
+        <div style="height: calc(var(--app-h, 100dvh) * 0.97); max-height: 100%;" class="w-full max-w-[1536px] flex flex-col relative overflow-hidden" id="modal-detail-content">
             <!-- content.html is injected here cleanly -->
         </div>
     </div>
@@ -270,6 +279,99 @@
         let activePanelKey = "0_0";
 
         const spatialDomNodes = {};
+
+        /* ---------- 實際可視高度（處理 Android 網址列伸縮） ---------- */
+        function setAppHeight() {
+            const h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+            document.documentElement.style.setProperty('--app-h', Math.round(h) + 'px');
+        }
+        setAppHeight();
+        window.addEventListener('resize', setAppHeight);
+        window.addEventListener('orientationchange', () => setTimeout(setAppHeight, 200));
+        if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
+
+        /* ---------- 背景依序預載各 yaw/pitch 面板的作品圖片 ---------- */
+        const BgPreloader = (function () {
+            const done = new Set();
+            const inflight = new Map();
+            const IMG_RE = /\.(?:jpe?g|png|webp|gif|avif)(?:\?.*)?$/i;
+
+            function loadOne(url) {
+                if (done.has(url)) return Promise.resolve(true);
+                if (inflight.has(url)) return inflight.get(url);
+                const p = new Promise(resolve => {
+                    const img = new Image();
+                    img.decoding = 'async';
+                    img.onload = () => { done.add(url); inflight.delete(url); resolve(true); };
+                    img.onerror = () => { done.add(url); inflight.delete(url); resolve(false); };
+                    img.src = url;
+                });
+                inflight.set(url, p);
+                return p;
+            }
+
+            async function collectUrls(item) {
+                const urls = new Set();
+                const add = u => { if (typeof u === 'string' && IMG_RE.test(u)) urls.add(u); };
+                const walk = o => {
+                    if (typeof o === 'string') add(o);
+                    else if (Array.isArray(o)) o.forEach(walk);
+                    else if (o && typeof o === 'object') {
+                        Object.keys(o).forEach(k => { if (k !== 'fallback' && k !== 'bgFallback') walk(o[k]); });
+                    }
+                };
+                let gotJson = false;
+                try {
+                    const r = await fetch((item.folder || '') + 'portfolio_data.json');
+                    if (r.ok) { walk(await r.json()); gotJson = urls.size > 0; }
+                } catch (e) {}
+                if (!gotJson) {
+                    try {
+                        const r = await fetch(item.detailFilePath || ((item.folder || '') + 'content.html'));
+                        if (r.ok) {
+                            const text = await r.text();
+                            const re = /["']((?:\.\/|\/)?assets\/[^"'\s]+?\.(?:jpe?g|png|webp|gif|avif))["']/gi;
+                            let m;
+                            while ((m = re.exec(text))) add(m[1]);
+                        }
+                    } catch (e) {}
+                }
+                return Array.from(urls);
+            }
+
+            const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+            async function run(orderedKeys) {
+                const conn = navigator.connection;
+                if (conn && conn.saveData) return; // 使用者開啟省流量模式就不預載
+                for (const key of orderedKeys) {
+                    const item = PORTFOLIO_DATA[key];
+                    if (!item || !item.hasCustomHtml) continue;
+                    const urls = await collectUrls(item);
+                    let i = 0;
+                    const worker = async () => {
+                        while (i < urls.length) {
+                            // 使用者正在拖曳全景或開著作品面板時暫停，不搶頻寬
+                            while (isUserInteracting) await sleep(300);
+                            const u = urls[i++];
+                            await loadOne(u);
+                            await sleep(40);
+                        }
+                    };
+                    await Promise.all([worker(), worker()]);
+                }
+            }
+
+            function start() {
+                const keys = Object.keys(PORTFOLIO_DATA);
+                const ordered = [activePanelKey, ...keys.filter(k => k !== activePanelKey)];
+                const go = () => run(ordered);
+                if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 4000 });
+                else setTimeout(go, 1500);
+            }
+
+            return { start, loadOne };
+        })();
 
         function isDesktopViewport() {
             return window.innerWidth >= 600;
@@ -315,13 +417,15 @@
                         it.previewImageHeight = it.previewImageHeight || (it.previewImageSize && it.previewImageSize.height) || 208;
                         it.previewImageSize = { width: it.previewImageWidth, height: it.previewImageHeight };
 
+                        // Android (Mobile < 600px) Parameter Normalization
                         it.thumbSizeMobile = it.thumbSizeMobile !== undefined ? Number(it.thumbSizeMobile) : (it.thumbSize || 64);
                         it.stripWidthMobile = it.stripWidthMobile !== undefined ? Number(it.stripWidthMobile) : (it.stripWidth || 312);
                         it.marginBottomMobile = it.marginBottomMobile !== undefined ? Number(it.marginBottomMobile) : (it.marginBottom || 26);
                         it.maskPercentMobile = it.maskPercentMobile !== undefined ? Number(it.maskPercentMobile) : (it.maskPercent || 22);
 
+                        // Tablet & PC (Desktop >= 600px) Parameter Normalization
                         it.thumbSizeDesktop = it.thumbSizeDesktop !== undefined ? Number(it.thumbSizeDesktop) : (it.thumbSizeMobile * 2);
-                        it.stripWidthDesktop = it.stripWidthDesktop !== undefined ? Number(it.stripWidthDesktop) : window.innerWidth;
+                        it.stripWidthDesktop = it.stripWidthDesktop !== undefined ? Number(it.stripWidthDesktop) : 0; // 0 represents full viewport width
                         it.marginBottomDesktop = it.marginBottomDesktop !== undefined ? Number(it.marginBottomDesktop) : 0;
                         it.maskPercentDesktop = it.maskPercentDesktop !== undefined ? Number(it.maskPercentDesktop) : 22;
 
@@ -381,6 +485,7 @@
             setupUIToggleButton();
             snapToNearestAngle();
             animate();
+            BgPreloader.start();
         }
 
         function generateDefaultPanoCanvas() {
@@ -591,10 +696,20 @@
 
             function updateDimensionsAndLayout() {
                 const isDesktop = isDesktopViewport();
-                const thumbSize = isDesktop ? (item.thumbSizeDesktop || 128) : (item.thumbSizeMobile || 64);
-                const stripWidthMobile = item.stripWidthMobile || 312;
-                const marginBottomMobile = item.marginBottomMobile || 26;
-                const maskPercentMobile = item.maskPercentMobile || 22;
+                
+                // Read exact values recorded in board_data.json for both modes
+                const thumbSize = isDesktop 
+                    ? (item.thumbSizeDesktop !== undefined ? Number(item.thumbSizeDesktop) : 128) 
+                    : (item.thumbSizeMobile !== undefined ? Number(item.thumbSizeMobile) : 64);
+                
+                const stripWidthMobile = item.stripWidthMobile !== undefined ? Number(item.stripWidthMobile) : 312;
+                const marginBottomMobile = item.marginBottomMobile !== undefined ? Number(item.marginBottomMobile) : 26;
+                const maskPercentMobile = item.maskPercentMobile !== undefined ? Number(item.maskPercentMobile) : 22;
+
+                const stripWidthDesktop = (item.stripWidthDesktop !== undefined && Number(item.stripWidthDesktop) > 0) ? Number(item.stripWidthDesktop) : window.innerWidth;
+                const marginBottomDesktop = item.marginBottomDesktop !== undefined ? Number(item.marginBottomDesktop) : 0;
+                const maskPercentDesktop = item.maskPercentDesktop !== undefined ? Number(item.maskPercentDesktop) : 22;
+
                 const stripHeight = thumbSize + 16;
 
                 if (isDesktop) {
@@ -605,21 +720,21 @@
                     strip.style.bottom = 'auto';
                     strip.style.left = '50%';
                     strip.style.transform = 'translate(-50%, -50%)';
-                    strip.style.width = '100vw';
+                    strip.style.width = (item.stripWidthDesktop && Number(item.stripWidthDesktop) > 0) ? `${stripWidthDesktop}px` : '100vw';
                     strip.style.height = `${stripHeight}px`;
-                    strip.style.marginBottom = '0px';
+                    strip.style.marginBottom = `${marginBottomDesktop}px`;
                     strip.style.marginLeft = '0px';
 
-                    // Smooth 100% to 0% fade-out gradient mask at screen left and right boundaries
+                    // Dynamic fade mask using maskPercentDesktop recorded in board_data.json
                     const maskCss = `linear-gradient(90deg, 
                         transparent 0%, 
                         rgba(0,0,0,0.4) 3%,
-                        #000 8%, 
+                        #000 ${maskPercentDesktop}%, 
                         #000 calc(50% - 180px), 
                         transparent calc(50% - 135px), 
                         transparent calc(50% + 135px), 
                         #000 calc(50% + 180px), 
-                        #000 92%, 
+                        #000 ${100 - maskPercentDesktop}%, 
                         rgba(0,0,0,0.4) 97%,
                         transparent 100%)`;
                     viewport.style.webkitMaskImage = maskCss;
@@ -637,7 +752,6 @@
                     strip.style.marginBottom = `${marginBottomMobile}px`;
                     strip.style.marginLeft = '0px';
 
-                    // Mobile smooth 100% to 0% edge fade-out mask
                     const maskCss = `linear-gradient(90deg, transparent 0%, #000 ${maskPercentMobile}%, #000 ${100 - maskPercentMobile}%, transparent 100%)`;
                     viewport.style.webkitMaskImage = maskCss;
                     viewport.style.maskImage = maskCss;
@@ -670,7 +784,9 @@
                     return el;
                 });
 
-                const containerWidth = isDesktop ? window.innerWidth : (item.stripWidthMobile || 312);
+                const containerWidth = isDesktop 
+                    ? ((item.stripWidthDesktop && Number(item.stripWidthDesktop) > 0) ? Number(item.stripWidthDesktop) : window.innerWidth) 
+                    : (item.stripWidthMobile || 312);
                 const centerScreen = containerWidth / 2;
 
                 const posFor = (i) => centerScreen - (i * (thumbSize + THUMB_GAP) + thumbSize / 2);
@@ -725,7 +841,6 @@
                     
                     const now = performance.now();
                     const dt = Math.max(1, now - st.lastT);
-                    // Smoothed touch velocity calculation
                     st.vel = 0.6 * st.vel + 0.4 * ((currentX - st.lastX) / dt);
                     st.lastX = currentX;
                     st.lastT = now;
@@ -741,21 +856,16 @@
                     document.removeEventListener('pointermove', onPointerMove);
                     document.removeEventListener('pointerup', onPointerUp);
                     document.removeEventListener('pointercancel', onPointerUp);
-                    document.removeEventListener('touchmove', onPointerMove);
-                    document.removeEventListener('touchend', onPointerUp);
 
-                    // Gentle, refined inertia deceleration (No explosive sudden momentum)
                     let lastInertiaTime = performance.now();
                     function inertiaStep() {
                         const now = performance.now();
                         const dt = Math.min(32, now - lastInertiaTime);
                         lastInertiaTime = now;
 
-                        // Controlled fluid movement without sudden jumps
                         st.pos += st.vel * dt * 0.85;
                         st.vel *= Math.pow(0.88, dt / 16);
 
-                        // Bounce back gently if moved beyond boundary limits
                         if (st.pos > st.max) {
                             st.pos += (st.max - st.pos) * 0.18;
                             st.vel *= 0.4;
@@ -783,12 +893,11 @@
                 document.addEventListener('pointermove', onPointerMove, { passive: false });
                 document.addEventListener('pointerup', onPointerUp, { passive: false });
                 document.addEventListener('pointercancel', onPointerUp, { passive: false });
-                document.addEventListener('touchmove', onPointerMove, { passive: false });
-                document.addEventListener('touchend', onPointerUp, { passive: false });
             };
 
             strip.addEventListener('pointerdown', handlePointerStart, { passive: false });
-            strip.addEventListener('touchstart', handlePointerStart, { passive: false });
+            // 觸控改由 pointer events 統一處理（touch-action:none 已確保手勢不被瀏覽器接管），避免與 touchstart 重複觸發
+            strip.addEventListener('touchstart', e => { e.stopPropagation(); }, { passive: true });
             strip.addEventListener('mousedown', e => e.stopPropagation());
             strip.addEventListener('click', e => { e.stopPropagation(); e.preventDefault(); });
 
@@ -863,7 +972,22 @@
             spatialDomNodes[key].controller = st;
         }
 
+        // 指標是否落在任何「已展開的縮圖列」範圍內（含縫隙與遮罩淡出區）
+        function isPointInsideOpenThumbStrip(x, y) {
+            const strips = document.querySelectorAll('.thumb-strip');
+            for (const s of strips) {
+                if (s.style.display === 'none' || getComputedStyle(s).display === 'none') continue;
+                const r = s.getBoundingClientRect();
+                if (x >= r.left - 4 && x <= r.right + 4 && y >= r.top - 4 && y <= r.bottom + 4) return true;
+            }
+            return false;
+        }
+
         function onPointerDown(event) {
+            // 縮圖區域內一律只做縮圖滑動，不觸發整個 360° 畫面的拖曳
+            if (event.target && event.target.closest && event.target.closest('.thumb-strip')) return;
+            if (isPointInsideOpenThumbStrip(event.clientX, event.clientY)) return;
+
             if (event.isPrimary === false) return;
 
             isUserInteracting = true;
@@ -954,7 +1078,6 @@
             updateActivePanelAndPreviews(key, closestYaw, closestPitch);
         }
 
-        // Auto open thumbnails when focused on active panel, close others
         function updateActivePanelAndPreviews(activeKey, yaw, pitch) {
             activePanelKey = activeKey;
             updateButtonHighlights(yaw, pitch);
@@ -1124,6 +1247,9 @@
             if (!data) return;
 
             const modalContentEl = document.getElementById('modal-detail-content');
+            window.__currentPanelFolder = data.folder;      // 讓 content.html 知道要讀哪個資料夾的 portfolio_data.json
+            document.documentElement.classList.add('modal-open');
+            setAppHeight();
             
             modalContentEl.innerHTML = `
                 <div class="flex items-center justify-center h-full text-peach-400 gap-3">
@@ -1208,6 +1334,7 @@
         window.closeModalFallback = function() {
             const modalDetails = document.getElementById('modal-details');
             if (modalDetails) modalDetails.classList.add('opacity-0', 'pointer-events-none', 'hidden');
+            document.documentElement.classList.remove('modal-open');
 
             const hudOverlay = document.getElementById('ui-hud-overlay');
             const spatialPanels = document.getElementById('spatial-panels-container');

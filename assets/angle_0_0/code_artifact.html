@@ -6,6 +6,7 @@
     <title>作品集全功能管理工具</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -88,7 +89,7 @@
     <!-- 隱藏的本地 JSON 檔案讀取 Input -->
     <input type="file" id="json-file-input" accept=".json" onchange="handleJsonFileImport(event)" class="hidden">
 
-    <!-- 自訂刪除/確認通用 Modal (不使用原生 confirm) -->
+    <!-- 自訂通用 Confirm Modal -->
     <div id="confirm-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none hidden transition-all duration-200">
         <div class="glass-panel w-full max-w-sm rounded-3xl p-6 border border-white/20 shadow-2xl space-y-4 text-center">
             <h3 id="confirm-modal-title" class="text-sm font-bold text-white">確認刪除</h3>
@@ -110,7 +111,7 @@
             
             <div class="space-y-3 text-xs">
                 <div>
-                    <label class="block text-gray-400 mb-1">主題唯一識別 Key (無法編輯，依拖曳順序自動編號)</label>
+                    <label class="block text-gray-400 mb-1">主題唯一識別 Key (無法編輯)</label>
                     <input type="text" id="modal-theme-key" readonly class="w-full bg-charcoal-950 border border-white/10 rounded-xl px-3 py-2 text-peach-400 font-mono focus:outline-none cursor-not-allowed opacity-80" placeholder="01">
                 </div>
                 <div>
@@ -122,16 +123,26 @@
                     <input type="text" id="modal-theme-tag" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. Digital Painting">
                 </div>
                 <div>
-                    <label class="block text-gray-400 mb-1">主題副標 / 描述文字</label>
+                    <label class="block text-gray-400 mb-1">主題描述文字</label>
                     <input type="text" id="modal-theme-desc" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. 光影筆觸堆疊與厚塗創作">
-                </div>
-                <div>
-                    <label class="block text-gray-400 mb-1">卡片背景封面路徑 (bgImage)</label>
-                    <input type="text" id="modal-theme-bg" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_0_0/01.jpg">
                 </div>
                 <div>
                     <label class="block text-gray-400 mb-1">對應資料夾路徑 (Folder Path)</label>
                     <input type="text" id="modal-theme-folder" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_0_0/01/">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">縮圖預載資料夾路徑 (preFolder)</label>
+                    <input type="text" id="modal-theme-prefolder" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-peach-300 font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_0_0/01/pre/">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-400 mb-1">縮圖顯示邊長 (px)</label>
+                        <input type="number" id="modal-theme-thumbsize" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="64">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">縮圖排列間距 (px)</label>
+                        <input type="number" id="modal-theme-thumbgap" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="8">
+                    </div>
                 </div>
             </div>
 
@@ -152,11 +163,11 @@
             
             <div class="space-y-3 text-xs">
                 <div>
-                    <label class="block text-gray-400 mb-1">小類別名稱 (例如：角色光影研究)</label>
-                    <input type="text" id="modal-sub-name" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. 角色光影研究">
+                    <label class="block text-gray-400 mb-1">小類別名稱 (例如：完稿練習)</label>
+                    <input type="text" id="modal-sub-name" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. 完稿練習">
                 </div>
                 <div>
-                    <label class="block text-gray-400 mb-1">子資料夾 Folder 前綴 (可填 `A/`、`B/`，或留空直接放於主題根目錄)</label>
+                    <label class="block text-gray-400 mb-1">子資料夾 Folder 前綴 (例如：A/、B/)</label>
                     <input type="text" id="modal-sub-folder" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-peach-300 font-mono focus:border-peach-500 focus:outline-none" placeholder="A/ 或留空">
                 </div>
             </div>
@@ -177,7 +188,7 @@
                     <span class="px-2.5 py-0.5 bg-peach-500/20 text-peach-400 border border-peach-500/30 rounded-md text-[11px] font-bold tracking-wider uppercase">Full Suite Studio</span>
                     <h1 class="text-lg md:text-xl font-extrabold text-white">作品集全功能管理工具</h1>
                 </div>
-                <p class="text-xs text-gray-400 mt-1">按住卡片直接拖曳排序 | 點擊卡片選定後：<kbd class="px-1.5 py-0.5 bg-white/10 rounded text-peach-300 font-mono">Ctrl + 滾輪</kbd> 縮放圖片，<kbd class="px-1.5 py-0.5 bg-white/10 rounded text-peach-300 font-mono">Ctrl + 左鍵</kbd> 拖曳檢視細節！</p>
+                <p class="text-xs text-gray-400 mt-1">按住卡片拖曳排序 | 內建智慧相對路徑偵測機制 (支援自動向下切換 assets/ / angle_0_0/ / 檔名相對路徑)</p>
             </div>
             
             <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
@@ -187,6 +198,9 @@
                 <button onclick="triggerJsonImport()" class="bg-charcoal-900 hover:bg-white/10 border border-white/10 text-gray-200 font-semibold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
                     📂 選擇 JSON 檔案
                 </button>
+                <button onclick="exportCurrentThemeThumbnailsZip()" class="bg-peach-500/20 hover:bg-peach-500/30 text-peach-300 border border-peach-500/40 font-bold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+                    📦 打包主題縮圖 ZIP
+                </button>
                 <button onclick="downloadJsonData()" class="bg-peach-500 hover:bg-peach-400 active:scale-95 text-charcoal-950 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-lg shadow-peach-500/20">
                     📄 下載 portfolio_data.json
                 </button>
@@ -194,17 +208,17 @@
         </header>
 
         <!-- 主題導航頁籤區 -->
-        <div class="glass-panel p-3 rounded-2xl flex items-center justify-between gap-3 overflow-x-auto no-scrollbar">
-            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar flex-1 py-1" id="theme-tabs-container">
+        <div class="glass-panel p-3 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto flex-1 py-1" id="theme-tabs-container">
                 <!-- 動態注入主題頁籤 -->
             </div>
 
-            <div class="flex items-center gap-2 flex-shrink-0">
+            <div class="flex items-center gap-2 flex-shrink-0 flex-wrap w-full md:w-auto justify-end">
                 <button onclick="openThemeModal(false)" class="bg-peach-500/20 hover:bg-peach-500/30 text-peach-300 border border-peach-500/40 text-xs px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1">
                     ➕ 新增主題
                 </button>
                 <button onclick="openThemeModal(true)" class="bg-charcoal-900 hover:bg-white/10 text-xs px-3 py-1.5 rounded-xl border border-white/10 transition text-gray-300">
-                    ✏️ 編輯主題
+                    ✏️ 編輯主題與縮圖參數
                 </button>
                 <button onclick="requestDeleteCurrentTheme()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs px-2.5 py-1.5 rounded-xl transition font-bold">
                     🗑️ 刪除主題
@@ -253,7 +267,7 @@
 
             <!-- 作品卡片區 -->
             <div class="glass-panel p-5 rounded-3xl flex-1 flex flex-col min-h-[480px]">
-                <div class="flex justify-between items-center mb-4">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
                     <h2 class="text-sm font-bold text-white flex items-center gap-2">
                         <span>作品排序與預覽區</span>
                         <span id="item-count-badge" class="text-[10px] bg-peach-500/20 text-peach-400 border border-peach-500/30 px-2 py-0.5 rounded-full font-mono">0 張作品</span>
@@ -271,115 +285,7 @@
     <script>
         const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80";
 
-        // 完整包含 01~04 四大主題與小類別的預設資料庫
-        let DATABASE = {
-            "01": {
-                title: "厚塗插畫",
-                tag: "Digital Painting",
-                desc: "光影筆觸堆疊、質感細節與氛圍感極佳的厚塗創作",
-                bgImage: "assets/angle_0_0/01.jpg",
-                bgFallback: DEFAULT_FALLBACK_IMAGE,
-                folder: "assets/angle_0_0/01/",
-                subcategories: [
-                    {
-                        name: "角色光影研究",
-                        folder: "A/",
-                        items: [
-                            { src: "assets/angle_0_0/01/A/01.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "角色光影研究 01" },
-                            { src: "assets/angle_0_0/01/A/02.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "角色光影研究 02" }
-                        ]
-                    },
-                    {
-                        name: "概念場景氛圍",
-                        folder: "B/",
-                        items: [
-                            { src: "assets/angle_0_0/01/B/01.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "場景概念繪製 01" },
-                            { src: "assets/angle_0_0/01/B/02.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "幾何厚塗繪圖 02" }
-                        ]
-                    }
-                ]
-            },
-            "02": {
-                title: "日系插畫",
-                tag: "Anime & Concept",
-                desc: "動漫人物風格、二次元賽博朋克與角色設計專案",
-                bgImage: "assets/angle_0_0/02.jpg",
-                bgFallback: DEFAULT_FALLBACK_IMAGE,
-                folder: "assets/angle_0_0/02/",
-                subcategories: [
-                    {
-                        name: "賽博朋克系列",
-                        folder: "A/",
-                        items: [
-                            { src: "assets/angle_0_0/02/A/01.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "賽博朋克角色 01" },
-                            { src: "assets/angle_0_0/02/A/02.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "霓虹美學專案 02" }
-                        ]
-                    },
-                    {
-                        name: "二次元立繪專案",
-                        folder: "B/",
-                        items: [
-                            { src: "assets/angle_0_0/02/B/01.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "動漫立繪展示 01" },
-                            { src: "assets/angle_0_0/02/B/02.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "動態視覺設定 02" }
-                        ]
-                    }
-                ]
-            },
-            "03": {
-                title: "設計練習",
-                tag: "Design Studies",
-                desc: "速寫研究、色彩實驗、結構造型練習與概念研究",
-                bgImage: "assets/angle_0_0/03.jpg",
-                bgFallback: DEFAULT_FALLBACK_IMAGE,
-                folder: "assets/angle_0_0/03/",
-                subcategories: [
-                    {
-                        name: "人體與結構速寫",
-                        folder: "A/",
-                        items: [
-                            { src: "assets/angle_0_0/03/A/01.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "解剖與造型速寫 01" },
-                            { src: "assets/angle_0_0/03/A/02.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "明暗調子練習 02" }
-                        ]
-                    },
-                    {
-                        name: "透視與空間實驗",
-                        folder: "B/",
-                        items: [
-                            { src: "assets/angle_0_0/03/B/01.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "透視場景研究 01" },
-                            { src: "assets/angle_0_0/03/B/02.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "色彩球體實驗 02" }
-                        ]
-                    }
-                ]
-            },
-            "04": {
-                title: "黑線繪",
-                tag: "Ink & Line Art",
-                desc: "精細線稿、黑白點陣風格、漫畫風格線描作品",
-                bgImage: "assets/angle_0_0/04.jpg",
-                bgFallback: DEFAULT_FALLBACK_IMAGE,
-                folder: "assets/angle_0_0/04/",
-                subcategories: [
-                    {
-                        name: "456",
-                        folder: "A/",
-                        items: [
-                            { src: "assets/angle_0_0/04/A/Life 01.png", fallback: DEFAULT_FALLBACK_IMAGE, name: "Life 01" },
-                            { src: "assets/angle_0_0/04/A/Life 02.png", fallback: DEFAULT_FALLBACK_IMAGE, name: "Life 02" },
-                            { src: "assets/angle_0_0/04/A/Life 03.png", fallback: DEFAULT_FALLBACK_IMAGE, name: "Life 03" }
-                        ]
-                    },
-                    {
-                        name: "測試",
-                        folder: "B/",
-                        items: [
-                            { src: "assets/angle_0_0/04/B/01.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "黑白點陣風格 01" },
-                            { src: "assets/angle_0_0/04/B/02.jpg", fallback: DEFAULT_FALLBACK_IMAGE, name: "漫畫風分鏡稿 02" }
-                        ]
-                    }
-                ]
-            }
-        };
-
+        let DATABASE = {};
         let activeCatKey = "01";
         let activeSubIdx = 0;
         let dragSrcIndex = null;
@@ -389,12 +295,83 @@
         let draggedSubTabIdx = null;
         let pendingConfirmCallback = null;
 
-        // 選定圖片操控狀態
         let selectedItemIdx = null;
-        let imgTransforms = {}; // key: itemIdx -> { scale: 1.0, panX: 0, panY: 0 }
+        let imgTransforms = {};
         let isCtrlPanning = false;
         let panStartX = 0, panStartY = 0;
         let panStartOffsetX = 0, panStartOffsetY = 0;
+
+        /**
+         * 智慧產生候選路徑：自動嘗試各種相對層級與前綴剝離
+         * 例如傳入: assets/angle_0_0/01/A/T02.jpg
+         * 產生:
+         * 1. assets/angle_0_0/01/A/T02.jpg
+         * 2. ./assets/angle_0_0/01/A/T02.jpg
+         * 3. angle_0_0/01/A/T02.jpg (剝離 assets/)
+         * 4. 01/A/T02.jpg (剝離 assets/angle_0_0/)
+         * 5. ../assets/angle_0_0/01/A/T02.jpg
+         */
+        function generatePathCandidates(src) {
+            if (!src) return [];
+            if (src.startsWith('data:') || src.startsWith('blob:') || src.startsWith('http://') || src.startsWith('https://')) {
+                return [src];
+            }
+
+            const candidates = [];
+            const clean = src.replace(/^\/+/, ''); // 移除最開頭斜線
+
+            candidates.push(clean);
+            candidates.push('./' + clean);
+
+            // 若包含 assets/
+            if (clean.startsWith('assets/')) {
+                const noAssets = clean.replace(/^assets\//, '');
+                candidates.push(noAssets);
+                candidates.push('./' + noAssets);
+
+                if (clean.startsWith('assets/angle_0_0/')) {
+                    const noAngle = clean.replace(/^assets\/angle_0_0\//, '');
+                    candidates.push(noAngle);
+                    candidates.push('./' + noAngle);
+                }
+            } else if (clean.startsWith('angle_0_0/')) {
+                const noAngle = clean.replace(/^angle_0_0\//, '');
+                candidates.push(noAngle);
+                candidates.push('./' + noAngle);
+            }
+
+            // 往上層目錄搜尋
+            candidates.push('../' + clean);
+            candidates.push('../../' + clean);
+
+            return Array.from(new Set(candidates));
+        }
+
+        /**
+         * 智慧動態載入 Image，若路徑 404 會自動依序嘗試其他候選路徑
+         */
+        function loadHTMLImageWithFallback(src) {
+            return new Promise((resolve) => {
+                const candidates = generatePathCandidates(src);
+                let index = 0;
+
+                function tryNext() {
+                    if (index >= candidates.length) {
+                        resolve(null);
+                        return;
+                    }
+
+                    const candidate = candidates[index++];
+                    const img = new Image();
+                    img.crossOrigin = "anonymous";
+                    img.onload = () => resolve(img);
+                    img.onerror = () => tryNext();
+                    img.src = candidate;
+                }
+
+                tryNext();
+            });
+        }
 
         function saveToLocalStorage() {
             try {
@@ -530,7 +507,6 @@
 
             if (fromIndex === -1 || toIndex === -1) return;
 
-            // 僅調整 DATABASE 中的 key-value 順序，絕不改動 themeObj.folder 或圖片路徑
             const entries = keys.map(k => [k, DATABASE[k]]);
             const [movedEntry] = entries.splice(fromIndex, 1);
             entries.splice(toIndex, 0, movedEntry);
@@ -577,8 +553,10 @@
             const titleInput = document.getElementById('modal-theme-title');
             const tagInput = document.getElementById('modal-theme-tag');
             const descInput = document.getElementById('modal-theme-desc');
-            const bgInput = document.getElementById('modal-theme-bg');
             const folderInput = document.getElementById('modal-theme-folder');
+            const prefolderInput = document.getElementById('modal-theme-prefolder');
+            const thumbsizeInput = document.getElementById('modal-theme-thumbsize');
+            const thumbgapInput = document.getElementById('modal-theme-thumbgap');
 
             if (editMode) {
                 const cur = DATABASE[activeCatKey];
@@ -587,8 +565,10 @@
                 titleInput.value = cur.title || '';
                 tagInput.value = cur.tag || '';
                 descInput.value = cur.desc || '';
-                bgInput.value = cur.bgImage || `assets/angle_0_0/${activeCatKey}.jpg`;
                 folderInput.value = cur.folder || `assets/angle_0_0/${activeCatKey}/`;
+                prefolderInput.value = cur.preFolder || `assets/angle_0_0/${activeCatKey}/pre/`;
+                thumbsizeInput.value = cur.thumbSize !== undefined ? cur.thumbSize : 64;
+                thumbgapInput.value = cur.thumbGap !== undefined ? cur.thumbGap : 8;
             } else {
                 const nextNum = String(Object.keys(DATABASE).length + 1).padStart(2, '0');
                 modalTitle.innerText = "新增主題";
@@ -596,8 +576,10 @@
                 titleInput.value = '';
                 tagInput.value = '';
                 descInput.value = '';
-                bgInput.value = `assets/angle_0_0/${nextNum}.jpg`;
                 folderInput.value = `assets/angle_0_0/${nextNum}/`;
+                prefolderInput.value = `assets/angle_0_0/${nextNum}/pre/`;
+                thumbsizeInput.value = 64;
+                thumbgapInput.value = 8;
             }
 
             modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
@@ -612,8 +594,10 @@
             const title = document.getElementById('modal-theme-title').value.trim();
             const tag = document.getElementById('modal-theme-tag').value.trim();
             const desc = document.getElementById('modal-theme-desc').value.trim();
-            const bgImage = document.getElementById('modal-theme-bg').value.trim();
             const folder = document.getElementById('modal-theme-folder').value.trim();
+            const preFolder = document.getElementById('modal-theme-prefolder').value.trim();
+            const thumbSize = parseInt(document.getElementById('modal-theme-thumbsize').value, 10) || 64;
+            const thumbGap = parseInt(document.getElementById('modal-theme-thumbgap').value, 10) || 8;
 
             if (!title) {
                 showToast("⚠️ 請填寫主題名稱！");
@@ -624,16 +608,22 @@
                 DATABASE[activeCatKey].title = title;
                 DATABASE[activeCatKey].tag = tag;
                 DATABASE[activeCatKey].desc = desc;
-                DATABASE[activeCatKey].bgImage = bgImage;
                 DATABASE[activeCatKey].folder = folder;
+                DATABASE[activeCatKey].preFolder = preFolder;
+                DATABASE[activeCatKey].thumbSize = thumbSize;
+                DATABASE[activeCatKey].thumbGap = thumbGap;
             } else {
                 DATABASE[key] = {
                     title: title,
                     tag: tag || 'Art Category',
                     desc: desc || '專案視覺創作展示',
-                    bgImage: bgImage || `assets/angle_0_0/${key}.jpg`,
+                    bgImage: `assets/angle_0_0/${key}.jpg`,
                     bgFallback: DEFAULT_FALLBACK_IMAGE,
                     folder: folder || `assets/angle_0_0/${key}/`,
+                    preFolder: preFolder || `assets/angle_0_0/${key}/pre/`,
+                    thumbSize: thumbSize,
+                    thumbGap: thumbGap,
+                    preImages: [],
                     subcategories: [
                         { name: "預設小類別", folder: "A/", items: [] }
                     ]
@@ -645,7 +635,7 @@
             closeThemeModal();
             saveToLocalStorage();
             renderTabs();
-            showToast("已儲存主題資訊！");
+            showToast("已儲存主題資訊與縮圖設定！");
         }
 
         function requestDeleteCurrentTheme() {
@@ -717,7 +707,6 @@
             if (draggedSubTabIdx === null || draggedSubTabIdx === targetSubIdx) return;
 
             const subcats = DATABASE[activeCatKey].subcategories;
-            // 僅調整小類別陣列中的順序，保留各小類別原本的 Folder 與圖片路徑
             const [movedSubcat] = subcats.splice(draggedSubTabIdx, 1);
             subcats.splice(targetSubIdx, 0, movedSubcat);
 
@@ -843,9 +832,10 @@
 
             let html = '';
             subcat.items.forEach((item, idx) => {
-                const previewSrc = item.previewBlob || item.src;
+                const previewSrc = item.previewBlob || item.thumb || item.src;
                 const fallbackImg = item.fallback || DEFAULT_FALLBACK_IMAGE;
                 const isSelected = selectedItemIdx === idx;
+                const thumbPath = item.thumb || `assets/angle_0_0/${activeCatKey}/pre/thumb_${idx + 1}.jpg`;
 
                 html += `
                     <div class="image-card group relative bg-charcoal-900 border border-white/10 rounded-2xl overflow-hidden shadow-lg p-2 flex flex-col justify-between transition-all duration-200 hover:border-peach-500/60 ${isSelected ? 'selected-card' : ''}"
@@ -883,8 +873,12 @@
                                 <input type="text" value="${item.name}" onchange="updateItemName(${idx}, this.value)" class="w-full bg-charcoal-950 border border-white/10 rounded-lg px-2 py-1 text-white text-[11px] focus:outline-none focus:border-peach-500">
                             </div>
                             <div>
-                                <label class="text-[9px] text-gray-400">圖片路徑：</label>
+                                <label class="text-[9px] text-gray-400">大圖路徑 (src)：</label>
                                 <input type="text" value="${item.src}" onchange="updateItemSrc(${idx}, this.value)" class="w-full bg-charcoal-950 border border-white/10 rounded-lg px-2 py-1 text-gray-300 font-mono text-[10px] focus:outline-none focus:border-peach-500">
+                            </div>
+                            <div>
+                                <label class="text-[9px] text-peach-400">正方形縮圖路徑 (thumb)：</label>
+                                <input type="text" value="${thumbPath}" onchange="updateItemThumb(${idx}, this.value)" class="w-full bg-charcoal-950 border border-peach-500/30 rounded-lg px-2 py-1 text-peach-300 font-mono text-[10px] focus:outline-none focus:border-peach-500">
                             </div>
                         </div>
                     </div>
@@ -896,7 +890,6 @@
             restoreAllImageTransforms();
         }
 
-        // 選定卡片
         function selectCard(idx) {
             selectedItemIdx = idx;
             document.querySelectorAll('.image-card').forEach((card, i) => {
@@ -925,39 +918,33 @@
             }
         }
 
-        // 智能三階段圖片探測降級機制
+        /**
+         * 智慧 onerror 處理：自動依序嘗試候選相對路徑
+         */
         function handleSmartImageError(img) {
-            const originalSrc = img.getAttribute('data-original-src') || img.src;
-            const fallback = img.getAttribute('data-fallback') || DEFAULT_FALLBACK_IMAGE;
-
-            if (!img.dataset.tryStage) {
-                img.dataset.tryStage = "1";
-                // 階段 1：針對 code_artifact.html 位於 assets/angle_0_0/ 目錄下，若原路徑有 assets/angle_0_0/ 前綴，嘗試相對層級路徑
-                let strippedPrefix = originalSrc.replace(/^assets\/angle_0_0\//, '');
-                if (strippedPrefix !== originalSrc && img.src !== strippedPrefix) {
-                    img.src = strippedPrefix;
-                    return;
-                }
+            if (!img.dataset.candidates) {
+                const originalSrc = img.getAttribute('data-original-src') || img.src;
+                const candidates = generatePathCandidates(originalSrc);
+                // 排除目前已失敗的 URL
+                const filtered = candidates.filter(c => c !== img.src && new URL(c, document.baseURI).href !== img.src);
+                img.dataset.candidates = JSON.stringify(filtered);
+                img.dataset.candidateIndex = "0";
             }
 
-            if (img.dataset.tryStage === "1") {
-                img.dataset.tryStage = "2";
-                // 階段 2：若原路徑含子資料夾（如 `/A/`），自動嘗試去掉子資料夾（轉為 `.../04/Life 01.png`）
-                let strippedSubcat = originalSrc.replace(/\/[A-Z]\//, '/').replace(/^assets\/angle_0_0\//, '');
-                if (strippedSubcat !== originalSrc && img.src !== strippedSubcat) {
-                    img.src = strippedSubcat;
-                    return;
-                }
-            }
+            const candidates = JSON.parse(img.dataset.candidates || "[]");
+            let idx = parseInt(img.dataset.candidateIndex || "0", 10);
 
-            // 階段 3：最終回退至雲端通用預設圖片
-            img.onerror = null;
-            img.src = fallback;
+            if (idx < candidates.length) {
+                img.dataset.candidateIndex = String(idx + 1);
+                img.src = candidates[idx];
+            } else {
+                img.onerror = null;
+                img.src = img.getAttribute('data-fallback') || DEFAULT_FALLBACK_IMAGE;
+            }
         }
 
-        // 圖片 Ctrl + 滾輪縮放邏輯
         function handleCardImgWheel(e, idx) {
-            if (!e.ctrlKey) return; // 僅在按住 Ctrl 鍵時觸發
+            if (!e.ctrlKey) return;
             e.preventDefault();
             e.stopPropagation();
 
@@ -969,13 +956,11 @@
 
             let state = imgTransforms[idx] || { scale: 1.0, panX: 0, panY: 0 };
 
-            // 計算最大縮放倍率 (不能超過圖片單邊極限尺寸或最大 3.0 倍)
             const containerWidth = container.clientWidth;
             const containerHeight = container.clientHeight;
             const naturalW = img.naturalWidth || containerWidth;
             const naturalH = img.naturalHeight || containerHeight;
 
-            // 計算最大允許 Scale (單邊尺寸達到圖片原始真實尺寸，最小不低於 3.0 倍)
             const maxScaleX = naturalW > 0 ? (naturalW / containerWidth) : 3.0;
             const maxScaleY = naturalH > 0 ? (naturalH / containerHeight) : 3.0;
             const maxAllowedScale = Math.max(1.5, Math.min(Math.max(maxScaleX, maxScaleY), 3.0));
@@ -983,12 +968,9 @@
             const delta = e.deltaY < 0 ? 0.15 : -0.15;
             let newScale = state.scale + delta;
 
-            // 邊界限制：1.0x ~ maxAllowedScale
             newScale = Math.max(1.0, Math.min(newScale, maxAllowedScale));
 
             state.scale = newScale;
-
-            // 重新限制 Pan 邊界
             clampPanBoundaries(state, containerWidth, containerHeight);
 
             imgTransforms[idx] = state;
@@ -996,9 +978,8 @@
             updateSelectedImageStatusUI();
         }
 
-        // 圖片 Ctrl + 左鍵 拖曳平移邏輯
         function handleCardImgMouseDown(e, idx) {
-            if (!e.ctrlKey || e.button !== 0) return; // Ctrl + 滑鼠左鍵
+            if (!e.ctrlKey || e.button !== 0) return;
             e.preventDefault();
             e.stopPropagation();
 
@@ -1009,7 +990,7 @@
             if (!container || !img) return;
 
             const state = imgTransforms[idx] || { scale: 1.0, panX: 0, panY: 0 };
-            if (state.scale <= 1.0) return; // 未放大無需平移
+            if (state.scale <= 1.0) return;
 
             isCtrlPanning = true;
             panStartX = e.clientX;
@@ -1043,7 +1024,6 @@
             window.addEventListener('mouseup', onMouseUp);
         }
 
-        // 邊界鎖定算法：超過圖片邊界無法再拖曳
         function clampPanBoundaries(state, containerW, containerH) {
             if (state.scale <= 1.0) {
                 state.panX = 0;
@@ -1072,7 +1052,6 @@
             });
         }
 
-        // 防止開啟整頁 Ctrl + 滾輪 網頁縮放
         window.addEventListener('wheel', (e) => {
             if (e.ctrlKey) {
                 e.preventDefault();
@@ -1132,6 +1111,11 @@
             saveToLocalStorage();
         }
 
+        function updateItemThumb(idx, val) {
+            DATABASE[activeCatKey].subcategories[activeSubIdx].items[idx].thumb = val;
+            saveToLocalStorage();
+        }
+
         function handleBatchFileUpload(e) {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
@@ -1142,10 +1126,12 @@
             files.forEach((file) => {
                 const fileNameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
                 const generatedSrc = `${cat.folder}${subcat.folder || ''}${file.name}`;
+                const generatedThumb = `${cat.preFolder || `assets/angle_0_0/${activeCatKey}/pre/`}${fileNameWithoutExt}.jpg`;
                 const previewBlob = URL.createObjectURL(file);
 
                 subcat.items.push({
                     src: generatedSrc,
+                    thumb: generatedThumb,
                     fallback: DEFAULT_FALLBACK_IMAGE,
                     name: fileNameWithoutExt,
                     previewBlob: previewBlob
@@ -1168,21 +1154,33 @@
                 item.name = `${subcat.name} ${paddedNum}`;
                 const ext = item.src.split('.').pop() || 'jpg';
                 item.src = `${cat.folder}${subcat.folder || ''}${paddedNum}.${ext}`;
+                item.thumb = `${cat.preFolder || `assets/angle_0_0/${activeCatKey}/pre/`}${paddedNum}.jpg`;
             });
 
             saveToLocalStorage();
             renderImageGrid();
-            showToast("已完成所有圖片重新編號！");
+            showToast("已完成所有圖片與縮圖路徑重新編號！");
         }
 
         function generateCleanJson() {
             const cleanDB = JSON.parse(JSON.stringify(DATABASE));
             Object.keys(cleanDB).forEach(cKey => {
-                cleanDB[cKey].subcategories.forEach(sub => {
+                const cat = cleanDB[cKey];
+                const preList = [];
+                cat.subcategories.forEach(sub => {
                     sub.items.forEach(item => {
                         delete item.previewBlob;
+                        if (!item.thumb) {
+                            const fileName = item.src ? item.src.split('/').pop() : '';
+                            const baseName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+                            item.thumb = `${cat.preFolder || `assets/angle_0_0/${cKey}/pre/`}${baseName}.jpg`;
+                        }
+                        if (item.thumb && !preList.includes(item.thumb)) {
+                            preList.push(item.thumb);
+                        }
                     });
                 });
+                cat.preImages = preList;
             });
             return cleanDB;
         }
@@ -1199,7 +1197,103 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast("📄 已下載 portfolio_data.json！");
+            showToast("📄 已成功下載 portfolio_data.json！");
+        }
+
+        // 大圖自動裁切正方形縮圖並打包 ZIP 下載（搭配智慧多路徑降級）
+        async function exportCurrentThemeThumbnailsZip() {
+            const cat = DATABASE[activeCatKey];
+            if (!cat) return;
+
+            const allItems = [];
+            cat.subcategories.forEach(sub => {
+                if (Array.isArray(sub.items)) {
+                    sub.items.forEach(it => allItems.push(it));
+                }
+            });
+
+            if (allItems.length === 0) {
+                showToast("⚠️ 當前主題內無圖片可生成縮圖！");
+                return;
+            }
+
+            if (typeof JSZip === 'undefined') {
+                showToast("⚠️ 正在載入壓縮庫，請稍微再試！");
+                return;
+            }
+
+            const targetSize = (cat.thumbSize || 64) * 4; // 預設 256px 高畫質正方形縮圖
+            showToast(`⏳ 正在為「${cat.title}」自動偵測圖片並生成 ${targetSize}x${targetSize} 正方形縮圖…`);
+
+            const zip = new JSZip();
+            const preFolderInZip = zip.folder("pre");
+            let processedCount = 0;
+
+            for (let i = 0; i < allItems.length; i++) {
+                const item = allItems[i];
+                const imgSrc = item.previewBlob || item.src;
+                const thumbPath = item.thumb || deriveThumbSrc(activeCatKey, item);
+                const thumbFileName = thumbPath.split('/').pop() || `thumb_${i+1}.jpg`;
+
+                try {
+                    const blob = await createSquareCroppedBlob(imgSrc, targetSize);
+                    if (blob) {
+                        preFolderInZip.file(thumbFileName, blob);
+                        processedCount++;
+                    }
+                } catch (e) {
+                    console.warn(`處理圖片失敗: ${imgSrc}`, e);
+                }
+            }
+
+            if (processedCount === 0) {
+                showToast("⚠️ 生成縮圖失敗，請檢查圖片相對路徑或確認圖檔是否存在！");
+                return;
+            }
+
+            showToast("📦 正在打包 ZIP 壓縮檔…");
+            const zipContent = await zip.generateAsync({ type: "blob" });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(zipContent);
+            a.download = `${activeCatKey}_pre_thumbnails.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+
+            showToast(`✅ 已成功匯出 ${processedCount} 張正方形縮圖至 ZIP！`);
+        }
+
+        async function createSquareCroppedBlob(imageSrc, targetSize = 256) {
+            const img = await loadHTMLImageWithFallback(imageSrc);
+            if (!img) return null;
+
+            return new Promise((resolve) => {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = targetSize;
+                    canvas.height = targetSize;
+                    const ctx = canvas.getContext('2d');
+
+                    const naturalW = img.naturalWidth || img.width;
+                    const naturalH = img.naturalHeight || img.height;
+                    const minDim = Math.min(naturalW, naturalH);
+                    const sx = (naturalW - minDim) / 2;
+                    const sy = (naturalH - minDim) / 2;
+
+                    ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
+                    canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.92);
+                } catch (e) {
+                    resolve(null);
+                }
+            });
+        }
+
+        function deriveThumbSrc(catKey, item) {
+            if (item.thumb) return item.thumb;
+            const fileName = item.src ? item.src.split('/').pop() : '';
+            const baseName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+            return `assets/angle_0_0/${catKey}/pre/${baseName}.jpg`;
         }
 
         function openConfirmModal(title, msg, onConfirm) {
@@ -1234,11 +1328,10 @@
             setTimeout(() => {
                 toast.classList.remove('opacity-100', 'translate-y-0');
                 toast.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
-            }, 2000);
+            }, 2500);
         }
 
         window.onload = function() {
-            // 初始化時自動嘗試抓取相鄰同目錄下的 portfolio_data.json
             fetchLocalPortfolioJson().then(() => {
                 renderTabs();
             }).catch(() => {
@@ -1246,7 +1339,7 @@
                 if (localSaved) {
                     try {
                         const parsed = JSON.parse(localSaved);
-                        if (parsed && Object.keys(parsed).length > 1) {
+                        if (parsed && Object.keys(parsed).length > 0) {
                             DATABASE = parsed;
                         }
                     } catch(e) {}
