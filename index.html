@@ -1274,7 +1274,8 @@
 
             let loadedCustom = false;
 
-            if (data.hasCustomHtml) {
+            // 不再只依賴 hasCustomHtml：只要資料夾內有 content.html 就載入，找不到 (404) 才用下方預設版面
+            {
                 const customHtmlPath = data.detailFilePath || `${data.folder}content.html`;
                 try {
                     const response = await fetch(customHtmlPath);

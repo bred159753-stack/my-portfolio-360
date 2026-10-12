@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專案展演</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        peach: {
+                            300: '#fde5be',
+                            400: '#fcd8a0',
+                            500: '#fcd191',
+                            600: '#e0b879',
+                        },
+                        charcoal: {
+                            800: '#2c2c31',
+                            850: '#232327',
+                            900: '#1c1c1f',
+                            950: '#141416',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141416;
+            color: #f3f4f6;
+            overflow: hidden;
+        }
+        .glass-panel {
+            background: rgba(35, 35, 39, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* VisionOS 3D Perspective Stage Styles */
+        .pc-3d-stage {
+            perspective: 1200px;
+            perspective-origin: 50% 50%;
+            transform-style: preserve-3d;
+        }
+        .pc-3d-cards-wrapper {
+            transform-style: preserve-3d;
+        }
+        .pc-3d-card {
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease, filter 0.4s ease;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+            will-change: transform, opacity, filter;
+        }
+    </style>
+</head>
+<body class="p-1 md:p-2 pt-1 md:pt-1 min-h-screen bg-charcoal-950 no-scrollbar selection:bg-peach-500 selection:text-charcoal-950 overflow-hidden">
+
+    <style>
+        #angle90-wrapper { height: 100%; max-height: 100%; padding-top: env(safe-area-inset-top, 0px); box-sizing: border-box; }
+        #angle90-wrapper .glass-panel {
+            background: rgba(35, 35, 39, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        #angle90-wrapper .no-scrollbar::-webkit-scrollbar { display: none; }
+        #angle90-wrapper .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        #angle90-wrapper .pc-3d-stage { perspective: 1200px; perspective-origin: 50% 50%; transform-style: preserve-3d; }
+        #angle90-wrapper .pc-3d-cards-wrapper { transform-style: preserve-3d; }
+        #angle90-wrapper .pc-3d-card {
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease, filter 0.4s ease;
+            transform-style: preserve-3d; backface-visibility: hidden;
+            will-change: transform, opacity, filter;
+        }
+        /* 縮圖列手勢捲動與彈性控制 */
+        #angle90-thumb-strip {
+            touch-action: pan-x;
+            overscroll-behavior-x: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+        /* 載入指示器 */
+        #angle90-loader {
+            position: absolute; inset: 0; z-index: 60;
+            display: none; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+            background: rgba(20, 20, 22, 0.78);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            border-radius: 1rem;
+        }
+        #angle90-loader.is-visible { display: flex; }
+        .angle90-spinner {
+            width: 52px; height: 52px; border-radius: 50%;
+            border: 4px solid rgba(252, 209, 145, 0.18);
+            border-top-color: #fcd191;
+            animation: angle90-spin 0.8s linear infinite;
+        }
+        @keyframes angle90-spin { to { transform: rotate(360deg); } }
+
+        /* 主題面板收折（手機版） */
+        #angle90-theme-collapse {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 300px; opacity: 1; overflow: hidden;
+        }
+        #angle90-theme-collapse.is-collapsed { max-height: 0; opacity: 0; pointer-events: none; }
+        @media (min-width: 768px) {
+            #angle90-theme-collapse,
+            #angle90-theme-collapse.is-collapsed { max-height: none; opacity: 1; pointer-events: auto; overflow: visible; }
+        }
+        /* 手機版：未選取的類別按鈕縮小 50% */
+        @media (max-width: 767px) {
+            #angle90-subcat-tags .angle90-subcat-btn.is-inactive { zoom: 0.5; }
+        }
+    </style>
+
+    <div id="angle90-wrapper" class="relative w-full h-full max-w-[1536px] mx-auto text-gray-100 flex flex-col justify-between overflow-hidden pt-0 gap-2">
+        
+        <!-- 1. Top Panel: Dedicated Centered Theme Selection Floating Glass Panel -->
+        <div class="w-full flex flex-col items-center justify-center relative z-40 flex-shrink-0">
+            <div id="angle90-theme-collapse" class="w-full flex justify-center">
+                <div class="glass-panel px-3 md:px-4 py-1.5 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center gap-2 max-w-[70vw] md:max-w-none">
+                    <!-- 主題排列方式切換：設計類型 / 公司排法 -->
+                    <div id="angle90-group-switch" class="flex flex-col md:flex-row items-stretch gap-1 flex-shrink-0">
+                        <!-- Dynamic Group Buttons Injected via JS -->
+                    </div>
+                    <div id="angle90-group-divider" class="w-[1px] self-stretch bg-white/10 flex-shrink-0"></div>
+                    <div id="angle90-theme-tags" class="flex flex-wrap md:flex-nowrap justify-center items-center gap-1.5 md:gap-2 md:overflow-x-auto no-scrollbar md:max-w-[calc(100vw-16rem)]">
+                        <!-- Dynamic Theme Buttons Injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Theme Panel Collapse Toggle -->
+            <button id="angle90-theme-toggle" onclick="window.angle90ToggleThemePanel()"
+                    class="md:hidden glass-panel px-6 py-1 rounded-b-2xl border-t-0 -mt-[1px] max-w-[70vw] text-gray-300 flex items-center justify-center gap-2 shadow-xl cursor-pointer active:scale-95 transition"
+                    title="收折/展開主題">
+                <div class="w-8 h-1 bg-peach-500/70 rounded-full"></div>
+                <span id="angle90-theme-toggle-icon" class="text-[10px] text-peach-400 font-bold">▲</span>
+            </button>
+
+            <!-- Modal Close Button -->
+            <button onclick="window.angle90CloseModal()"
+                    class="absolute right-0 top-0 md:top-1/2 md:-translate-y-1/2 w-8 h-8 rounded-xl bg-charcoal-900/90 hover:bg-rose-500/30 hover:border-rose-400/50 flex items-center justify-center text-xs text-gray-300 hover:text-white transition border border-white/10 shadow-md flex-shrink-0 cursor-pointer"
+                    title="關閉作品面板">
+                ✕
+            </button>
+        </div>
+
+        <!-- 2. Single Unified Main Panel -->
+        <div class="glass-panel rounded-3xl p-3 md:p-5 border border-white/10 shadow-2xl flex-1 w-full flex flex-col justify-between overflow-hidden">
+            
+            <!-- Subcategory Header Bar -->
+            <header class="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 z-30 flex-shrink-0">
+                <div id="angle90-subcat-tags" class="flex flex-wrap items-center gap-1.5 max-w-[48%] max-h-20 overflow-y-auto no-scrollbar py-0.5">
+                    <!-- Dynamic Subcategory Tag Buttons Injected via JS -->
+                </div>
+
+                <!-- Page Counter -->
+                <div class="flex items-center gap-2 ml-auto">
+                    <span id="angle90-lightbox-counter" class="font-mono bg-white/10 px-3 py-1 rounded-full text-xs text-peach-300 font-bold">
+                        1 / 10
+                    </span>
+                </div>
+            </header>
+
+            <!-- Main Stage: Workspace -->
+            <div id="angle90-lightbox-stage-container" class="relative flex-1 w-full flex items-center justify-center my-1 overflow-hidden cursor-grab active:cursor-grabbing pc-3d-stage">
+                <div id="angle90-loader">
+                    <div class="angle90-spinner"></div>
+                    <div id="angle90-loader-text" class="text-xs font-semibold text-peach-300 tracking-wide">載入中…</div>
+                </div>
+                <div id="angle90-lightbox-toast" 
+                     class="absolute top-2 z-40 px-4 py-1.5 rounded-full bg-peach-500 text-charcoal-950 font-bold text-xs shadow-2xl backdrop-blur-md transition-all duration-500 opacity-0 -translate-y-4 pointer-events-none">
+                    <span id="angle90-toast-text">已切換主題</span>
+                </div>
+
+                <button id="angle90-nav-btn-prev" onclick="event.stopPropagation(); window.angle90NavImage(-1);" 
+                        class="absolute left-2 z-30 w-10 h-10 rounded-full bg-charcoal-900/90 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold opacity-30 hover:opacity-100 active:scale-95">
+                    ‹
+                </button>
+
+                <div id="angle90-lightbox-cards-wrapper" class="relative w-full h-full flex items-center justify-center pc-3d-cards-wrapper">
+                    <!-- Dynamic Glass Cards -->
+                </div>
+
+                <button id="angle90-nav-btn-next" onclick="event.stopPropagation(); window.angle90NavImage(1);" 
+                        class="absolute right-2 z-30 w-10 h-10 rounded-full bg-charcoal-900/90 border border-white/20 text-white flex items-center justify-center transition shadow-2xl font-bold opacity-30 hover:opacity-100 active:scale-95">
+                    ›
+                </button>
+            </div>
+
+            <!-- Bottom Thumbnail Strip Container -->
+            <div class="w-full pt-2 border-t border-white/10 flex-shrink-0" style="padding-bottom: env(safe-area-inset-bottom, 0px);">
+                <div id="angle90-thumb-strip" class="flex items-center overflow-x-auto no-scrollbar py-0.5 px-0 justify-start cursor-grab active:cursor-grabbing select-none">
+                    <!-- Dynamic thumbnails from pre/ directory -->
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            // DATABASE = { company: { "01": 主題 }, design: { "01": 主題 } }
+            // activeCategoryKey 為「排列方式:編號」，例如 "company:01"、"design:02"
+            let DATABASE = { company: {}, design: {} };
+            let activeCategoryKey = "";
+            let flatImageList = [];
+            let activeGlobalImageIndex = 0;
+
+            const aspectRatioCache = {};
+            const imageStore = (window.__portfolioImages = window.__portfolioImages || { promises: new Map(), resolved: {} });
+
+            function deriveThumbSrc(catKey, item) {
+                if (item.thumb) return item.thumb;
+                if (item.thumbSrc) return item.thumbSrc;
+                
+                // 自動建構 assets/angle_90_0/{catKey}/pre/ 縮圖路徑
+                const fileName = item.src ? item.src.split('/').pop() : '';
+                const baseName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+                return `assets/angle_90_0/${catKey}/pre/${baseName}.jpg`;
+            }
+
+            function loadImageEntry(src, fallback) {
+                if (imageStore.promises.has(src)) return imageStore.promises.get(src);
+
+                const p = new Promise((resolve) => {
+                    const tryLoad = (url, isFallback) => {
+                        const img = new Image();
+                        img.decoding = 'async';
+                        img.onload = () => {
+                            imageStore.resolved[src] = url;
+                            aspectRatioCache[src] = img.naturalWidth / Math.max(1, img.naturalHeight);
+                            const decoded = img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+                            decoded.then(() => resolve(true));
+                        };
+                        img.onerror = () => {
+                            if (!isFallback && fallback) tryLoad(fallback, true);
+                            else resolve(false);
+                        };
+                        img.src = url;
+                    };
+                    tryLoad(src, false);
+                });
+
+                imageStore.promises.set(src, p);
+                return p;
+            }
+
+            function isItemReady(src) {
+                return Object.prototype.hasOwnProperty.call(imageStore.resolved, src);
+            }
+
+            async function preloadItems(items, onProgress, concurrency = 4, timeoutMs = 25000) {
+                const total = items.length;
+                let done = 0;
+                let cursor = 0;
+                if (total === 0) return;
+
+                const worker = async () => {
+                    while (cursor < total) {
+                        const it = items[cursor++];
+                        await loadImageEntry(it.src, it.fallback);
+                        if (it.thumbSrc) {
+                            await loadImageEntry(it.thumbSrc, it.src);
+                        }
+                        done++;
+                        if (onProgress) onProgress(done, total);
+                    }
+                };
+                const workers = Array.from({ length: Math.min(concurrency, total) }, worker);
+                await Promise.race([
+                    Promise.all(workers),
+                    new Promise((r) => setTimeout(r, timeoutMs))
+                ]);
+            }
+
+            function setLoaderVisible(visible, text) {
+                const el = document.getElementById('angle90-loader');
+                const txt = document.getElementById('angle90-loader-text');
+                if (!el) return;
+                if (txt && text !== undefined) txt.innerText = text;
+                el.classList.toggle('is-visible', !!visible);
+            }
+
+            function getTheme(compKey) {
+                const [group, key] = String(compKey).split(':');
+                return (DATABASE[group] || {})[key] || null;
+            }
+
+            // 依公司排法順序走訪所有圖片：cb(item, companyKey)
+            function forEachCompanyItem(cb) {
+                getSortedKeys('company').forEach(cKey => {
+                    (DATABASE.company[cKey].subcategories || []).forEach(sub => {
+                        (sub.items || []).forEach(item => cb(item, cKey, sub));
+                    });
+                });
+            }
+
+            // 取得主題的圖片清單：公司排法直接讀自己的類別；設計類型從公司排法圖片的 design 標記彙整（路徑沿用公司排法）
+            function buildThemeItems(compKey) {
+                const [group, key] = String(compKey).split(':');
+                const theme = getTheme(compKey);
+                const list = [];
+                if (!theme || !Array.isArray(theme.subcategories)) return list;
+
+                if (group === 'company') {
+                    theme.subcategories.forEach(sub => (sub.items || []).forEach(item => {
+                        list.push({ ...item, thumbSrc: deriveThumbSrc(key, item), subCatName: sub.name });
+                    }));
+                } else {
+                    theme.subcategories.forEach(sub => {
+                        forEachCompanyItem((item, cKey) => {
+                            if ((item.design || []).some(r => r.theme === key && r.sub === sub.id)) {
+                                list.push({ ...item, thumbSrc: deriveThumbSrc(cKey, item), subCatName: sub.name });
+                            }
+                        });
+                    });
+                }
+                return list;
+            }
+
+            function preloadOtherThemesQuietly() {
+                const run = async () => {
+                    for (const k of getSortedKeys('company')) {
+                        const compKey = `company:${k}`;
+                        if (compKey === activeCategoryKey) continue;
+                        await preloadItems(buildThemeItems(compKey), null, 2, 60000);
+                    }
+                };
+                if (window.requestIdleCallback) window.requestIdleCallback(() => run(), { timeout: 3000 });
+                else setTimeout(run, 1200);
+            }
+
+            let touchStartX = 0;
+            let touchEndX = 0;
+            let isDraggingThumbStrip = false;
+            let isProgrammaticScroll = false;
+            let scrollSnapTimer = null;
+            let inertiaAnimationId = null;
+            let isTouchScrolling = false;
+            let loadToken = 0;
+
+            function isPCView() {
+                return window.innerWidth >= 768;
+            }
+
+            window.initAngle90App = async function() {
+                const panelFolder = window.__currentPanelFolder;
+                const pathsToTry = [
+                    ...(panelFolder ? [panelFolder + 'portfolio_data.json'] : []),
+                    'assets/angle_90_0/portfolio_data.json',
+                    'portfolio_data.json',
+                    './portfolio_data.json',
+                    '../portfolio_data.json'
+                ];
+
+                let loadedData = null;
+                for (const path of pathsToTry) {
+                    try {
+                        const res = await fetch(path, { cache: 'no-store' });
+                        if (res.ok) {
+                            const rawJson = await res.json();
+                            if (rawJson && typeof rawJson === 'object' && Object.keys(rawJson).length > 0) {
+                                loadedData = rawJson;
+                                break;
+                            }
+                        }
+                    } catch (e) {}
+                }
+
+                if (loadedData) {
+                    // 相容舊版扁平格式 { "01": {...} }：全部視為公司排法
+                    const isNew = loadedData.company || loadedData.design || loadedData.settings;
+                    // settings.multiLayout 為 false 時只有公司排法，不載入設計類型
+                    multiLayout = !(isNew && loadedData.settings && loadedData.settings.multiLayout === false);
+                    DATABASE = {
+                        company: (isNew ? loadedData.company : loadedData) || {},
+                        design: (isNew && multiLayout ? loadedData.design : null) || {}
+                    };
+                }
+
+                const firstKey = getGroupKeys('design')[0] || getGroupKeys('company')[0];
+                if (firstKey) {
+                    activeCategoryKey = firstKey;
+                    activeGroup = firstKey.split(':')[0];
+                }
+
+                renderThemeTags();
+                switchThemeCategory(activeCategoryKey, false);
+
+                setupTouchSwiping();
+                setupLightboxMouseDrag();
+                setupThumbStripMouseDrag();
+                setupThumbStripScrollAndSnap();
+
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        renderLightboxImage(false);
+                    }, 100);
+                });
+            };
+
+            // 公司排法：編號 01、02、03… = 資料夾名稱；設計類型：沒有資料夾，圖片來自公司排法中被勾選到的類別
+            const THEME_GROUPS = {
+                design:  { label: '設計類型' },
+                company: { label: '公司排法' }
+            };
+            let activeGroup = 'design';
+            let multiLayout = true;
+
+            // 依 code_artifact 拖曳設定的 order 排序；沒有 order 時依編號
+            function getSortedKeys(group) {
+                const store = DATABASE[group] || {};
+                const orderOf = k => (typeof store[k].order === 'number' ? store[k].order : Infinity);
+                return Object.keys(store).sort((a, b) => (orderOf(a) - orderOf(b)) || (parseInt(a, 10) - parseInt(b, 10)));
+            }
+
+            // 回傳可顯示的主題 (含標題且至少有一張圖片)，格式為 "group:key"
+            function getGroupKeys(group) {
+                return getSortedKeys(group)
+                    .map(k => `${group}:${k}`)
+                    .filter(compKey => {
+                        const theme = getTheme(compKey);
+                        return theme && theme.title && buildThemeItems(compKey).length > 0;
+                    });
+            }
+
+            function renderGroupSwitch() {
+                const groupContainer = document.getElementById('angle90-group-switch');
+                if (!groupContainer) return;
+
+                // 只有一種排法時，主題按鈕前不顯示排列方式切換按鈕
+                const divider = document.getElementById('angle90-group-divider');
+                groupContainer.classList.toggle('hidden', !multiLayout);
+                if (divider) divider.classList.toggle('hidden', !multiLayout);
+                if (!multiLayout) {
+                    groupContainer.innerHTML = '';
+                    return;
+                }
+
+                groupContainer.innerHTML = Object.keys(THEME_GROUPS).map(group => {
+                    const isActive = group === activeGroup;
+                    const isEmpty = getGroupKeys(group).length === 0;
+                    return `
+                        <button onclick="window.angle90SelectGroup('${group}')" ${isEmpty ? 'disabled title="尚無主題"' : ''}
+                                class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex-shrink-0 border whitespace-nowrap ${
+                                    isActive
+                                    ? 'bg-white/90 text-charcoal-950 border-white/90'
+                                    : 'text-gray-400 border-white/10 hover:text-white hover:bg-white/10'
+                                } ${isEmpty ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'}">
+                            ${THEME_GROUPS[group].label}
+                        </button>
+                    `;
+                }).join('');
+            }
+
+            window.angle90SelectGroup = function(group) {
+                if (group === activeGroup || !THEME_GROUPS[group]) return;
+                const keys = getGroupKeys(group);
+                if (keys.length === 0) return;
+                activeGroup = group;
+                switchThemeCategory(keys[0], true);
+            };
+
+            function renderThemeTags() {
+                const tagsContainer = document.getElementById('angle90-theme-tags');
+                if (!tagsContainer) return;
+
+                renderGroupSwitch();
+
+                let html = '';
+                getGroupKeys(activeGroup).forEach(catKey => {
+                    const cat = getTheme(catKey);
+                    if (!cat || !cat.title) return;
+
+                    const isActive = catKey === activeCategoryKey;
+                    html += `
+                        <button onclick="window.angle90SelectTheme('${catKey}')" 
+                                class="btn-theme-tag px-3 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border flex-shrink-0 cursor-pointer ${
+                                    isActive 
+                                    ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20 font-extrabold' 
+                                    : 'glass-panel text-gray-300 hover:text-white hover:bg-white/10 border-white/10'
+                                }">
+                            ${cat.title}
+                        </button>
+                    `;
+                });
+                tagsContainer.innerHTML = html;
+            }
+
+            window.angle90SelectTheme = function(catKey) {
+                if (catKey === activeCategoryKey || !getTheme(catKey)) return;
+                switchThemeCategory(catKey, true);
+            };
+
+            function switchThemeCategory(catKey, showToast) {
+                activeCategoryKey = catKey;
+                activeGroup = String(catKey).split(':')[0];
+                const categoryData = getTheme(catKey);
+                if (!categoryData) return;
+
+                renderThemeTags();
+
+                flatImageList = buildThemeItems(catKey).map((item, globalIndex) => ({ ...item, globalIndex }));
+
+                activeGlobalImageIndex = 0;
+
+                const myToken = ++loadToken;
+                const allReady = flatImageList.length > 0 && flatImageList.every(it => isItemReady(it.src));
+
+                const finishAndRender = () => {
+                    setLoaderVisible(false);
+                    renderLightboxImage(false);
+                    renderThumbStrip();
+                    if (showToast) triggerSubcategoryToast(`主題：${categoryData.title}`);
+                    preloadOtherThemesQuietly();
+                };
+
+                if (allReady || flatImageList.length === 0) {
+                    finishAndRender();
+                    return;
+                }
+
+                const cardsWrapper = document.getElementById('angle90-lightbox-cards-wrapper');
+                const stripEl = document.getElementById('angle90-thumb-strip');
+                if (cardsWrapper) cardsWrapper.innerHTML = '';
+                if (stripEl) stripEl.innerHTML = '';
+                renderSubcategoryTags();
+                const counterEl = document.getElementById('angle90-lightbox-counter');
+                if (counterEl) counterEl.innerText = `0 / ${flatImageList.length}`;
+                setLoaderVisible(true, `載入中 0 / ${flatImageList.length}`);
+
+                preloadItems(flatImageList, (done, total) => {
+                    if (myToken !== loadToken) return;
+                    setLoaderVisible(true, `載入中 ${done} / ${total}`);
+                }).then(() => {
+                    if (myToken !== loadToken) return;
+                    finishAndRender();
+                });
+            }
+
+            window.angle90ToggleThemePanel = function() {
+                const panel = document.getElementById('angle90-theme-collapse');
+                const icon = document.getElementById('angle90-theme-toggle-icon');
+                if (!panel) return;
+                const collapsed = panel.classList.toggle('is-collapsed');
+                if (icon) icon.innerText = collapsed ? '▼' : '▲';
+                // 收折後舞台高度改變，動畫結束後重算大圖尺寸
+                setTimeout(() => renderLightboxImage(false), 320);
+            };
+
+            window.angle90NavImage = function(direction) {
+                if (!flatImageList || flatImageList.length === 0) return;
+                const prevSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+
+                // 不循環：第一張往前 / 最後一張往後時停在原地
+                const nextIndex = activeGlobalImageIndex + direction;
+                if (nextIndex < 0 || nextIndex >= flatImageList.length) return;
+                activeGlobalImageIndex = nextIndex;
+                const newSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+
+                renderLightboxImage(prevSubCat !== newSubCat);
+                updateThumbStripActiveState();
+            };
+
+            window.angle90JumpToImage = function(index) {
+                if (isDraggingThumbStrip) {
+                    isDraggingThumbStrip = false;
+                    return;
+                }
+                if (index < 0 || index >= flatImageList.length) return;
+                const prevSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+                activeGlobalImageIndex = index;
+                const newSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+                renderLightboxImage(prevSubCat !== newSubCat);
+                updateThumbStripActiveState();
+            };
+
+            function renderSubcategoryTags() {
+                const subcatContainer = document.getElementById('angle90-subcat-tags');
+                if (!subcatContainer) return;
+
+                const categoryData = getTheme(activeCategoryKey);
+                if (!categoryData || !Array.isArray(categoryData.subcategories)) {
+                    subcatContainer.innerHTML = '';
+                    return;
+                }
+
+                const currentItem = flatImageList[activeGlobalImageIndex];
+                const currentSubCatName = currentItem ? currentItem.subCatName : '';
+
+                let html = '';
+                categoryData.subcategories.forEach((subCat) => {
+                    const firstImgIndex = flatImageList.findIndex(img => img.subCatName === subCat.name);
+                    const isActive = (subCat.name === currentSubCatName);
+
+                    if (firstImgIndex !== -1) {
+                        html += `
+                            <button onclick="window.angle90JumpToImage(${firstImgIndex})" 
+                                    class="angle90-subcat-btn ${isActive ? 'is-active' : 'is-inactive'} px-2.5 py-1 rounded-xl text-xs font-bold transition flex-shrink-0 cursor-pointer border ${
+                                        isActive
+                                        ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20 font-extrabold' 
+                                        : 'glass-panel text-gray-300 hover:text-white hover:bg-white/10 border-white/10'
+                                    }">
+                                ${subCat.name}
+                            </button>
+                        `;
+                    }
+                });
+                subcatContainer.innerHTML = html;
+            }
+
+            function ensureImageAspectRatioLoaded(item, callback) {
+                if (!item || !item.src) return;
+                if (aspectRatioCache[item.src]) {
+                    callback(aspectRatioCache[item.src]);
+                    return;
+                }
+
+                const img = new Image();
+                img.onload = () => {
+                    const ratio = img.naturalWidth / Math.max(1, img.naturalHeight);
+                    aspectRatioCache[item.src] = ratio;
+                    callback(ratio);
+                };
+                img.onerror = () => {
+                    aspectRatioCache[item.src] = 1.0;
+                    callback(1.0);
+                };
+                img.src = item.src;
+            }
+
+            function renderLightboxImage(showToast) {
+                const currentItem = flatImageList[activeGlobalImageIndex];
+                if (!currentItem) return;
+
+                const counterEl = document.getElementById('angle90-lightbox-counter');
+                const btnPrev = document.getElementById('angle90-nav-btn-prev');
+                const btnNext = document.getElementById('angle90-nav-btn-next');
+                const cardsWrapper = document.getElementById('angle90-lightbox-cards-wrapper');
+
+                if (counterEl) counterEl.innerText = `${activeGlobalImageIndex + 1} / ${flatImageList.length}`;
+
+                renderSubcategoryTags();
+
+                const isPC = isPCView();
+
+                const stageEl = document.getElementById('angle90-lightbox-stage-container');
+                const stageH = (stageEl && stageEl.clientHeight) || Math.round(window.innerHeight * 0.55);
+                const stageW = (stageEl && stageEl.clientWidth) || window.innerWidth;
+                const CAPTION_RESERVE = 56;
+                const PERSPECTIVE_ZOOM = 1.22;
+                const pcImgMaxH = Math.max(120, Math.floor((stageH - CAPTION_RESERVE) / PERSPECTIVE_ZOOM) - 8);
+                const pcImgMaxW = Math.max(160, Math.floor(stageW * 0.58));
+                const mobImgMaxH = Math.max(120, stageH - CAPTION_RESERVE - 8);
+
+                if (isPC) {
+                    if (btnPrev) btnPrev.style.display = 'none';
+                    if (btnNext) btnNext.style.display = 'none';
+
+                    const total = flatImageList.length;
+                    const relativeOffsets = [-2, -1, 0, 1, 2];
+
+                    const activeRatio = aspectRatioCache[currentItem.src] || 1.2;
+                    const w = Math.min(pcImgMaxW, pcImgMaxH * activeRatio);
+
+                    const Z1 = 0.984, Z2 = 0.857;
+                    let c1 = 0.55 * w;
+                    let c2 = 0.92 * w;
+                    const side2HalfScreen = 0.19 * w * Z2 * 1.0;
+                    const maxC2 = stageW / 2 - side2HalfScreen - 2;
+                    if (c2 > maxC2) {
+                        const k = Math.max(0.55, maxC2 / c2);
+                        c1 *= k; c2 *= k;
+                    }
+                    const shiftX1 = Math.round(c1 / Z1);
+                    const shiftX2 = Math.round(c2 / Z2);
+
+                    let html = '';
+                    relativeOffsets.forEach(offset => {
+                        const targetIdx = activeGlobalImageIndex + offset;
+                        if (targetIdx < 0 || targetIdx >= total) return;
+
+                        const item = flatImageList[targetIdx];
+                        if (!item) return;
+
+                        let transformCss = '';
+                        let zIndex = 10;
+                        let opacity = 1;
+                        let filterCss = '';
+
+                        if (offset === 0) {
+                            transformCss = 'translateX(0px) translateZ(180px) rotateY(0deg) scale(1.0)';
+                            zIndex = 30;
+                            opacity = 1.0;
+                            filterCss = 'brightness(100%) contrast(100%)';
+                        } else if (offset === -1) {
+                            transformCss = `translateX(-${shiftX1}px) translateZ(-20px) rotateY(34deg) scale(0.82)`;
+                            zIndex = 20;
+                            opacity = 0.70;
+                            filterCss = 'brightness(45%) contrast(90%)';
+                        } else if (offset === 1) {
+                            transformCss = `translateX(${shiftX1}px) translateZ(-20px) rotateY(-34deg) scale(0.82)`;
+                            zIndex = 20;
+                            opacity = 0.70;
+                            filterCss = 'brightness(45%) contrast(90%)';
+                        } else if (offset === -2) {
+                            transformCss = `translateX(-${shiftX2}px) translateZ(-200px) rotateY(54deg) scale(0.65)`;
+                            zIndex = 10;
+                            opacity = 0.40;
+                            filterCss = 'brightness(25%) contrast(85%)';
+                        } else if (offset === 2) {
+                            transformCss = `translateX(${shiftX2}px) translateZ(-200px) rotateY(-54deg) scale(0.65)`;
+                            zIndex = 10;
+                            opacity = 0.40;
+                            filterCss = 'brightness(25%) contrast(85%)';
+                        }
+
+                        html += `
+                            <div onclick="event.stopPropagation(); window.angle90NavImage(${offset});"
+                                 class="pc-3d-card absolute flex flex-col items-center justify-center cursor-pointer select-none"
+                                 style="transform: ${transformCss}; z-index: ${zIndex}; opacity: ${opacity}; filter: ${filterCss};">
+                                
+                                <img src="${item.src}" 
+                                     draggable="false"
+                                     decoding="async"
+                                     style="max-height:${pcImgMaxH}px; max-width:${pcImgMaxW}px;" class="w-auto h-auto object-contain rounded-2xl shadow-2xl border border-white/20 transition-all duration-300 pointer-events-none select-none"
+                                     onerror="this.onerror=null; this.src='${item.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';">
+
+                                <div class="mt-3 px-3.5 py-1 rounded-full glass-panel border border-white/10 text-center max-w-[360px] shadow-lg truncate">
+                                    <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    cardsWrapper.innerHTML = html;
+
+                    if (!aspectRatioCache[currentItem.src]) {
+                        ensureImageAspectRatioLoaded(currentItem, () => {
+                            renderLightboxImage(false);
+                        });
+                    }
+                } else {
+                    if (btnPrev) {
+                        btnPrev.style.display = 'flex';
+                        btnPrev.style.visibility = activeGlobalImageIndex > 0 ? 'visible' : 'hidden';
+                    }
+                    if (btnNext) {
+                        btnNext.style.display = 'flex';
+                        btnNext.style.visibility = activeGlobalImageIndex < flatImageList.length - 1 ? 'visible' : 'hidden';
+                    }
+
+                    cardsWrapper.innerHTML = `
+                        <div class="flex flex-col items-center justify-center" style="max-height:100%;">
+                            <img id="angle90-lightbox-img" 
+                                 src="${currentItem.src}" 
+                                 draggable="false"
+                                 decoding="async"
+                                 style="max-height:${mobImgMaxH}px; max-width:100%;" class="w-auto h-auto object-contain rounded-xl shadow-2xl transition-transform duration-200 select-none border border-white/20"
+                                 onerror="this.onerror=null; this.src='${currentItem.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';"
+                                 alt="Full Artwork Detail">
+
+                            <div class="mt-3 px-3.5 py-1 rounded-full glass-panel border border-white/10 text-center max-w-[300px] shadow-lg truncate">
+                                <h4 class="text-xs font-bold text-white truncate">${currentItem.name}</h4>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if (showToast) triggerSubcategoryToast(currentItem.subCatName);
+            }
+
+            function renderThumbStrip() {
+                const stripEl = document.getElementById('angle90-thumb-strip');
+                if (!stripEl) return;
+
+                const categoryData = getTheme(activeCategoryKey) || {};
+                const thumbSize = categoryData.thumbSize || 64;
+                const thumbGap = categoryData.thumbGap || 8;
+
+                stripEl.style.gap = `${thumbGap}px`;
+
+                let html = '<div style="width: calc(50% + 3rem); flex-shrink: 0; height: 1px; pointer-events: none;"></div>';
+                flatImageList.forEach((item, idx) => {
+                    const isActive = idx === activeGlobalImageIndex;
+                    const thumbUrl = item.thumbSrc || item.src;
+
+                    html += `
+                        <div onclick="window.angle90JumpToImage(${idx})" 
+                             data-thumb-idx="${idx}"
+                             style="width: ${thumbSize}px; height: ${thumbSize}px;"
+                             class="angle90-thumb-item flex-shrink-0 rounded-xl overflow-hidden border-2 cursor-pointer transition-all duration-200 ${isActive ? 'border-peach-500 scale-105 shadow-lg shadow-peach-500/20' : 'border-white/20 opacity-60 hover:opacity-100'}">
+                            <img src="${thumbUrl}" 
+                                 draggable="false" 
+                                 decoding="async" 
+                                 fetchpriority="low" 
+                                 class="w-full h-full object-cover select-none pointer-events-none" 
+                                 onerror="this.onerror=null; this.src='${item.src}';"
+                            >
+                        </div>
+                    `;
+                });
+                html += '<div style="width: calc(50% + 3rem); flex-shrink: 0; height: 1px; pointer-events: none;"></div>';
+                stripEl.innerHTML = html;
+                centerActiveThumbnail(false);
+            }
+
+            function updateThumbStripActiveState() {
+                updateThumbOutlineOnly();
+                centerActiveThumbnail(true);
+            }
+
+            function updateThumbOutlineOnly() {
+                const stripEl = document.getElementById('angle90-thumb-strip');
+                if (!stripEl) return;
+
+                const categoryData = getTheme(activeCategoryKey) || {};
+                const thumbSize = categoryData.thumbSize || 64;
+
+                const thumbs = stripEl.querySelectorAll('.angle90-thumb-item');
+                thumbs.forEach((el, idx) => {
+                    el.style.width = `${thumbSize}px`;
+                    el.style.height = `${thumbSize}px`;
+                    if (idx === activeGlobalImageIndex) {
+                        el.className = "angle90-thumb-item flex-shrink-0 rounded-xl overflow-hidden border-2 border-peach-500 scale-105 shadow-lg shadow-peach-500/20 cursor-pointer transition-all duration-200";
+                    } else {
+                        el.className = "angle90-thumb-item flex-shrink-0 rounded-xl overflow-hidden border-2 border-white/20 opacity-60 hover:opacity-100 cursor-pointer transition-all duration-200";
+                    }
+                });
+            }
+
+            function centerActiveThumbnail(smooth = true) {
+                requestAnimationFrame(() => {
+                    const stripEl = document.getElementById('angle90-thumb-strip');
+                    if (!stripEl) return;
+                    const activeEl = stripEl.querySelector(`[data-thumb-idx="${activeGlobalImageIndex}"]`);
+                    if (!activeEl) return;
+
+                    const containerWidth = stripEl.clientWidth;
+                    const itemCenter = activeEl.offsetLeft + activeEl.clientWidth / 2;
+                    const scrollTarget = itemCenter - (containerWidth / 2);
+
+                    isProgrammaticScroll = true;
+                    stripEl.scrollTo({
+                        left: scrollTarget,
+                        behavior: smooth ? 'smooth' : 'auto'
+                    });
+                    setTimeout(() => {
+                        isProgrammaticScroll = false;
+                    }, smooth ? 320 : 40);
+                });
+            }
+
+            function snapClosestThumbnailToCenter() {
+                const stripEl = document.getElementById('angle90-thumb-strip');
+                if (!stripEl) return;
+                const activeEl = stripEl.querySelector(`[data-thumb-idx="${activeGlobalImageIndex}"]`);
+                if (!activeEl) return;
+
+                const containerWidth = stripEl.clientWidth;
+                const itemCenter = activeEl.offsetLeft + activeEl.clientWidth / 2;
+                const scrollTarget = itemCenter - (containerWidth / 2);
+
+                isProgrammaticScroll = true;
+                stripEl.scrollTo({
+                    left: scrollTarget,
+                    behavior: 'smooth'
+                });
+                setTimeout(() => {
+                    isProgrammaticScroll = false;
+                }, 280);
+            }
+
+            function triggerSubcategoryToast(textMsg) {
+                const toastEl = document.getElementById('angle90-lightbox-toast');
+                const toastTextEl = document.getElementById('angle90-toast-text');
+
+                if (toastEl && toastTextEl) {
+                    toastTextEl.innerText = textMsg;
+                    toastEl.classList.remove('opacity-0', '-translate-y-4');
+                    toastEl.classList.add('opacity-100', 'translate-y-0');
+
+                    setTimeout(() => {
+                        toastEl.classList.remove('opacity-100', 'translate-y-0');
+                        toastEl.classList.add('opacity-0', '-translate-y-4');
+                    }, 1800);
+                }
+            }
+
+            window.angle90CloseModal = function() {
+                const modalDetails = document.getElementById('modal-details');
+                if (modalDetails) {
+                    modalDetails.classList.add('opacity-0', 'pointer-events-none', 'hidden');
+                }
+                if (typeof window.closeModalFallback === 'function') {
+                    try {
+                        window.closeModalFallback();
+                    } catch (e) {
+                        console.warn('closeModalFallback error:', e);
+                    }
+                }
+            };
+
+            function setupLightboxMouseDrag() {
+                const lightboxEl = document.getElementById('angle90-lightbox-stage-container');
+                if (!lightboxEl) return;
+
+                let isMouseDown = false;
+                let startX = 0;
+
+                lightboxEl.addEventListener('dragstart', (e) => e.preventDefault());
+
+                lightboxEl.addEventListener('mousedown', (e) => {
+                    if (e.target.closest('button') || e.target.closest('#angle90-thumb-strip')) return;
+                    isMouseDown = true;
+                    startX = e.clientX;
+                });
+
+                lightboxEl.addEventListener('mouseup', (e) => {
+                    if (!isMouseDown) return;
+                    isMouseDown = false;
+                    const diffX = e.clientX - startX;
+                    if (Math.abs(diffX) > 40) {
+                        if (diffX < 0) window.angle90NavImage(1);
+                        else window.angle90NavImage(-1);
+                    }
+                });
+
+                lightboxEl.addEventListener('mouseleave', () => {
+                    isMouseDown = false;
+                });
+            }
+
+            function setupThumbStripMouseDrag() {
+                const stripEl = document.getElementById('angle90-thumb-strip');
+                if (!stripEl) return;
+
+                let isMouseDown = false;
+                let startX = 0;
+                let scrollLeft = 0;
+                let dragDistance = 0;
+                let velocity = 0;
+                let lastX = 0;
+                let lastTime = 0;
+
+                stripEl.addEventListener('dragstart', (e) => e.preventDefault());
+
+                function stopInertia() {
+                    if (inertiaAnimationId) {
+                        cancelAnimationFrame(inertiaAnimationId);
+                        inertiaAnimationId = null;
+                    }
+                }
+
+                stripEl.addEventListener('mousedown', (e) => {
+                    stopInertia();
+                    isMouseDown = true;
+                    dragDistance = 0;
+                    startX = e.pageX - stripEl.offsetLeft;
+                    scrollLeft = stripEl.scrollLeft;
+                    lastX = e.pageX;
+                    lastTime = performance.now();
+                    velocity = 0;
+                });
+
+                function handleRelease() {
+                    if (!isMouseDown) return;
+                    isMouseDown = false;
+                    if (dragDistance > 6) {
+                        isDraggingThumbStrip = true;
+                        setTimeout(() => { isDraggingThumbStrip = false; }, 50);
+                    }
+
+                    if (Math.abs(velocity) > 0.1) {
+                        let currentVelocity = velocity;
+                        let lastFrameTime = performance.now();
+
+                        function coastStep(now) {
+                            const dt = Math.max(1, now - lastFrameTime);
+                            lastFrameTime = now;
+
+                            stripEl.scrollLeft -= currentVelocity * dt;
+                            currentVelocity *= 0.93;
+
+                            if (Math.abs(currentVelocity) < 0.05) {
+                                stopInertia();
+                                snapClosestThumbnailToCenter();
+                            } else {
+                                inertiaAnimationId = requestAnimationFrame(coastStep);
+                            }
+                        }
+
+                        stopInertia();
+                        inertiaAnimationId = requestAnimationFrame(coastStep);
+                    } else {
+                        snapClosestThumbnailToCenter();
+                    }
+                }
+
+                stripEl.addEventListener('mouseleave', handleRelease);
+                stripEl.addEventListener('mouseup', handleRelease);
+
+                stripEl.addEventListener('mousemove', (e) => {
+                    if (!isMouseDown) return;
+                    e.preventDefault();
+                    
+                    const now = performance.now();
+                    const dt = Math.max(1, now - lastTime);
+                    const currentX = e.pageX;
+                    const deltaX = currentX - lastX;
+
+                    const instVelocity = (deltaX * 1.2) / dt;
+                    velocity = velocity * 0.4 + instVelocity * 0.6;
+
+                    lastX = currentX;
+                    lastTime = now;
+
+                    const x = currentX - stripEl.offsetLeft;
+                    const walk = (x - startX) * 1.5;
+                    dragDistance = Math.abs(x - startX);
+                    stripEl.scrollLeft = scrollLeft - walk;
+                });
+            }
+
+            function setupThumbStripScrollAndSnap() {
+                const stripEl = document.getElementById('angle90-thumb-strip');
+                if (!stripEl) return;
+
+                let isTicking = false;
+
+                stripEl.addEventListener('touchstart', () => {
+                    isTouchScrolling = true;
+                    isProgrammaticScroll = false;
+                    clearTimeout(scrollSnapTimer);
+                }, { passive: true });
+                const endTouch = () => {
+                    isTouchScrolling = false;
+                    clearTimeout(scrollSnapTimer);
+                    scrollSnapTimer = setTimeout(snapClosestThumbnailToCenter, 180);
+                };
+                stripEl.addEventListener('touchend', endTouch, { passive: true });
+                stripEl.addEventListener('touchcancel', endTouch, { passive: true });
+
+                stripEl.addEventListener('scroll', () => {
+                    if (isProgrammaticScroll) return;
+
+                    if (!isTicking) {
+                        requestAnimationFrame(() => {
+                            const containerWidth = stripEl.clientWidth;
+                            const containerCenter = stripEl.scrollLeft + containerWidth / 2;
+                            const thumbs = stripEl.querySelectorAll('.angle90-thumb-item');
+
+                            let closestIdx = activeGlobalImageIndex;
+                            let minDiff = Infinity;
+
+                            thumbs.forEach((el) => {
+                                const idx = parseInt(el.dataset.thumbIdx, 10);
+                                const elCenter = el.offsetLeft + el.clientWidth / 2;
+                                const diff = Math.abs(containerCenter - elCenter);
+                                if (diff < minDiff) {
+                                    minDiff = diff;
+                                    closestIdx = idx;
+                                }
+                            });
+
+                            if (closestIdx !== activeGlobalImageIndex) {
+                                const prevSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+                                activeGlobalImageIndex = closestIdx;
+                                const newSubCat = flatImageList[activeGlobalImageIndex] ? flatImageList[activeGlobalImageIndex].subCatName : '';
+
+                                renderLightboxImage(prevSubCat !== newSubCat);
+                                updateThumbOutlineOnly();
+                            }
+
+                            if (!inertiaAnimationId && !isTouchScrolling) {
+                                clearTimeout(scrollSnapTimer);
+                                scrollSnapTimer = setTimeout(() => {
+                                    snapClosestThumbnailToCenter();
+                                }, 150);
+                            }
+
+                            isTicking = false;
+                        });
+                        isTicking = true;
+                    }
+                }, { passive: true });
+            }
+
+            function setupTouchSwiping() {
+                const lightboxEl = document.getElementById('angle90-lightbox-stage-container');
+                if (!lightboxEl) return;
+
+                lightboxEl.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                lightboxEl.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    const diff = touchEndX - touchStartX;
+                    if (Math.abs(diff) > 40) {
+                        if (diff < 0) window.angle90NavImage(1);
+                        else window.angle90NavImage(-1);
+                    }
+                }, { passive: true });
+            }
+
+            window.initAngle90App();
+        })();
+    </script>
+</body>
+</html>

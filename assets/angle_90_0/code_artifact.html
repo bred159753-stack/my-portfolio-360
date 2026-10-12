@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品集全功能管理工具</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        peach: {
+                            300: '#fde5be',
+                            400: '#fcd8a0',
+                            500: '#fcd191',
+                            600: '#e0b879',
+                        },
+                        charcoal: {
+                            800: '#2c2c31',
+                            850: '#232327',
+                            900: '#1c1c1f',
+                            950: '#141416',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141416;
+            color: #f3f4f6;
+        }
+        .glass-panel {
+            background: rgba(35, 35, 39, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .dragging {
+            opacity: 0.4;
+            transform: scale(0.95);
+            border-color: #fcd191 !important;
+        }
+        .tab-dragging, .sub-tab-dragging {
+            opacity: 0.4;
+            border-style: dashed;
+            border-color: #fcd191 !important;
+        }
+        .image-card.selected-card {
+            border-color: #fcd191 !important;
+            box-shadow: 0 0 15px rgba(252, 209, 145, 0.3);
+        }
+        .interactive-img-container {
+            overflow: hidden;
+            position: relative;
+            touch-action: none;
+        }
+        .interactive-img {
+            transition: transform 0.05s ease-out;
+            transform-origin: center center;
+            will-change: transform;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-charcoal-950 p-3 md:p-6 text-gray-100 flex flex-col">
+
+    <!-- Toast 提示訊息 -->
+    <div id="toast" class="fixed top-5 right-5 z-50 bg-peach-500 text-charcoal-950 px-4 py-2.5 rounded-xl font-bold text-xs shadow-2xl transition-all duration-300 opacity-0 pointer-events-none -translate-y-2">
+        <span id="toast-message">操作成功！</span>
+    </div>
+
+    <!-- 隱藏的本地 JSON 檔案讀取 Input -->
+    <input type="file" id="json-file-input" accept=".json" onchange="handleJsonFileImport(event)" class="hidden">
+
+    <!-- 自訂通用 Confirm Modal -->
+    <div id="confirm-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none hidden transition-all duration-200">
+        <div class="glass-panel w-full max-w-sm rounded-3xl p-6 border border-white/20 shadow-2xl space-y-4 text-center">
+            <h3 id="confirm-modal-title" class="text-sm font-bold text-white">確認刪除</h3>
+            <p id="confirm-modal-msg" class="text-xs text-gray-300">您確定要刪除這項內容嗎？此操作無法復原。</p>
+            <div class="flex justify-center gap-3 pt-2">
+                <button onclick="closeConfirmModal(false)" class="px-4 py-2 bg-charcoal-900 hover:bg-white/10 text-xs rounded-xl text-gray-300">取消</button>
+                <button id="confirm-modal-action-btn" onclick="executeConfirmAction()" class="px-4 py-2 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-500/20">確定刪除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主題彈窗 Modal -->
+    <div id="theme-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none hidden transition-all duration-200">
+        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 border border-white/20 shadow-2xl relative space-y-4">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 id="theme-modal-title" class="text-sm font-bold text-white">新增主題 (大類別)</h3>
+                <button onclick="closeThemeModal()" class="text-xs text-gray-400 hover:text-white">✕</button>
+            </div>
+            
+            <div class="space-y-3 text-xs">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-400 mb-1">主題排列方式</label>
+                        <select id="modal-theme-group" onchange="onThemeModalGroupChange()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none disabled:opacity-60 disabled:cursor-not-allowed">
+                            <option value="company">公司排法 (編號 = 資料夾)</option>
+                            <option value="design">設計類型 (無資料夾)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">主題編號 <span id="modal-theme-key-hint" class="text-gray-500"></span></label>
+                        <input type="text" id="modal-theme-key" oninput="onThemeModalKeyChange()" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-peach-400 font-mono focus:border-peach-500 focus:outline-none read-only:bg-charcoal-950 read-only:cursor-not-allowed read-only:opacity-80" placeholder="01">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">主題名稱 (中文標題)</label>
+                    <input type="text" id="modal-theme-title" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. 厚塗插畫">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">英文字標 (Tag Badge)</label>
+                    <input type="text" id="modal-theme-tag" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. Digital Painting">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">主題描述文字</label>
+                    <input type="text" id="modal-theme-desc" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. 光影筆觸堆疊與厚塗創作">
+                </div>
+                <div id="modal-theme-folder-fields" class="space-y-3">
+                <div>
+                    <label class="block text-gray-400 mb-1">對應資料夾路徑 (Folder Path)</label>
+                    <input type="text" id="modal-theme-folder" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_90_0/01/">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">縮圖預載資料夾路徑 (preFolder)</label>
+                    <input type="text" id="modal-theme-prefolder" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-peach-300 font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_90_0/01/pre/">
+                </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-400 mb-1">縮圖顯示邊長 (px)</label>
+                        <input type="number" id="modal-theme-thumbsize" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="64">
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 mb-1">縮圖排列間距 (px)</label>
+                        <input type="number" id="modal-theme-thumbgap" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="8">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2 border-t border-white/10">
+                <button onclick="closeThemeModal()" class="px-4 py-2 bg-charcoal-900 hover:bg-white/10 text-xs rounded-xl text-gray-300">取消</button>
+                <button onclick="saveThemeModal()" class="px-4 py-2 bg-peach-500 hover:bg-peach-400 text-charcoal-950 font-bold text-xs rounded-xl shadow-lg shadow-peach-500/20">儲存主題</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 小類別彈窗 Modal -->
+    <div id="subcategory-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none hidden transition-all duration-200">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-6 border border-white/20 shadow-2xl relative space-y-4">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 id="subcategory-modal-title" class="text-sm font-bold text-white">小類別設定</h3>
+                <button onclick="closeSubcategoryModal()" class="text-xs text-gray-400 hover:text-white">✕</button>
+            </div>
+            
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-gray-400 mb-1">小類別名稱 (例如：完稿練習)</label>
+                    <input type="text" id="modal-sub-name" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. 完稿練習">
+                </div>
+                <div id="modal-sub-folder-field">
+                    <label class="block text-gray-400 mb-1">子資料夾 Folder 前綴 (例如：A/、B/)</label>
+                    <input type="text" id="modal-sub-folder" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-peach-300 font-mono focus:border-peach-500 focus:outline-none" placeholder="A/ 或留空">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2 border-t border-white/10">
+                <button onclick="closeSubcategoryModal()" class="px-4 py-2 bg-charcoal-900 hover:bg-white/10 text-xs rounded-xl text-gray-300">取消</button>
+                <button onclick="saveSubcategoryModal()" class="px-4 py-2 bg-peach-500 hover:bg-peach-400 text-charcoal-950 font-bold text-xs rounded-xl shadow-lg shadow-peach-500/20">儲存小類別</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 設計類型指定彈窗：勾選此圖片要歸入哪些設計類型的主題 › 類別 -->
+    <div id="design-assign-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-6 border border-white/20 shadow-2xl relative space-y-4">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 class="text-sm font-bold text-white">🏷 設定設計類型</h3>
+                <button onclick="closeDesignAssignModal()" class="text-xs text-gray-400 hover:text-white">✕</button>
+            </div>
+            <p id="design-assign-item-name" class="text-[11px] text-gray-400 font-mono truncate"></p>
+            <div id="design-assign-list" class="max-h-[50vh] overflow-y-auto no-scrollbar space-y-3 text-xs">
+                <!-- 動態注入設計類型主題與類別勾選清單 -->
+            </div>
+            <div class="flex justify-end gap-2 pt-2 border-t border-white/10">
+                <button onclick="closeDesignAssignModal()" class="px-4 py-2 bg-charcoal-900 hover:bg-white/10 text-xs rounded-xl text-gray-300">取消</button>
+                <button onclick="saveDesignAssignModal()" class="px-4 py-2 bg-peach-500 hover:bg-peach-400 text-charcoal-950 font-bold text-xs rounded-xl shadow-lg shadow-peach-500/20">儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto w-full flex-1 flex flex-col gap-5">
+        
+        <!-- Header -->
+        <header class="glass-panel p-4 md:p-5 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 bg-peach-500/20 text-peach-400 border border-peach-500/30 rounded-md text-[11px] font-bold tracking-wider uppercase">Full Suite Studio</span>
+                    <h1 class="text-lg md:text-xl font-extrabold text-white">作品集全功能管理工具</h1>
+                </div>
+                <p class="text-xs text-gray-400 mt-1">按住卡片拖曳排序 | 內建智慧相對路徑偵測機制 (支援自動向下切換 assets/ / angle_90_0/ / 檔名相對路徑)</p>
+            </div>
+            
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+                <button onclick="fetchLocalPortfolioJson()" class="bg-charcoal-900 hover:bg-white/10 border border-white/10 text-peach-300 font-semibold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+                    📥 載入 portfolio_data.json
+                </button>
+                <button onclick="triggerJsonImport()" class="bg-charcoal-900 hover:bg-white/10 border border-white/10 text-gray-200 font-semibold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+                    📂 選擇 JSON 檔案
+                </button>
+                <button onclick="exportCurrentThemeThumbnailsZip()" class="company-only bg-peach-500/20 hover:bg-peach-500/30 text-peach-300 border border-peach-500/40 font-bold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+                    📦 打包主題縮圖 ZIP
+                </button>
+                <button onclick="downloadJsonData()" class="bg-peach-500 hover:bg-peach-400 active:scale-95 text-charcoal-950 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-lg shadow-peach-500/20">
+                    📄 下載 portfolio_data.json
+                </button>
+            </div>
+        </header>
+
+        <!-- 主題導航頁籤區 -->
+        <div class="glass-panel p-3 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 w-full md:w-auto flex-1 min-w-0">
+                <!-- 主題排列方式切換：設計類型(01~19) / 公司排法(21~39) -->
+                <label class="flex items-center gap-1.5 flex-shrink-0 text-[11px] text-gray-300 bg-charcoal-950/60 px-2.5 py-2 rounded-xl border border-white/10 cursor-pointer select-none" title="關閉後只使用公司排法，前台不顯示排列方式切換按鈕">
+                    <input type="checkbox" id="multi-layout-toggle" onchange="toggleMultiLayout(this.checked)" class="accent-peach-500" checked>
+                    多選擇排列
+                </label>
+                <div id="theme-group-switch" class="flex items-center gap-1 flex-shrink-0 bg-charcoal-950/60 p-1 rounded-xl border border-white/10">
+                    <!-- 動態注入排列方式按鈕 -->
+                </div>
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar flex-1 py-1" id="theme-tabs-container">
+                    <!-- 動態注入主題頁籤 -->
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 flex-shrink-0 flex-wrap w-full md:w-auto justify-end">
+                <button onclick="openThemeModal(false)" class="bg-peach-500/20 hover:bg-peach-500/30 text-peach-300 border border-peach-500/40 text-xs px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1">
+                    ➕ 新增主題
+                </button>
+                <button onclick="openThemeModal(true)" class="bg-charcoal-900 hover:bg-white/10 text-xs px-3 py-1.5 rounded-xl border border-white/10 transition text-gray-300">
+                    ✏️ 編輯主題與縮圖參數
+                </button>
+                <button onclick="requestDeleteCurrentTheme()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs px-2.5 py-1.5 rounded-xl transition font-bold">
+                    🗑️ 刪除主題
+                </button>
+            </div>
+        </div>
+
+        <!-- 小類別與作品網格區 -->
+        <div class="flex flex-col gap-4 flex-1">
+            
+            <div class="glass-panel p-3.5 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-peach-400">當前小類別列表 (可拖曳排序)：</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button onclick="openSubcategoryModal(false)" class="bg-peach-500/20 hover:bg-peach-500/30 text-peach-300 border border-peach-500/40 text-xs px-2.5 py-1.5 rounded-xl font-bold transition flex items-center gap-1">
+                            ➕ 新增小類別
+                        </button>
+                        <button onclick="openSubcategoryModal(true)" class="bg-charcoal-900 hover:bg-white/10 text-xs px-2.5 py-1.5 rounded-xl border border-white/10 transition text-gray-300">
+                            ✏️ 編輯小類別
+                        </button>
+                        <button onclick="requestDeleteCurrentSubcategory()" class="bg-rose-500/20 hover:bg-rose-500/30 text-xs px-2.5 py-1.5 rounded-xl border border-rose-500/40 transition text-rose-300 font-bold">
+                            🗑️ 刪除小類別
+                        </button>
+                        
+                        <div class="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block"></div>
+
+                        <label class="company-only bg-charcoal-900 hover:bg-white/10 text-xs px-3 py-1.5 rounded-xl border border-white/10 cursor-pointer transition text-gray-200 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-peach-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            批量新增本地圖片
+                            <input type="file" id="file-input" multiple accept="image/*" onchange="handleBatchFileUpload(event)" class="hidden">
+                        </label>
+
+                        <button onclick="autoRenumberItems()" class="company-only bg-charcoal-900 hover:bg-white/10 text-xs px-3 py-1.5 rounded-xl border border-white/10 transition text-gray-200">
+                            🔢 自動依序編號
+                        </button>
+                    </div>
+                </div>
+
+                <div id="subcategory-tabs-container" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                    <!-- 動態注入小類別頁籤 -->
+                </div>
+            </div>
+
+            <!-- 作品卡片區 -->
+            <div class="glass-panel p-5 rounded-3xl flex-1 flex flex-col min-h-[480px]">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                    <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                        <span>作品排序與預覽區</span>
+                        <span id="item-count-badge" class="text-[10px] bg-peach-500/20 text-peach-400 border border-peach-500/30 px-2 py-0.5 rounded-full font-mono">0 張作品</span>
+                    </h2>
+                    <span id="selected-image-status" class="text-[11px] text-peach-300 font-mono">未選擇圖片 (點擊卡片選定後可 Ctrl+滾輪縮放)</span>
+                </div>
+
+                <div id="image-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 flex-1 align-content-start">
+                    <!-- 動態注入作品卡片 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80";
+
+        let DATABASE = {};
+        let activeCatKey = "01";
+        let activeSubIdx = 0;
+        let dragSrcIndex = null;
+        let isEditingTheme = false;
+        let isEditingSubcategory = false;
+        let draggedSubTabIdx = null;
+        let draggedTabKey = null;
+        let pendingConfirmCallback = null;
+
+        let selectedItemIdx = null;
+        let imgTransforms = {};
+        let isCtrlPanning = false;
+        let panStartX = 0, panStartY = 0;
+        let panStartOffsetX = 0, panStartOffsetY = 0;
+
+        /**
+         * 智慧產生候選路徑：自動嘗試各種相對層級與前綴剝離
+         * 例如傳入: assets/angle_90_0/01/A/T02.jpg
+         * 產生:
+         * 1. assets/angle_90_0/01/A/T02.jpg
+         * 2. ./assets/angle_90_0/01/A/T02.jpg
+         * 3. angle_90_0/01/A/T02.jpg (剝離 assets/)
+         * 4. 01/A/T02.jpg (剝離 assets/angle_90_0/)
+         * 5. ../assets/angle_90_0/01/A/T02.jpg
+         */
+        function generatePathCandidates(src) {
+            if (!src) return [];
+            if (src.startsWith('data:') || src.startsWith('blob:') || src.startsWith('http://') || src.startsWith('https://')) {
+                return [src];
+            }
+
+            const candidates = [];
+            const clean = src.replace(/^\/+/, ''); // 移除最開頭斜線
+
+            candidates.push(clean);
+            candidates.push('./' + clean);
+
+            // 若包含 assets/
+            if (clean.startsWith('assets/')) {
+                const noAssets = clean.replace(/^assets\//, '');
+                candidates.push(noAssets);
+                candidates.push('./' + noAssets);
+
+                if (clean.startsWith('assets/angle_90_0/')) {
+                    const noAngle = clean.replace(/^assets\/angle_90_0\//, '');
+                    candidates.push(noAngle);
+                    candidates.push('./' + noAngle);
+                }
+            } else if (clean.startsWith('angle_90_0/')) {
+                const noAngle = clean.replace(/^angle_90_0\//, '');
+                candidates.push(noAngle);
+                candidates.push('./' + noAngle);
+            }
+
+            // 往上層目錄搜尋
+            candidates.push('../' + clean);
+            candidates.push('../../' + clean);
+
+            return Array.from(new Set(candidates));
+        }
+
+        /**
+         * 智慧動態載入 Image，若路徑 404 會自動依序嘗試其他候選路徑
+         */
+        function loadHTMLImageWithFallback(src) {
+            return new Promise((resolve) => {
+                const candidates = generatePathCandidates(src);
+                let index = 0;
+
+                function tryNext() {
+                    if (index >= candidates.length) {
+                        resolve(null);
+                        return;
+                    }
+
+                    const candidate = candidates[index++];
+                    const img = new Image();
+                    img.crossOrigin = "anonymous";
+                    img.onload = () => resolve(img);
+                    img.onerror = () => tryNext();
+                    img.src = candidate;
+                }
+
+                tryNext();
+            });
+        }
+
+        function saveToLocalStorage() {
+            try {
+                const cleanDB = generateCleanJson();
+                localStorage.setItem('PORTFOLIO_DATABASE_angle_90_0', JSON.stringify(cleanDB));
+            } catch (e) {
+                console.warn('LocalStorage limit or restriction');
+            }
+        }
+
+        async function fetchLocalPortfolioJson() {
+            const pathsToTry = [
+                'portfolio_data.json',
+                'assets/angle_90_0/portfolio_data.json',
+                './portfolio_data.json',
+                '../portfolio_data.json'
+            ];
+
+            let loadedData = null;
+            for (const path of pathsToTry) {
+                try {
+                    const res = await fetch(path);
+                    if (res.ok) {
+                        loadedData = await res.json();
+                        if (loadedData && typeof loadedData === 'object' && Object.keys(loadedData).length > 0) {
+                            break;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            if (loadedData) {
+                loadDatabase(loadedData);
+                reorderAndRenumberDatabaseKeys();
+                saveToLocalStorage();
+                showToast("✅ 已成功讀取 portfolio_data.json！");
+            } else {
+                const localSaved = localStorage.getItem('PORTFOLIO_DATABASE_angle_90_0');
+                if (localSaved) {
+                    try {
+                        loadDatabase(JSON.parse(localSaved));
+                        reorderAndRenumberDatabaseKeys();
+                        showToast("✅ 已從本地快取同步最新資料庫！");
+                        return;
+                    } catch(e) {}
+                }
+                showToast("⚠️ 未找到相鄰 JSON，請點擊「選擇 JSON 檔案」匯入");
+            }
+        }
+
+        function triggerJsonImport() {
+            document.getElementById('json-file-input').click();
+        }
+
+        function handleJsonFileImport(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const jsonData = JSON.parse(evt.target.result);
+                    if (jsonData && typeof jsonData === 'object' && Object.keys(jsonData).length > 0) {
+                        loadDatabase(jsonData);
+                        reorderAndRenumberDatabaseKeys();
+                        saveToLocalStorage();
+                        showToast("✅ 已成功匯入 JSON 資料！");
+                    } else {
+                        showToast("⚠️ JSON 內容格式不正確");
+                    }
+                } catch (err) {
+                    showToast("⚠️ JSON 解析失敗");
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        }
+
+        // 「公司排法」：實際存放圖片的主題，編號 01、02、03…(無上限) = 資料夾名稱
+        // 「設計類型」：不對應資料夾，只有主題與類別；圖片在公司排法的卡片上勾選要歸入哪些設計類型類別
+        let DESIGN = {};
+        // settings.multiLayout：true = 「設計類型 / 公司排法」兩種排列可切換；false = 只有公司排法
+        let SETTINGS = { multiLayout: true };
+        const THEME_GROUPS = {
+            company: { label: '公司排法' },
+            design:  { label: '設計類型' }
+        };
+        let activeGroup = 'company';
+
+        function getStore(group) {
+            return group === 'design' ? DESIGN : DATABASE;
+        }
+
+        function curStore() {
+            return getStore(activeGroup);
+        }
+
+        function curTheme() {
+            return activeCatKey ? curStore()[activeCatKey] : null;
+        }
+
+        function padKey(n) {
+            return String(n).padStart(2, '0');
+        }
+
+        function newSubId(theme) {
+            const used = new Set(((theme && theme.subcategories) || []).map(s => s.id));
+            let id;
+            do { id = 's' + Math.random().toString(36).slice(2, 8); } while (used.has(id));
+            return id;
+        }
+
+        // 支援舊版扁平格式 { "01": {...} } 與新版 { company: {...}, design: {...} }
+        function loadDatabase(raw) {
+            const isNew = raw && (raw.company || raw.design || raw.settings);
+            DATABASE = (isNew ? raw.company : raw) || {};
+            DESIGN = (isNew ? raw.design : null) || {};
+            SETTINGS.multiLayout = !(isNew && raw.settings && raw.settings.multiLayout === false);
+            if (!SETTINGS.multiLayout) activeGroup = 'company';
+            Object.keys(DATABASE).forEach(k => {
+                const cat = DATABASE[k];
+                delete cat.group;
+                cat.subcategories = cat.subcategories || [];
+                cat.subcategories.forEach(sub => {
+                    sub.items = sub.items || [];
+                    sub.items.forEach(item => { if (!Array.isArray(item.design)) item.design = []; });
+                });
+            });
+            Object.keys(DESIGN).forEach(k => {
+                const theme = DESIGN[k];
+                theme.subcategories = theme.subcategories || [];
+                theme.subcategories.forEach(sub => { if (!sub.id) sub.id = newSubId(theme); });
+            });
+            normalizeThemeOrder('company');
+            normalizeThemeOrder('design');
+        }
+
+        // 顯示順序由 order 決定（可拖曳調整），編號/資料夾名稱不變；舊資料沒有 order 時依編號排列
+        function getGroupKeys(group) {
+            const store = getStore(group);
+            const orderOf = k => (typeof store[k].order === 'number' ? store[k].order : Infinity);
+            return Object.keys(store).sort((a, b) => (orderOf(a) - orderOf(b)) || (parseInt(a, 10) - parseInt(b, 10)));
+        }
+
+        function normalizeThemeOrder(group) {
+            const store = getStore(group);
+            getGroupKeys(group).forEach((k, idx) => { store[k].order = idx + 1; });
+        }
+
+        function getNextFreeKey(group) {
+            const store = getStore(group);
+            let n = 1;
+            while (store[padKey(n)]) n++;
+            return padKey(n);
+        }
+
+        // 依公司排法順序走訪所有圖片：cb(item, companyKey, subIdx, itemIdx)
+        function forEachCompanyItem(cb) {
+            getGroupKeys('company').forEach(cKey => {
+                (DATABASE[cKey].subcategories || []).forEach((sub, sIdx) => {
+                    (sub.items || []).forEach((item, iIdx) => cb(item, cKey, sIdx, iIdx));
+                });
+            });
+        }
+
+        function getDesignSubItems(themeKey, subId) {
+            const list = [];
+            forEachCompanyItem((item, cKey, sIdx, iIdx) => {
+                if ((item.design || []).some(r => r.theme === themeKey && r.sub === subId)) {
+                    list.push({ item, cKey, sIdx, iIdx });
+                }
+            });
+            return list;
+        }
+
+        // 刪除設計類型主題 (subId 省略) 或類別時，一併清掉圖片上的引用
+        function removeDesignRefs(themeKey, subId) {
+            forEachCompanyItem(item => {
+                item.design = (item.design || []).filter(r => !(r.theme === themeKey && (subId === undefined || r.sub === subId)));
+            });
+        }
+
+        function getSubItemCount(sub) {
+            return activeGroup === 'design'
+                ? getDesignSubItems(activeCatKey, sub.id).length
+                : (sub.items ? sub.items.length : 0);
+        }
+
+        function toggleMultiLayout(enabled) {
+            SETTINGS.multiLayout = !!enabled;
+            saveToLocalStorage();
+            if (!SETTINGS.multiLayout && activeGroup !== 'company') {
+                switchThemeGroup('company');
+            } else {
+                renderTabs();
+            }
+            showToast(SETTINGS.multiLayout ? "已開啟多選擇排列（設計類型 / 公司排法）" : "已關閉多選擇排列，只使用公司排法");
+        }
+
+        function renderGroupSwitch() {
+            const el = document.getElementById('theme-group-switch');
+            document.getElementById('multi-layout-toggle').checked = SETTINGS.multiLayout;
+            el.classList.toggle('hidden', !SETTINGS.multiLayout);
+            el.innerHTML = Object.keys(THEME_GROUPS).map(group => {
+                const isActive = group === activeGroup;
+                return `
+                    <button onclick="switchThemeGroup('${group}')"
+                            class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap ${isActive ? 'bg-peach-500 text-charcoal-950 shadow-md shadow-peach-500/20' : 'text-gray-300 hover:text-white hover:bg-white/5'}">
+                        <span>${THEME_GROUPS[group].label}</span>
+                        <span class="font-mono text-[10px] opacity-60">(${getGroupKeys(group).length})</span>
+                    </button>
+                `;
+            }).join('');
+            // 設計類型沒有資料夾，隱藏只適用於公司排法的圖片操作按鈕
+            document.querySelectorAll('.company-only').forEach(btn => btn.classList.toggle('hidden', activeGroup === 'design'));
+        }
+
+        function switchThemeGroup(group) {
+            if (!THEME_GROUPS[group]) return;
+            activeGroup = group;
+            activeCatKey = getGroupKeys(group)[0] || null;
+            activeSubIdx = 0;
+            selectedItemIdx = null;
+            imgTransforms = {};
+            renderTabs();
+        }
+
+        function renderTabs() {
+            renderGroupSwitch();
+
+            const tabsContainer = document.getElementById('theme-tabs-container');
+            let html = '';
+            const keys = getGroupKeys(activeGroup);
+            if (keys.length === 0) {
+                activeCatKey = null;
+                tabsContainer.innerHTML = `<span class="text-xs text-gray-500">「${THEME_GROUPS[activeGroup].label}」尚無主題，請點「新增主題」</span>`;
+                renderSubcategoryTabs();
+                return;
+            }
+
+            if (!keys.includes(activeCatKey)) {
+                activeCatKey = keys[0];
+            }
+
+            keys.forEach((catKey, idx) => {
+                const cat = curStore()[catKey];
+                const isActive = catKey === activeCatKey;
+                const displayNum = padKey(idx + 1);
+                html += `
+                    <div draggable="true"
+                         data-tab-key="${catKey}"
+                         ondragstart="handleTabDragStart(event, '${catKey}')"
+                         ondragover="handleTabDragOver(event)"
+                         ondrop="handleTabDrop(event, '${catKey}')"
+                         ondragend="handleTabDragEnd(event)"
+                         onclick="switchCategory('${catKey}')"
+                         class="px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-grab active:cursor-grabbing flex-shrink-0 flex items-center gap-1.5 border select-none ${isActive ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20' : 'text-gray-300 hover:text-white hover:bg-white/5 border-white/10'}">
+                        <span class="opacity-50 text-[10px]">⋮⋮</span>
+                        <span>${displayNum}. ${cat.title}</span>
+                        ${activeGroup === 'company' ? `<span class="font-mono text-[10px] opacity-60" title="對應資料夾">📁${catKey}</span>` : ''}
+                    </div>
+                `;
+            });
+            tabsContainer.innerHTML = html;
+            renderSubcategoryTabs();
+        }
+
+        function handleTabDragStart(e, key) {
+            draggedTabKey = key;
+            e.currentTarget.classList.add('tab-dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleTabDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        // 拖曳只改變顯示順序 (order)，不更動編號與資料夾路徑
+        function handleTabDrop(e, targetKey) {
+            e.preventDefault();
+            if (!draggedTabKey || draggedTabKey === targetKey) return;
+
+            const keys = getGroupKeys(activeGroup);
+            const fromIndex = keys.indexOf(draggedTabKey);
+            const toIndex = keys.indexOf(targetKey);
+            if (fromIndex === -1 || toIndex === -1) return;
+
+            keys.splice(toIndex, 0, keys.splice(fromIndex, 1)[0]);
+            const store = curStore();
+            keys.forEach((k, idx) => { store[k].order = idx + 1; });
+
+            saveToLocalStorage();
+            renderTabs();
+            showToast("已更換主題顯示順序！");
+        }
+
+        function handleTabDragEnd(e) {
+            e.currentTarget.classList.remove('tab-dragging');
+            draggedTabKey = null;
+        }
+
+        function reorderAndRenumberDatabaseKeys() {
+            if (!curStore()[activeCatKey]) {
+                activeCatKey = getGroupKeys(activeGroup)[0] || null;
+            }
+            activeSubIdx = 0;
+            saveToLocalStorage();
+            renderTabs();
+        }
+
+        function switchCategory(catKey) {
+            activeCatKey = catKey;
+            activeSubIdx = 0;
+            selectedItemIdx = null;
+            imgTransforms = {};
+            renderTabs();
+        }
+
+        let themeModalLastKey = '';
+
+        // 編號變更時，若資料夾路徑仍是舊編號的預設值，就跟著更新
+        function applyThemeModalDefaultPaths(newKey) {
+            const folderInput = document.getElementById('modal-theme-folder');
+            const prefolderInput = document.getElementById('modal-theme-prefolder');
+            const oldFolder = `assets/angle_90_0/${themeModalLastKey}/`;
+            if (!folderInput.value || folderInput.value === oldFolder) {
+                folderInput.value = `assets/angle_90_0/${newKey}/`;
+            }
+            if (!prefolderInput.value || prefolderInput.value === oldFolder + 'pre/') {
+                prefolderInput.value = `assets/angle_90_0/${newKey}/pre/`;
+            }
+            themeModalLastKey = newKey;
+        }
+
+        function updateThemeModalGroupUI() {
+            const group = document.getElementById('modal-theme-group').value;
+            document.getElementById('modal-theme-key-hint').innerText = group === 'company' ? '(= 資料夾名稱，無上限)' : '(僅決定排序)';
+            document.getElementById('modal-theme-folder-fields').classList.toggle('hidden', group !== 'company');
+        }
+
+        function onThemeModalGroupChange() {
+            if (isEditingTheme) return;
+            const group = document.getElementById('modal-theme-group').value;
+            const nextKey = getNextFreeKey(group);
+            document.getElementById('modal-theme-key').value = nextKey;
+            updateThemeModalGroupUI();
+            applyThemeModalDefaultPaths(nextKey);
+        }
+
+        function onThemeModalKeyChange() {
+            if (isEditingTheme) return;
+            const n = parseInt(document.getElementById('modal-theme-key').value.trim(), 10);
+            if (!isNaN(n)) applyThemeModalDefaultPaths(padKey(n));
+        }
+
+        function openThemeModal(editMode = false) {
+            if (editMode && !curTheme()) {
+                showToast("⚠️ 請先新增主題！");
+                return;
+            }
+            isEditingTheme = editMode;
+            const modal = document.getElementById('theme-modal');
+            const modalTitle = document.getElementById('theme-modal-title');
+            const groupSelect = document.getElementById('modal-theme-group');
+            const keyInput = document.getElementById('modal-theme-key');
+            const titleInput = document.getElementById('modal-theme-title');
+            const tagInput = document.getElementById('modal-theme-tag');
+            const descInput = document.getElementById('modal-theme-desc');
+            const folderInput = document.getElementById('modal-theme-folder');
+            const prefolderInput = document.getElementById('modal-theme-prefolder');
+            const thumbsizeInput = document.getElementById('modal-theme-thumbsize');
+            const thumbgapInput = document.getElementById('modal-theme-thumbgap');
+
+            if (editMode) {
+                const cur = curTheme();
+                modalTitle.innerText = `編輯主題：${cur.title}`;
+                groupSelect.value = activeGroup;
+                groupSelect.disabled = true;
+                keyInput.readOnly = true;
+                keyInput.value = activeCatKey;
+                themeModalLastKey = activeCatKey;
+                titleInput.value = cur.title || '';
+                tagInput.value = cur.tag || '';
+                descInput.value = cur.desc || '';
+                folderInput.value = cur.folder || `assets/angle_90_0/${activeCatKey}/`;
+                prefolderInput.value = cur.preFolder || `assets/angle_90_0/${activeCatKey}/pre/`;
+                thumbsizeInput.value = cur.thumbSize !== undefined ? cur.thumbSize : 64;
+                thumbgapInput.value = cur.thumbGap !== undefined ? cur.thumbGap : 8;
+            } else {
+                const nextNum = getNextFreeKey(activeGroup);
+                modalTitle.innerText = "新增主題";
+                groupSelect.value = activeGroup;
+                groupSelect.disabled = !SETTINGS.multiLayout;
+                keyInput.readOnly = false;
+                keyInput.value = nextNum;
+                themeModalLastKey = nextNum;
+                titleInput.value = '';
+                tagInput.value = '';
+                descInput.value = '';
+                folderInput.value = `assets/angle_90_0/${nextNum}/`;
+                prefolderInput.value = `assets/angle_90_0/${nextNum}/pre/`;
+                thumbsizeInput.value = 64;
+                thumbgapInput.value = 8;
+            }
+
+            updateThemeModalGroupUI();
+            modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        }
+
+        function closeThemeModal() {
+            document.getElementById('theme-modal').classList.add('hidden', 'opacity-0', 'pointer-events-none');
+        }
+
+        function saveThemeModal() {
+            const group = document.getElementById('modal-theme-group').value;
+            const rawKey = document.getElementById('modal-theme-key').value.trim();
+            const keyNum = parseInt(rawKey, 10);
+            const key = isEditingTheme ? activeCatKey : padKey(keyNum);
+            const title = document.getElementById('modal-theme-title').value.trim();
+            const tag = document.getElementById('modal-theme-tag').value.trim();
+            const desc = document.getElementById('modal-theme-desc').value.trim();
+            const folder = document.getElementById('modal-theme-folder').value.trim();
+            const preFolder = document.getElementById('modal-theme-prefolder').value.trim();
+            const thumbSize = parseInt(document.getElementById('modal-theme-thumbsize').value, 10) || 64;
+            const thumbGap = parseInt(document.getElementById('modal-theme-thumbgap').value, 10) || 8;
+
+            if (!title) {
+                showToast("⚠️ 請填寫主題名稱！");
+                return;
+            }
+
+            if (!isEditingTheme) {
+                if (!/^\d+$/.test(rawKey) || keyNum < 1) {
+                    showToast("⚠️ 主題編號需為 1 以上的數字！");
+                    return;
+                }
+                if (getStore(group)[key]) {
+                    showToast(`⚠️ ${THEME_GROUPS[group].label}編號 ${key} 已被「${getStore(group)[key].title}」使用！`);
+                    return;
+                }
+            }
+
+            if (isEditingTheme) {
+                const cur = curTheme();
+                cur.title = title;
+                cur.tag = tag;
+                cur.desc = desc;
+                cur.thumbSize = thumbSize;
+                cur.thumbGap = thumbGap;
+                if (activeGroup === 'company') {
+                    cur.folder = folder;
+                    cur.preFolder = preFolder;
+                }
+            } else if (group === 'design') {
+                // 設計類型沒有對應資料夾，圖片一律沿用公司排法中的路徑
+                const theme = { title: title, order: getGroupKeys('design').length + 1, tag: tag, desc: desc, thumbSize: thumbSize, thumbGap: thumbGap, subcategories: [] };
+                theme.subcategories.push({ id: newSubId(theme), name: "預設類別" });
+                DESIGN[key] = theme;
+                activeGroup = group;
+                activeCatKey = key;
+                activeSubIdx = 0;
+            } else {
+                DATABASE[key] = {
+                    title: title,
+                    order: getGroupKeys('company').length + 1,
+                    tag: tag || 'Art Category',
+                    desc: desc || '專案視覺創作展示',
+                    bgImage: `assets/angle_90_0/${key}.jpg`,
+                    bgFallback: DEFAULT_FALLBACK_IMAGE,
+                    folder: folder || `assets/angle_90_0/${key}/`,
+                    preFolder: preFolder || `assets/angle_90_0/${key}/pre/`,
+                    thumbSize: thumbSize,
+                    thumbGap: thumbGap,
+                    preImages: [],
+                    subcategories: [
+                        { name: "預設小類別", folder: "A/", items: [] }
+                    ]
+                };
+                activeGroup = group;
+                activeCatKey = key;
+                activeSubIdx = 0;
+            }
+
+            closeThemeModal();
+            saveToLocalStorage();
+            renderTabs();
+            showToast("已儲存主題資訊與縮圖設定！");
+        }
+
+        function requestDeleteCurrentTheme() {
+            const theme = curTheme();
+            if (!theme) { showToast("⚠️ 請先新增主題！"); return; }
+            if (activeGroup === 'company' && getGroupKeys('company').length <= 1) {
+                showToast("⚠️ 公司排法最少需保留一個主題！");
+                return;
+            }
+
+            const delKey = activeCatKey;
+            const group = activeGroup;
+            openConfirmModal("刪除主題", `確定要刪除${THEME_GROUPS[group].label}主題「${theme.title}」嗎？`, function() {
+                if (group === 'design') removeDesignRefs(delKey);
+                delete getStore(group)[delKey];
+                normalizeThemeOrder(group);
+                activeCatKey = null;
+                reorderAndRenumberDatabaseKeys();
+                showToast("已成功刪除主題！");
+            });
+        }
+
+        function renderSubcategoryTabs() {
+            const subContainer = document.getElementById('subcategory-tabs-container');
+            if (!curStore()[activeCatKey] || !curStore()[activeCatKey].subcategories) {
+                subContainer.innerHTML = '<span class="text-xs text-gray-500">尚無小類別</span>';
+                renderImageGrid();
+                return;
+            }
+
+            const subcats = curStore()[activeCatKey].subcategories;
+            if (activeSubIdx >= subcats.length) {
+                activeSubIdx = Math.max(0, subcats.length - 1);
+            }
+
+            let html = '';
+            subcats.forEach((sub, idx) => {
+                const isActive = idx === activeSubIdx;
+                html += `
+                    <div draggable="true"
+                         data-sub-idx="${idx}"
+                         ondragstart="handleSubTabDragStart(event, ${idx})"
+                         ondragover="handleSubTabDragOver(event)"
+                         ondrop="handleSubTabDrop(event, ${idx})"
+                         ondragend="handleSubTabDragEnd(event)"
+                         onclick="switchSubcategory(${idx})" 
+                         class="px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-grab active:cursor-grabbing flex-shrink-0 flex items-center gap-1.5 border select-none ${isActive ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20' : 'text-gray-300 hover:text-white hover:bg-white/5 border-white/10'}">
+                        <span class="opacity-50 text-[10px]">⋮⋮</span>
+                        <span class="font-mono text-peach-300 ${isActive ? 'text-charcoal-950 font-extrabold' : ''}">${activeGroup === 'company' ? (sub.folder || '') : ''}</span>
+                        <span>${sub.name}</span>
+                        <span class="text-[10px] opacity-60 font-mono">(${getSubItemCount(sub)})</span>
+                    </div>
+                `;
+            });
+
+            subContainer.innerHTML = html;
+            renderImageGrid();
+        }
+
+        function handleSubTabDragStart(e, subIdx) {
+            draggedSubTabIdx = subIdx;
+            e.currentTarget.classList.add('sub-tab-dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleSubTabDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleSubTabDrop(e, targetSubIdx) {
+            e.preventDefault();
+            if (draggedSubTabIdx === null || draggedSubTabIdx === targetSubIdx) return;
+
+            const subcats = curStore()[activeCatKey].subcategories;
+            const [movedSubcat] = subcats.splice(draggedSubTabIdx, 1);
+            subcats.splice(targetSubIdx, 0, movedSubcat);
+
+            if (activeSubIdx === draggedSubTabIdx) {
+                activeSubIdx = targetSubIdx;
+            } else if (activeSubIdx > draggedSubTabIdx && activeSubIdx <= targetSubIdx) {
+                activeSubIdx--;
+            } else if (activeSubIdx < draggedSubTabIdx && activeSubIdx >= targetSubIdx) {
+                activeSubIdx++;
+            }
+
+            saveToLocalStorage();
+            renderSubcategoryTabs();
+            showToast("已更換小類別顯示順序！");
+        }
+
+        function handleSubTabDragEnd(e) {
+            e.currentTarget.classList.remove('sub-tab-dragging');
+            draggedSubTabIdx = null;
+        }
+
+        function switchSubcategory(subIdx) {
+            activeSubIdx = parseInt(subIdx, 10);
+            selectedItemIdx = null;
+            imgTransforms = {};
+            renderSubcategoryTabs();
+        }
+
+        function openSubcategoryModal(editMode = false) {
+            if (!curStore()[activeCatKey]) return;
+            isEditingSubcategory = editMode;
+
+            const modal = document.getElementById('subcategory-modal');
+            const nameInput = document.getElementById('modal-sub-name');
+            const folderInput = document.getElementById('modal-sub-folder');
+            const subcats = curStore()[activeCatKey].subcategories;
+
+            if (editMode && subcats[activeSubIdx]) {
+                const cur = subcats[activeSubIdx];
+                nameInput.value = cur.name || '';
+                folderInput.value = cur.folder || '';
+            } else {
+                nameInput.value = '';
+                folderInput.value = 'A/';
+            }
+            document.getElementById('modal-sub-folder-field').classList.toggle('hidden', activeGroup !== 'company');
+
+            modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        }
+
+        function closeSubcategoryModal() {
+            document.getElementById('subcategory-modal').classList.add('hidden', 'opacity-0', 'pointer-events-none');
+        }
+
+        function saveSubcategoryModal() {
+            if (!curStore()[activeCatKey]) { showToast("⚠️ 請先新增主題！"); return; }
+            const name = document.getElementById('modal-sub-name').value.trim();
+            let folder = document.getElementById('modal-sub-folder').value.trim();
+
+            if (!name) {
+                showToast("⚠️ 請填寫小類別名稱！");
+                return;
+            }
+
+            if (folder && !folder.endsWith('/')) {
+                folder += '/';
+            }
+
+            const subcats = curStore()[activeCatKey].subcategories;
+            if (isEditingSubcategory && subcats[activeSubIdx]) {
+                subcats[activeSubIdx].name = name;
+                if (activeGroup === 'company') subcats[activeSubIdx].folder = folder;
+            } else {
+                if (activeGroup === 'design') {
+                    subcats.push({ id: newSubId(curTheme()), name: name });
+                } else {
+                    subcats.push({ name: name, folder: folder, items: [] });
+                }
+                activeSubIdx = subcats.length - 1;
+            }
+
+            closeSubcategoryModal();
+            saveToLocalStorage();
+            renderSubcategoryTabs();
+            showToast("已成功儲存小類別！");
+        }
+
+        function requestDeleteCurrentSubcategory() {
+            if (!curStore()[activeCatKey]) { showToast("⚠️ 請先新增主題！"); return; }
+            const subcats = curStore()[activeCatKey].subcategories;
+            if (subcats.length <= 1) {
+                showToast("⚠️ 最少需保留一個小類別！");
+                return;
+            }
+
+            const curSubName = subcats[activeSubIdx] ? subcats[activeSubIdx].name : '';
+            openConfirmModal("刪除小類別", `確定要刪除小類別「${curSubName}」嗎？`, function() {
+                if (activeGroup === 'design') removeDesignRefs(activeCatKey, subcats[activeSubIdx].id);
+                subcats.splice(activeSubIdx, 1);
+                activeSubIdx = 0;
+                saveToLocalStorage();
+                renderSubcategoryTabs();
+                showToast("已成功刪除小類別！");
+            });
+        }
+
+        function renderImageGrid() {
+            if (activeGroup === 'design') {
+                renderDesignImageGrid();
+                return;
+            }
+            const gridEl = document.getElementById('image-grid');
+            const badgeEl = document.getElementById('item-count-badge');
+            
+            if (!DATABASE[activeCatKey] || !DATABASE[activeCatKey].subcategories[activeSubIdx]) {
+                badgeEl.innerText = '0 張作品';
+                gridEl.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 text-xs">請選擇或新增主題與小類別</div>`;
+                return;
+            }
+
+            const subcat = DATABASE[activeCatKey].subcategories[activeSubIdx];
+            badgeEl.innerText = `${subcat.items ? subcat.items.length : 0} 張作品`;
+
+            if (!subcat.items || subcat.items.length === 0) {
+                gridEl.innerHTML = `
+                    <div class="col-span-full py-16 text-center text-gray-500 text-xs flex flex-col items-center gap-2">
+                        <span>此小類別尚無圖片作品</span>
+                        <label class="bg-peach-500/20 text-peach-300 border border-peach-500/30 px-3.5 py-2 rounded-xl cursor-pointer hover:bg-peach-500/30 font-bold transition">
+                            點此批量新增本地圖片
+                            <input type="file" multiple accept="image/*" onchange="handleBatchFileUpload(event)" class="hidden">
+                        </label>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            subcat.items.forEach((item, idx) => {
+                const previewSrc = item.previewBlob || item.thumb || item.src;
+                const fallbackImg = item.fallback || DEFAULT_FALLBACK_IMAGE;
+                const isSelected = selectedItemIdx === idx;
+                const thumbPath = item.thumb || `assets/angle_90_0/${activeCatKey}/pre/thumb_${idx + 1}.jpg`;
+
+                html += `
+                    <div class="image-card group relative bg-charcoal-900 border border-white/10 rounded-2xl overflow-hidden shadow-lg p-2 flex flex-col justify-between transition-all duration-200 hover:border-peach-500/60 ${isSelected ? 'selected-card' : ''}"
+                         draggable="true"
+                         data-index="${idx}"
+                         onclick="selectCard(${idx})"
+                         ondragstart="handleDragStart(event, ${idx})"
+                         ondragover="handleDragOver(event)"
+                         ondrop="handleDrop(event, ${idx})"
+                         ondragend="handleDragEnd(event)">
+                        
+                        <div class="flex justify-between items-center mb-1.5 px-1">
+                            <span class="font-mono text-[10px] text-peach-400 font-bold">#${idx + 1}</span>
+                            <div class="flex items-center gap-1">
+                                ${SETTINGS.multiLayout ? `<button onclick="event.stopPropagation(); openDesignAssignModal('${activeCatKey}', ${activeSubIdx}, ${idx})" title="設定設計類型" class="px-1.5 py-0.5 hover:bg-peach-500/20 rounded text-peach-300 transition text-[10px] font-bold">🏷 ${(item.design || []).length}</button>` : ''}
+                                <button onclick="event.stopPropagation(); removeItem(${idx})" title="刪除作品" class="p-1 hover:bg-rose-500/20 rounded text-rose-400 transition text-[10px]">✕</button>
+                            </div>
+                        </div>
+
+                        <div class="interactive-img-container aspect-square rounded-xl overflow-hidden bg-black/40 mb-2 relative"
+                             id="img-container-${idx}"
+                             onmousedown="handleCardImgMouseDown(event, ${idx})"
+                             onwheel="handleCardImgWheel(event, ${idx})">
+                            <img id="card-img-${idx}"
+                                 src="${previewSrc}" 
+                                 alt="${item.name}" 
+                                 class="interactive-img w-full h-full object-cover select-none pointer-events-none" 
+                                 data-original-src="${item.src}"
+                                 data-fallback="${fallbackImg}"
+                                 onerror="handleSmartImageError(this)">
+                        </div>
+
+                        <div class="space-y-1.5 text-[11px]" onclick="event.stopPropagation();">
+                            <div>
+                                <label class="text-[9px] text-gray-400">作品名稱：</label>
+                                <input type="text" value="${item.name}" onchange="updateItemName(${idx}, this.value)" class="w-full bg-charcoal-950 border border-white/10 rounded-lg px-2 py-1 text-white text-[11px] focus:outline-none focus:border-peach-500">
+                            </div>
+                            <div>
+                                <label class="text-[9px] text-gray-400">大圖路徑 (src)：</label>
+                                <input type="text" value="${item.src}" onchange="updateItemSrc(${idx}, this.value)" class="w-full bg-charcoal-950 border border-white/10 rounded-lg px-2 py-1 text-gray-300 font-mono text-[10px] focus:outline-none focus:border-peach-500">
+                            </div>
+                            <div>
+                                <label class="text-[9px] text-peach-400">正方形縮圖路徑 (thumb)：</label>
+                                <input type="text" value="${thumbPath}" onchange="updateItemThumb(${idx}, this.value)" class="w-full bg-charcoal-950 border border-peach-500/30 rounded-lg px-2 py-1 text-peach-300 font-mono text-[10px] focus:outline-none focus:border-peach-500">
+                            </div>
+                            ${SETTINGS.multiLayout ? `<div class="text-[9px] text-gray-400 truncate" title="${getDesignRefLabels(item)}">設計類型：<span class="text-peach-300">${getDesignRefLabels(item) || '未設定'}</span></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            gridEl.innerHTML = html;
+            updateSelectedImageStatusUI();
+            restoreAllImageTransforms();
+        }
+
+        function getDesignRefLabels(item) {
+            return (item.design || []).map(r => {
+                const theme = DESIGN[r.theme];
+                const sub = theme && (theme.subcategories || []).find(x => x.id === r.sub);
+                return sub ? `${theme.title} › ${sub.name}` : '';
+            }).filter(Boolean).join('、');
+        }
+
+        // 設計類型的作品區：列出公司排法中勾選到此類別的圖片（路徑沿用公司排法）
+        function renderDesignImageGrid() {
+            const gridEl = document.getElementById('image-grid');
+            const badgeEl = document.getElementById('item-count-badge');
+            const theme = curTheme();
+            const sub = theme && theme.subcategories ? theme.subcategories[activeSubIdx] : null;
+
+            if (!sub) {
+                badgeEl.innerText = '0 張作品';
+                gridEl.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 text-xs">請選擇或新增設計類型主題與類別</div>`;
+                return;
+            }
+
+            const list = getDesignSubItems(activeCatKey, sub.id);
+            badgeEl.innerText = `${list.length} 張作品`;
+
+            if (list.length === 0) {
+                gridEl.innerHTML = `<div class="col-span-full py-16 text-center text-gray-500 text-xs">此類別尚無圖片。請切換到「公司排法」，在圖片卡片上點「🏷」勾選此類別。</div>`;
+                return;
+            }
+
+            gridEl.innerHTML = list.map(({ item, cKey, sIdx, iIdx }, idx) => {
+                const companyCat = DATABASE[cKey];
+                const companySub = companyCat.subcategories[sIdx];
+                return `
+                    <div class="image-card relative bg-charcoal-900 border border-white/10 rounded-2xl overflow-hidden shadow-lg p-2 flex flex-col justify-between transition-all duration-200 hover:border-peach-500/60">
+                        <div class="flex justify-between items-center mb-1.5 px-1">
+                            <span class="font-mono text-[10px] text-peach-400 font-bold">#${idx + 1}</span>
+                            <div class="flex items-center gap-1">
+                                <button onclick="openDesignAssignModal('${cKey}', ${sIdx}, ${iIdx})" title="設定設計類型" class="px-1.5 py-0.5 hover:bg-peach-500/20 rounded text-peach-300 transition text-[10px] font-bold">🏷 ${(item.design || []).length}</button>
+                                <button onclick="removeItemFromDesignSub('${cKey}', ${sIdx}, ${iIdx})" title="移出此類別" class="p-1 hover:bg-rose-500/20 rounded text-rose-400 transition text-[10px]">✕</button>
+                            </div>
+                        </div>
+                        <div class="aspect-square rounded-xl overflow-hidden bg-black/40 mb-2">
+                            <img src="${item.previewBlob || item.thumb || item.src}"
+                                 alt="${item.name}"
+                                 class="w-full h-full object-cover select-none pointer-events-none"
+                                 data-original-src="${item.src}"
+                                 data-fallback="${item.fallback || DEFAULT_FALLBACK_IMAGE}"
+                                 onerror="handleSmartImageError(this)">
+                        </div>
+                        <div class="space-y-1 text-[10px]">
+                            <div class="text-white font-bold truncate">${item.name}</div>
+                            <div class="text-gray-400 truncate">公司排法 ${cKey}. ${companyCat.title} › ${companySub.name}</div>
+                            <div class="text-gray-500 font-mono truncate" title="${item.src}">${item.src}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function removeItemFromDesignSub(cKey, sIdx, iIdx) {
+            const theme = curTheme();
+            const sub = theme && theme.subcategories[activeSubIdx];
+            const item = DATABASE[cKey] && DATABASE[cKey].subcategories[sIdx] && DATABASE[cKey].subcategories[sIdx].items[iIdx];
+            if (!sub || !item) return;
+            item.design = (item.design || []).filter(r => !(r.theme === activeCatKey && r.sub === sub.id));
+            saveToLocalStorage();
+            renderSubcategoryTabs();
+            showToast("已移出此設計類型類別！");
+        }
+
+        let designAssignTarget = null;
+
+        function openDesignAssignModal(cKey, sIdx, iIdx) {
+            const item = DATABASE[cKey] && DATABASE[cKey].subcategories[sIdx] && DATABASE[cKey].subcategories[sIdx].items[iIdx];
+            if (!item) return;
+            designAssignTarget = item;
+
+            const refs = item.design || [];
+            const keys = getGroupKeys('design');
+            document.getElementById('design-assign-item-name').innerText = `${item.name}（${item.src}）`;
+
+            const listEl = document.getElementById('design-assign-list');
+            if (keys.length === 0) {
+                listEl.innerHTML = '<div class="text-gray-500 py-6 text-center">尚無設計類型主題，請先切換到「設計類型」新增主題與類別</div>';
+            } else {
+                listEl.innerHTML = keys.map(tKey => {
+                    const theme = DESIGN[tKey];
+                    const subsHtml = (theme.subcategories || []).map(sub => {
+                        const checked = refs.some(r => r.theme === tKey && r.sub === sub.id);
+                        return `
+                            <label class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-white/5 cursor-pointer">
+                                <input type="checkbox" class="design-assign-cb accent-peach-500" data-theme="${tKey}" data-sub="${sub.id}" ${checked ? 'checked' : ''}>
+                                <span class="text-gray-200">${sub.name}</span>
+                            </label>
+                        `;
+                    }).join('') || '<div class="px-3 text-gray-500">（此主題尚無類別）</div>';
+                    return `<div><div class="font-bold text-peach-400 mb-1">${tKey}. ${theme.title}</div>${subsHtml}</div>`;
+                }).join('');
+            }
+
+            document.getElementById('design-assign-modal').classList.remove('hidden');
+        }
+
+        function closeDesignAssignModal() {
+            document.getElementById('design-assign-modal').classList.add('hidden');
+            designAssignTarget = null;
+        }
+
+        function saveDesignAssignModal() {
+            if (!designAssignTarget) return;
+            designAssignTarget.design = Array.from(document.querySelectorAll('.design-assign-cb:checked'))
+                .map(cb => ({ theme: cb.dataset.theme, sub: cb.dataset.sub }));
+            closeDesignAssignModal();
+            saveToLocalStorage();
+            renderSubcategoryTabs();
+            showToast("已更新設計類型！");
+        }
+
+        function selectCard(idx) {
+            selectedItemIdx = idx;
+            document.querySelectorAll('.image-card').forEach((card, i) => {
+                if (i === idx) {
+                    card.classList.add('selected-card');
+                } else {
+                    card.classList.remove('selected-card');
+                }
+            });
+            updateSelectedImageStatusUI();
+        }
+
+        function updateSelectedImageStatusUI() {
+            const statusEl = document.getElementById('selected-image-status');
+            if (selectedItemIdx === null) {
+                statusEl.innerText = "未選擇圖片 (點擊卡片選定後可 Ctrl+滾輪縮放)";
+                statusEl.className = "text-[11px] text-gray-400 font-mono";
+            } else {
+                const subcat = DATABASE[activeCatKey].subcategories[activeSubIdx];
+                const item = subcat && subcat.items ? subcat.items[selectedItemIdx] : null;
+                const name = item ? item.name : `#${selectedItemIdx + 1}`;
+                const transform = imgTransforms[selectedItemIdx] || { scale: 1, panX: 0, panY: 0 };
+                const scalePct = Math.round(transform.scale * 100);
+                statusEl.innerText = `已選定：${name} (${scalePct}%) | 按住 Ctrl + 滾輪/左鍵 操作`;
+                statusEl.className = "text-[11px] text-peach-300 font-mono font-bold";
+            }
+        }
+
+        /**
+         * 智慧 onerror 處理：自動依序嘗試候選相對路徑
+         */
+        function handleSmartImageError(img) {
+            if (!img.dataset.candidates) {
+                const originalSrc = img.getAttribute('data-original-src') || img.src;
+                const candidates = generatePathCandidates(originalSrc);
+                // 排除目前已失敗的 URL
+                const filtered = candidates.filter(c => c !== img.src && new URL(c, document.baseURI).href !== img.src);
+                img.dataset.candidates = JSON.stringify(filtered);
+                img.dataset.candidateIndex = "0";
+            }
+
+            const candidates = JSON.parse(img.dataset.candidates || "[]");
+            let idx = parseInt(img.dataset.candidateIndex || "0", 10);
+
+            if (idx < candidates.length) {
+                img.dataset.candidateIndex = String(idx + 1);
+                img.src = candidates[idx];
+            } else {
+                img.onerror = null;
+                img.src = img.getAttribute('data-fallback') || DEFAULT_FALLBACK_IMAGE;
+            }
+        }
+
+        function handleCardImgWheel(e, idx) {
+            if (!e.ctrlKey) return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            selectCard(idx);
+
+            const container = document.getElementById(`img-container-${idx}`);
+            const img = document.getElementById(`card-img-${idx}`);
+            if (!container || !img) return;
+
+            let state = imgTransforms[idx] || { scale: 1.0, panX: 0, panY: 0 };
+
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            const naturalW = img.naturalWidth || containerWidth;
+            const naturalH = img.naturalHeight || containerHeight;
+
+            const maxScaleX = naturalW > 0 ? (naturalW / containerWidth) : 3.0;
+            const maxScaleY = naturalH > 0 ? (naturalH / containerHeight) : 3.0;
+            const maxAllowedScale = Math.max(1.5, Math.min(Math.max(maxScaleX, maxScaleY), 3.0));
+
+            const delta = e.deltaY < 0 ? 0.15 : -0.15;
+            let newScale = state.scale + delta;
+
+            newScale = Math.max(1.0, Math.min(newScale, maxAllowedScale));
+
+            state.scale = newScale;
+            clampPanBoundaries(state, containerWidth, containerHeight);
+
+            imgTransforms[idx] = state;
+            applyImgTransform(img, state);
+            updateSelectedImageStatusUI();
+        }
+
+        function handleCardImgMouseDown(e, idx) {
+            if (!e.ctrlKey || e.button !== 0) return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            selectCard(idx);
+
+            const container = document.getElementById(`img-container-${idx}`);
+            const img = document.getElementById(`card-img-${idx}`);
+            if (!container || !img) return;
+
+            const state = imgTransforms[idx] || { scale: 1.0, panX: 0, panY: 0 };
+            if (state.scale <= 1.0) return;
+
+            isCtrlPanning = true;
+            panStartX = e.clientX;
+            panStartY = e.clientY;
+            panStartOffsetX = state.panX;
+            panStartOffsetY = state.panY;
+
+            const onMouseMove = (moveEvt) => {
+                if (!isCtrlPanning) return;
+                moveEvt.preventDefault();
+
+                const dx = moveEvt.clientX - panStartX;
+                const dy = moveEvt.clientY - panStartY;
+
+                state.panX = panStartOffsetX + dx;
+                state.panY = panStartOffsetY + dy;
+
+                clampPanBoundaries(state, container.clientWidth, container.clientHeight);
+
+                imgTransforms[idx] = state;
+                applyImgTransform(img, state);
+            };
+
+            const onMouseUp = () => {
+                isCtrlPanning = false;
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
+            };
+
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+        }
+
+        function clampPanBoundaries(state, containerW, containerH) {
+            if (state.scale <= 1.0) {
+                state.panX = 0;
+                state.panY = 0;
+                return;
+            }
+
+            const maxPanX = (containerW * (state.scale - 1)) / 2;
+            const maxPanY = (containerH * (state.scale - 1)) / 2;
+
+            state.panX = Math.max(-maxPanX, Math.min(state.panX, maxPanX));
+            state.panY = Math.max(-maxPanY, Math.min(state.panY, maxPanY));
+        }
+
+        function applyImgTransform(imgEl, state) {
+            imgEl.style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${state.scale})`;
+        }
+
+        function restoreAllImageTransforms() {
+            Object.keys(imgTransforms).forEach(idxStr => {
+                const idx = parseInt(idxStr, 10);
+                const img = document.getElementById(`card-img-${idx}`);
+                if (img) {
+                    applyImgTransform(img, imgTransforms[idx]);
+                }
+            });
+        }
+
+        window.addEventListener('wheel', (e) => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        function handleDragStart(e, idx) {
+            dragSrcIndex = idx;
+            e.currentTarget.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDrop(e, targetIdx) {
+            e.preventDefault();
+            if (dragSrcIndex === null || dragSrcIndex === targetIdx) return;
+
+            const items = DATABASE[activeCatKey].subcategories[activeSubIdx].items;
+            const movedItem = items.splice(dragSrcIndex, 1)[0];
+            items.splice(targetIdx, 0, movedItem);
+
+            selectedItemIdx = targetIdx;
+            imgTransforms = {};
+
+            saveToLocalStorage();
+            renderImageGrid();
+            showToast("已更換作品順序！");
+        }
+
+        function handleDragEnd(e) {
+            e.currentTarget.classList.remove('dragging');
+            dragSrcIndex = null;
+        }
+
+        function removeItem(idx) {
+            const items = DATABASE[activeCatKey].subcategories[activeSubIdx].items;
+            items.splice(idx, 1);
+            if (selectedItemIdx === idx) selectedItemIdx = null;
+            imgTransforms = {};
+            saveToLocalStorage();
+            renderImageGrid();
+            renderSubcategoryTabs();
+            showToast("已刪除圖片！");
+        }
+
+        function updateItemName(idx, val) {
+            DATABASE[activeCatKey].subcategories[activeSubIdx].items[idx].name = val;
+            saveToLocalStorage();
+        }
+
+        function updateItemSrc(idx, val) {
+            DATABASE[activeCatKey].subcategories[activeSubIdx].items[idx].src = val;
+            saveToLocalStorage();
+        }
+
+        function updateItemThumb(idx, val) {
+            DATABASE[activeCatKey].subcategories[activeSubIdx].items[idx].thumb = val;
+            saveToLocalStorage();
+        }
+
+        function handleBatchFileUpload(e) {
+            if (activeGroup !== 'company') return;
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+            if (!DATABASE[activeCatKey]) { showToast("⚠️ 請先新增主題！"); e.target.value = ''; return; }
+
+            const cat = DATABASE[activeCatKey];
+            const subcat = cat.subcategories[activeSubIdx];
+
+            files.forEach((file) => {
+                const fileNameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                const generatedSrc = `${cat.folder}${subcat.folder || ''}${file.name}`;
+                const generatedThumb = `${cat.preFolder || `assets/angle_90_0/${activeCatKey}/pre/`}${fileNameWithoutExt}.jpg`;
+                const previewBlob = URL.createObjectURL(file);
+
+                subcat.items.push({
+                    src: generatedSrc,
+                    thumb: generatedThumb,
+                    fallback: DEFAULT_FALLBACK_IMAGE,
+                    name: fileNameWithoutExt,
+                    previewBlob: previewBlob
+                });
+            });
+
+            saveToLocalStorage();
+            renderImageGrid();
+            renderSubcategoryTabs();
+            showToast(`已成功新增 ${files.length} 張圖片！`);
+            e.target.value = '';
+        }
+
+        function autoRenumberItems() {
+            if (activeGroup !== 'company') return;
+            if (!DATABASE[activeCatKey]) { showToast("⚠️ 請先新增主題！"); return; }
+            const cat = DATABASE[activeCatKey];
+            const subcat = cat.subcategories[activeSubIdx];
+
+            subcat.items.forEach((item, idx) => {
+                const paddedNum = String(idx + 1).padStart(2, '0');
+                item.name = `${subcat.name} ${paddedNum}`;
+                const ext = item.src.split('.').pop() || 'jpg';
+                item.src = `${cat.folder}${subcat.folder || ''}${paddedNum}.${ext}`;
+                item.thumb = `${cat.preFolder || `assets/angle_90_0/${activeCatKey}/pre/`}${paddedNum}.jpg`;
+            });
+
+            saveToLocalStorage();
+            renderImageGrid();
+            showToast("已完成所有圖片與縮圖路徑重新編號！");
+        }
+
+        function generateCleanJson() {
+            const company = JSON.parse(JSON.stringify(DATABASE));
+            const design = JSON.parse(JSON.stringify(DESIGN));
+            const isValidRef = r => r && design[r.theme] && (design[r.theme].subcategories || []).some(sub => sub.id === r.sub);
+
+            Object.keys(company).forEach(cKey => {
+                const cat = company[cKey];
+                delete cat.group;
+                const preList = [];
+                (cat.subcategories || []).forEach(sub => {
+                    (sub.items || []).forEach(item => {
+                        delete item.previewBlob;
+                        item.design = (item.design || []).filter(isValidRef);
+                        if (!item.thumb) {
+                            const fileName = item.src ? item.src.split('/').pop() : '';
+                            const baseName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+                            item.thumb = `${cat.preFolder || `assets/angle_90_0/${cKey}/pre/`}${baseName}.jpg`;
+                        }
+                        if (item.thumb && !preList.includes(item.thumb)) {
+                            preList.push(item.thumb);
+                        }
+                    });
+                });
+                cat.preImages = preList;
+            });
+            return { settings: { multiLayout: SETTINGS.multiLayout }, company, design };
+        }
+
+        function downloadJsonData() {
+            const cleanDB = generateCleanJson();
+            const jsonStr = JSON.stringify(cleanDB, null, 4);
+            const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'portfolio_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("📄 已成功下載 portfolio_data.json！");
+        }
+
+        // 大圖自動裁切正方形縮圖並打包 ZIP 下載（搭配智慧多路徑降級）
+        async function exportCurrentThemeThumbnailsZip() {
+            if (activeGroup !== 'company') return;
+            const cat = DATABASE[activeCatKey];
+            if (!cat) return;
+
+            const allItems = [];
+            cat.subcategories.forEach(sub => {
+                if (Array.isArray(sub.items)) {
+                    sub.items.forEach(it => allItems.push(it));
+                }
+            });
+
+            if (allItems.length === 0) {
+                showToast("⚠️ 當前主題內無圖片可生成縮圖！");
+                return;
+            }
+
+            if (typeof JSZip === 'undefined') {
+                showToast("⚠️ 正在載入壓縮庫，請稍微再試！");
+                return;
+            }
+
+            const targetSize = (cat.thumbSize || 64) * 4; // 預設 256px 高畫質正方形縮圖
+            showToast(`⏳ 正在為「${cat.title}」自動偵測圖片並生成 ${targetSize}x${targetSize} 正方形縮圖…`);
+
+            const zip = new JSZip();
+            const preFolderInZip = zip.folder("pre");
+            let processedCount = 0;
+
+            for (let i = 0; i < allItems.length; i++) {
+                const item = allItems[i];
+                const imgSrc = item.previewBlob || item.src;
+                const thumbPath = item.thumb || deriveThumbSrc(activeCatKey, item);
+                const thumbFileName = thumbPath.split('/').pop() || `thumb_${i+1}.jpg`;
+
+                try {
+                    const blob = await createSquareCroppedBlob(imgSrc, targetSize);
+                    if (blob) {
+                        preFolderInZip.file(thumbFileName, blob);
+                        processedCount++;
+                    }
+                } catch (e) {
+                    console.warn(`處理圖片失敗: ${imgSrc}`, e);
+                }
+            }
+
+            if (processedCount === 0) {
+                showToast("⚠️ 生成縮圖失敗，請檢查圖片相對路徑或確認圖檔是否存在！");
+                return;
+            }
+
+            showToast("📦 正在打包 ZIP 壓縮檔…");
+            const zipContent = await zip.generateAsync({ type: "blob" });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(zipContent);
+            a.download = `${activeCatKey}_pre_thumbnails.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+
+            showToast(`✅ 已成功匯出 ${processedCount} 張正方形縮圖至 ZIP！`);
+        }
+
+        async function createSquareCroppedBlob(imageSrc, targetSize = 256) {
+            const img = await loadHTMLImageWithFallback(imageSrc);
+            if (!img) return null;
+
+            return new Promise((resolve) => {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = targetSize;
+                    canvas.height = targetSize;
+                    const ctx = canvas.getContext('2d');
+
+                    const naturalW = img.naturalWidth || img.width;
+                    const naturalH = img.naturalHeight || img.height;
+                    const minDim = Math.min(naturalW, naturalH);
+                    const sx = (naturalW - minDim) / 2;
+                    const sy = (naturalH - minDim) / 2;
+
+                    ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
+                    canvas.toBlob((blob) => resolve(blob), 'image/jpeg', 0.92);
+                } catch (e) {
+                    resolve(null);
+                }
+            });
+        }
+
+        function deriveThumbSrc(catKey, item) {
+            if (item.thumb) return item.thumb;
+            const fileName = item.src ? item.src.split('/').pop() : '';
+            const baseName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+            return `assets/angle_90_0/${catKey}/pre/${baseName}.jpg`;
+        }
+
+        function openConfirmModal(title, msg, onConfirm) {
+            document.getElementById('confirm-modal-title').innerText = title;
+            document.getElementById('confirm-modal-msg').innerText = msg;
+            pendingConfirmCallback = onConfirm;
+
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        }
+
+        function closeConfirmModal() {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.add('hidden', 'opacity-0', 'pointer-events-none');
+            pendingConfirmCallback = null;
+        }
+
+        function executeConfirmAction() {
+            if (typeof pendingConfirmCallback === 'function') {
+                pendingConfirmCallback();
+            }
+            closeConfirmModal();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.innerText = msg;
+            toast.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
+            }, 2500);
+        }
+
+        window.onload = function() {
+            fetchLocalPortfolioJson().then(() => {
+                renderTabs();
+            }).catch(() => {
+                const localSaved = localStorage.getItem('PORTFOLIO_DATABASE_angle_90_0');
+                if (localSaved) {
+                    try {
+                        const parsed = JSON.parse(localSaved);
+                        if (parsed && Object.keys(parsed).length > 0) {
+                            loadDatabase(parsed);
+                        }
+                    } catch(e) {}
+                }
+                renderTabs();
+            });
+        };
+    </script>
+</body>
+</html>

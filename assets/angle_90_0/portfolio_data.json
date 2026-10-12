@@ -1,0 +1,324 @@
+{
+    "settings": {
+        "multiLayout": false
+    },
+    "company": {
+        "01": {
+            "title": "主題 01",
+            "tag": "",
+            "desc": "",
+            "bgImage": "",
+            "bgFallback": "",
+            "folder": "assets/angle_90_0/01/",
+            "preFolder": "assets/angle_90_0/01/pre/",
+            "thumbSize": 64,
+            "thumbGap": 8,
+            "preImages": [
+                "assets/angle_90_0/01/pre/CG (10).jpg",
+                "assets/angle_90_0/01/pre/CG (4).jpg",
+                "assets/angle_90_0/01/pre/CG (9).jpg",
+                "assets/angle_90_0/01/pre/CG (5).jpg",
+                "assets/angle_90_0/01/pre/CG (6).jpg",
+                "assets/angle_90_0/01/pre/CG (7).jpg",
+                "assets/angle_90_0/01/pre/CG (8).jpg",
+                "assets/angle_90_0/01/pre/CG (11).jpg",
+                "assets/angle_90_0/01/pre/CG (15).jpg",
+                "assets/angle_90_0/01/pre/CG (16).jpg",
+                "assets/angle_90_0/01/pre/CG (12).jpg",
+                "assets/angle_90_0/01/pre/CG (13).jpg",
+                "assets/angle_90_0/01/pre/CG (14).jpg",
+                "assets/angle_90_0/01/pre/CG (1).jpg",
+                "assets/angle_90_0/01/pre/CG (2).jpg",
+                "assets/angle_90_0/01/pre/CG (3).jpg",
+                "assets/angle_90_0/01/pre/CG (18).jpg",
+                "assets/angle_90_0/01/pre/CG (19).jpg",
+                "assets/angle_90_0/01/pre/CG (20).jpg",
+                "assets/angle_90_0/01/pre/CG (21).jpg",
+                "assets/angle_90_0/01/pre/CG (22).jpg",
+                "assets/angle_90_0/01/pre/CG (23).jpg",
+                "assets/angle_90_0/01/pre/CG (24).jpg"
+            ],
+            "subcategories": [
+                {
+                    "name": "場景概念",
+                    "folder": "A/",
+                    "items": [
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (10).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (10).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (10)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (4).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (4).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (4)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (9).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (9).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (9)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (5).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (5).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (5)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (6).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (6).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (6)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (7).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (7).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (7)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (8).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (8).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (8)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (11).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (11).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (11)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (15).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (15).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (15)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (16).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (16).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (16)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (12).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (12).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (12)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (13).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (13).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (13)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (14).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (14).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (14)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (1).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (1).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (1)",
+                            "design": [
+                                {
+                                    "theme": "01",
+                                    "sub": "s1"
+                                }
+                            ]
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (2).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (2).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (2)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/A/CG (3).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (3).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (3)",
+                            "design": []
+                        }
+                    ]
+                },
+                {
+                    "name": "角色概念",
+                    "folder": "B/",
+                    "items": [
+                        {
+                            "src": "assets/angle_90_0/01/B/CG (18).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (18).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (18)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/B/CG (19).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (19).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (19)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/B/CG (20).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (20).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (20)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/B/CG (21).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (21).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (21)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/B/CG (22).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (22).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (22)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/B/CG (23).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (23).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (23)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/01/B/CG (24).png",
+                            "thumb": "assets/angle_90_0/01/pre/CG (24).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CG (24)",
+                            "design": []
+                        }
+                    ]
+                }
+            ],
+            "order": 1
+        },
+        "02": {
+            "title": "主題 02",
+            "tag": "",
+            "desc": "",
+            "bgImage": "",
+            "bgFallback": "",
+            "folder": "assets/angle_90_0/02/",
+            "preFolder": "assets/angle_90_0/02/pre/",
+            "thumbSize": 64,
+            "thumbGap": 8,
+            "preImages": [],
+            "subcategories": [],
+            "order": 2
+        },
+        "03": {
+            "title": "主題 03",
+            "tag": "",
+            "desc": "",
+            "bgImage": "",
+            "bgFallback": "",
+            "folder": "assets/angle_90_0/03/",
+            "preFolder": "assets/angle_90_0/03/pre/",
+            "thumbSize": 64,
+            "thumbGap": 8,
+            "preImages": [],
+            "subcategories": [],
+            "order": 3
+        },
+        "04": {
+            "title": "主題 04",
+            "tag": "",
+            "desc": "",
+            "bgImage": "",
+            "bgFallback": "",
+            "folder": "assets/angle_90_0/04/",
+            "preFolder": "assets/angle_90_0/04/pre/",
+            "thumbSize": 64,
+            "thumbGap": 8,
+            "preImages": [],
+            "subcategories": [],
+            "order": 4
+        },
+        "05": {
+            "title": "主題 05",
+            "tag": "",
+            "desc": "",
+            "bgImage": "",
+            "bgFallback": "",
+            "folder": "assets/angle_90_0/05/",
+            "preFolder": "assets/angle_90_0/05/pre/",
+            "thumbSize": 64,
+            "thumbGap": 8,
+            "preImages": [],
+            "subcategories": [],
+            "order": 5
+        },
+        "06": {
+            "title": "主題 06",
+            "tag": "",
+            "desc": "",
+            "bgImage": "",
+            "bgFallback": "",
+            "folder": "assets/angle_90_0/06/",
+            "preFolder": "assets/angle_90_0/06/pre/",
+            "thumbSize": 64,
+            "thumbGap": 8,
+            "preImages": [],
+            "subcategories": [],
+            "order": 6
+        },
+        "07": {
+            "title": "主題 07",
+            "tag": "",
+            "desc": "",
+            "bgImage": "",
+            "bgFallback": "",
+            "folder": "assets/angle_90_0/07/",
+            "preFolder": "assets/angle_90_0/07/pre/",
+            "thumbSize": 64,
+            "thumbGap": 8,
+            "preImages": [],
+            "subcategories": [],
+            "order": 7
+        }
+    },
+    "design": {
+        "01": {
+            "title": "設計主題 01",
+            "tag": "",
+            "desc": "",
+            "thumbSize": 64,
+            "thumbGap": 8,
+            "subcategories": [
+                {
+                    "id": "s1",
+                    "name": "預設類別"
+                }
+            ],
+            "order": 1
+        }
+    }
+}
