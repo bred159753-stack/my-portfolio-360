@@ -4,7 +4,7 @@
     },
     "company": {
         "01": {
-            "title": "主題 01",
+            "title": "西基",
             "tag": "",
             "desc": "",
             "bgImage": "",
@@ -221,7 +221,7 @@
             "order": 1
         },
         "02": {
-            "title": "主題 02",
+            "title": "樂旗",
             "tag": "",
             "desc": "",
             "bgImage": "",
@@ -231,11 +231,17 @@
             "thumbSize": 64,
             "thumbGap": 8,
             "preImages": [],
-            "subcategories": [],
+            "subcategories": [
+                {
+                    "name": "卡牌插畫",
+                    "folder": "A/",
+                    "items": []
+                }
+            ],
             "order": 2
         },
         "03": {
-            "title": "主題 03",
+            "title": "華義",
             "tag": "",
             "desc": "",
             "bgImage": "",
@@ -245,11 +251,27 @@
             "thumbSize": 64,
             "thumbGap": 8,
             "preImages": [],
-            "subcategories": [],
+            "subcategories": [
+                {
+                    "name": "博弈",
+                    "folder": "A/",
+                    "items": []
+                },
+                {
+                    "name": "動態",
+                    "folder": "B/",
+                    "items": []
+                },
+                {
+                    "name": "2D卷軸遊戲概念",
+                    "folder": "C/",
+                    "items": []
+                }
+            ],
             "order": 3
         },
         "04": {
-            "title": "主題 04",
+            "title": "傳奇",
             "tag": "",
             "desc": "",
             "bgImage": "",
@@ -259,11 +281,37 @@
             "thumbSize": 64,
             "thumbGap": 8,
             "preImages": [],
-            "subcategories": [],
+            "subcategories": [
+                {
+                    "name": "背飾",
+                    "folder": "A/",
+                    "items": []
+                },
+                {
+                    "name": "武器",
+                    "folder": "B/",
+                    "items": []
+                },
+                {
+                    "name": "坐騎",
+                    "folder": "C/",
+                    "items": []
+                },
+                {
+                    "name": "怪物生物",
+                    "folder": "D/",
+                    "items": []
+                },
+                {
+                    "name": "技能概念",
+                    "folder": "E/",
+                    "items": []
+                }
+            ],
             "order": 4
         },
         "05": {
-            "title": "主題 05",
+            "title": "北網銀",
             "tag": "",
             "desc": "",
             "bgImage": "",
@@ -273,11 +321,32 @@
             "thumbSize": 64,
             "thumbGap": 8,
             "preImages": [],
-            "subcategories": [],
+            "subcategories": [
+                {
+                    "name": "角色設計",
+                    "folder": "A/",
+                    "items": []
+                },
+                {
+                    "name": "寵物設計",
+                    "folder": "B/",
+                    "items": []
+                },
+                {
+                    "name": "ICON",
+                    "folder": "C/",
+                    "items": []
+                },
+                {
+                    "name": "插畫",
+                    "folder": "D/",
+                    "items": []
+                }
+            ],
             "order": 5
         },
         "06": {
-            "title": "主題 06",
+            "title": "眾鼎",
             "tag": "",
             "desc": "",
             "bgImage": "",
@@ -287,22 +356,24 @@
             "thumbSize": 64,
             "thumbGap": 8,
             "preImages": [],
-            "subcategories": [],
+            "subcategories": [
+                {
+                    "name": "測試題",
+                    "folder": "A/",
+                    "items": []
+                },
+                {
+                    "name": "寵物設計",
+                    "folder": "B/",
+                    "items": []
+                },
+                {
+                    "name": "擬人動物設計",
+                    "folder": "C/",
+                    "items": []
+                }
+            ],
             "order": 6
-        },
-        "07": {
-            "title": "主題 07",
-            "tag": "",
-            "desc": "",
-            "bgImage": "",
-            "bgFallback": "",
-            "folder": "assets/angle_90_0/07/",
-            "preFolder": "assets/angle_90_0/07/pre/",
-            "thumbSize": 64,
-            "thumbGap": 8,
-            "preImages": [],
-            "subcategories": [],
-            "order": 7
         }
     },
     "design": {
