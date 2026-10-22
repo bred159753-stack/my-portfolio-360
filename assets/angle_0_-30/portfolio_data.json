@@ -1,0 +1,170 @@
+{
+    "01": {
+        "title": "自我介紹",
+        "tag": "About Me",
+        "desc": "基本資料、工作履歷與技能專長",
+        "folder": "assets/angle_0_-30/01/",
+        "subcategories": [
+            {
+                "name": "基本資料",
+                "folder": "A/",
+                "style": "cards",
+                "items": [
+                    {
+                        "title": "你的名字（待填寫）",
+                        "meta": "插畫師 / 視覺設計",
+                        "image": "",
+                        "text": "在這裡寫一段簡短的自我介紹：你是誰、擅長什麼、目前在做什麼。",
+                        "fields": [
+                            { "label": "暱稱", "value": "待填寫" },
+                            { "label": "所在地", "value": "待填寫" },
+                            { "label": "語言", "value": "中文 / English" },
+                            { "label": "Email", "value": "待填寫" }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "工作履歷",
+                "folder": "B/",
+                "style": "timeline",
+                "items": [
+                    {
+                        "title": "公司名稱（待填寫）",
+                        "meta": "20XX – 現在 · 職稱",
+                        "text": "簡述這份工作的內容與負責範圍。",
+                        "points": ["主要成果或負責專案 1", "主要成果或負責專案 2"]
+                    },
+                    {
+                        "title": "公司名稱（待填寫）",
+                        "meta": "20XX – 20XX · 職稱",
+                        "text": "簡述這份工作的內容與負責範圍。",
+                        "points": ["主要成果或負責專案 1"]
+                    }
+                ]
+            },
+            {
+                "name": "學歷",
+                "folder": "C/",
+                "style": "timeline",
+                "items": [
+                    {
+                        "title": "學校名稱（待填寫）",
+                        "meta": "20XX – 20XX · 科系",
+                        "text": "可補充修課重點、畢業製作或得獎紀錄。"
+                    }
+                ]
+            },
+            {
+                "name": "技能專長",
+                "folder": "D/",
+                "style": "cards",
+                "items": [
+                    {
+                        "title": "繪圖",
+                        "tags": ["厚塗插畫", "角色設計", "場景概念", "黑白線稿"]
+                    },
+                    {
+                        "title": "工具",
+                        "tags": ["Photoshop", "Clip Studio Paint", "ComfyUI"]
+                    }
+                ]
+            },
+            {
+                "name": "聯絡方式",
+                "folder": "E/",
+                "style": "cards",
+                "items": [
+                    {
+                        "title": "歡迎聯絡",
+                        "text": "合作邀約、商稿或任何問題都可以透過以下方式聯絡。",
+                        "fields": [
+                            { "label": "Email", "value": "待填寫" },
+                            { "label": "社群", "value": "待填寫" }
+                        ],
+                        "link": { "label": "前往社群頁面", "url": "" }
+                    }
+                ]
+            }
+        ]
+    },
+    "02": {
+        "title": "興趣",
+        "tag": "Interests",
+        "desc": "工作之外的喜好與日常",
+        "folder": "assets/angle_0_-30/02/",
+        "subcategories": [
+            {
+                "name": "遊戲",
+                "folder": "A/",
+                "style": "cards",
+                "items": [
+                    { "title": "喜歡的遊戲（待填寫）", "text": "喜歡的原因、玩了多久、對創作的影響。" }
+                ]
+            },
+            {
+                "name": "閱讀",
+                "folder": "B/",
+                "style": "cards",
+                "items": [
+                    { "title": "書名（待填寫）", "meta": "作者", "text": "一句話心得。" }
+                ]
+            },
+            {
+                "name": "運動",
+                "folder": "C/",
+                "style": "cards",
+                "items": [
+                    { "title": "運動項目（待填寫）", "text": "多久做一次、喜歡的地方。" }
+                ]
+            }
+        ]
+    },
+    "03": {
+        "title": "推薦頻道",
+        "tag": "Recommended Channels",
+        "desc": "常看、也推薦給大家的頻道",
+        "folder": "assets/angle_0_-30/03/",
+        "subcategories": [
+            {
+                "name": "哲學",
+                "folder": "A/",
+                "style": "cards",
+                "items": [
+                    {
+                        "title": "頻道名稱（待填寫）",
+                        "meta": "YouTube",
+                        "text": "推薦理由。",
+                        "link": { "label": "前往頻道", "url": "" }
+                    }
+                ]
+            },
+            {
+                "name": "AI",
+                "folder": "B/",
+                "style": "cards",
+                "items": [
+                    {
+                        "title": "頻道名稱（待填寫）",
+                        "meta": "YouTube",
+                        "text": "推薦理由。",
+                        "link": { "label": "前往頻道", "url": "" }
+                    }
+                ]
+            },
+            {
+                "name": "運動",
+                "folder": "C/",
+                "style": "cards",
+                "items": [
+                    {
+                        "title": "頻道名稱（待填寫）",
+                        "meta": "YouTube",
+                        "text": "推薦理由。",
+                        "link": { "label": "前往頻道", "url": "" }
+                    }
+                ]
+            }
+        ]
+    }
+}

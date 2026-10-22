@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>關於我內容管理工具</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        peach: {
+                            300: '#fde5be',
+                            400: '#fcd8a0',
+                            500: '#fcd191',
+                            600: '#e0b879',
+                        },
+                        charcoal: {
+                            800: '#2c2c31',
+                            850: '#232327',
+                            900: '#1c1c1f',
+                            950: '#141416',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141416;
+            color: #f3f4f6;
+        }
+        .glass-panel {
+            background: rgba(35, 35, 39, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .dragging {
+            opacity: 0.4;
+            transform: scale(0.98);
+            border-color: #fcd191 !important;
+        }
+        .tab-dragging, .sub-tab-dragging {
+            opacity: 0.4;
+            border-style: dashed;
+            border-color: #fcd191 !important;
+        }
+        .field-input {
+            width: 100%;
+            background: #141416;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 0.3rem 0.5rem;
+            color: #fff;
+            font-size: 11px;
+        }
+        .field-input:focus { outline: none; border-color: #fcd191; }
+        .field-label { display: block; font-size: 9px; color: #9ca3af; margin-bottom: 2px; }
+    </style>
+</head>
+<body class="min-h-screen bg-charcoal-950 p-3 md:p-6 text-gray-100 flex flex-col">
+
+    <!-- Toast 提示訊息 -->
+    <div id="toast" class="fixed top-5 right-5 z-50 bg-peach-500 text-charcoal-950 px-4 py-2.5 rounded-xl font-bold text-xs shadow-2xl transition-all duration-300 opacity-0 pointer-events-none -translate-y-2">
+        <span id="toast-message">操作成功！</span>
+    </div>
+
+    <!-- 隱藏的本地 JSON 檔案讀取 Input -->
+    <input type="file" id="json-file-input" accept=".json" onchange="handleJsonFileImport(event)" class="hidden">
+
+    <!-- 自訂通用 Confirm Modal -->
+    <div id="confirm-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none hidden transition-all duration-200">
+        <div class="glass-panel w-full max-w-sm rounded-3xl p-6 border border-white/20 shadow-2xl space-y-4 text-center">
+            <h3 id="confirm-modal-title" class="text-sm font-bold text-white">確認刪除</h3>
+            <p id="confirm-modal-msg" class="text-xs text-gray-300">您確定要刪除這項內容嗎？此操作無法復原。</p>
+            <div class="flex justify-center gap-3 pt-2">
+                <button onclick="closeConfirmModal(false)" class="px-4 py-2 bg-charcoal-900 hover:bg-white/10 text-xs rounded-xl text-gray-300">取消</button>
+                <button id="confirm-modal-action-btn" onclick="executeConfirmAction()" class="px-4 py-2 bg-rose-500 hover:bg-rose-400 text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-500/20">確定刪除</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主題彈窗 Modal -->
+    <div id="theme-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none hidden transition-all duration-200">
+        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 border border-white/20 shadow-2xl relative space-y-4">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 id="theme-modal-title" class="text-sm font-bold text-white">新增主題 (大類別)</h3>
+                <button onclick="closeThemeModal()" class="text-xs text-gray-400 hover:text-white">✕</button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-gray-400 mb-1">主題唯一識別 Key (無法編輯)</label>
+                    <input type="text" id="modal-theme-key" readonly class="w-full bg-charcoal-950 border border-white/10 rounded-xl px-3 py-2 text-peach-400 font-mono focus:outline-none cursor-not-allowed opacity-80" placeholder="01">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">主題名稱 (中文標題)</label>
+                    <input type="text" id="modal-theme-title" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. 自我介紹">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">英文字標 (Tag Badge)</label>
+                    <input type="text" id="modal-theme-tag" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. About Me">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">主題描述文字</label>
+                    <input type="text" id="modal-theme-desc" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. 基本資料、工作履歷與技能專長">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">對應資料夾路徑 (Folder Path，放圖片用)</label>
+                    <input type="text" id="modal-theme-folder" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="assets/angle_0_-30/01/">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2 border-t border-white/10">
+                <button onclick="closeThemeModal()" class="px-4 py-2 bg-charcoal-900 hover:bg-white/10 text-xs rounded-xl text-gray-300">取消</button>
+                <button onclick="saveThemeModal()" class="px-4 py-2 bg-peach-500 hover:bg-peach-400 text-charcoal-950 font-bold text-xs rounded-xl shadow-lg shadow-peach-500/20">儲存主題</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 小類別彈窗 Modal -->
+    <div id="subcategory-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none hidden transition-all duration-200">
+        <div class="glass-panel w-full max-w-md rounded-3xl p-6 border border-white/20 shadow-2xl relative space-y-4">
+            <div class="flex justify-between items-center border-b border-white/10 pb-3">
+                <h3 id="subcategory-modal-title" class="text-sm font-bold text-white">小類別設定</h3>
+                <button onclick="closeSubcategoryModal()" class="text-xs text-gray-400 hover:text-white">✕</button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-gray-400 mb-1">小類別名稱 (例如：基本資料)</label>
+                    <input type="text" id="modal-sub-name" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none" placeholder="e.g. 基本資料">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">子資料夾 Folder 前綴 (例如：A/、B/)</label>
+                    <input type="text" id="modal-sub-folder" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-peach-300 font-mono focus:border-peach-500 focus:outline-none" placeholder="A/ 或留空">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">版面樣式</label>
+                    <select id="modal-sub-style" class="w-full bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white focus:border-peach-500 focus:outline-none">
+                        <option value="cards">卡片 (cards)</option>
+                        <option value="timeline">時間軸 (timeline，適合履歷/學歷)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2 border-t border-white/10">
+                <button onclick="closeSubcategoryModal()" class="px-4 py-2 bg-charcoal-900 hover:bg-white/10 text-xs rounded-xl text-gray-300">取消</button>
+                <button onclick="saveSubcategoryModal()" class="px-4 py-2 bg-peach-500 hover:bg-peach-400 text-charcoal-950 font-bold text-xs rounded-xl shadow-lg shadow-peach-500/20">儲存小類別</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto w-full flex-1 flex flex-col gap-5">
+
+        <!-- Header -->
+        <header class="glass-panel p-4 md:p-5 rounded-3xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-0.5 bg-peach-500/20 text-peach-400 border border-peach-500/30 rounded-md text-[11px] font-bold tracking-wider uppercase">About Me Studio</span>
+                    <h1 class="text-lg md:text-xl font-extrabold text-white">關於我內容管理工具</h1>
+                </div>
+                <p class="text-xs text-gray-400 mt-1">編輯 angle_0_-30 的主題 / 小類別 / 文字內容 | 按住卡片拖曳排序 | 完成後下載 portfolio_data.json 覆蓋同資料夾的檔案</p>
+            </div>
+
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+                <button onclick="fetchLocalPortfolioJson()" class="bg-charcoal-900 hover:bg-white/10 border border-white/10 text-peach-300 font-semibold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+                    📥 載入 portfolio_data.json
+                </button>
+                <button onclick="triggerJsonImport()" class="bg-charcoal-900 hover:bg-white/10 border border-white/10 text-gray-200 font-semibold px-3.5 py-2 rounded-xl text-xs transition flex items-center gap-1.5">
+                    📂 選擇 JSON 檔案
+                </button>
+                <button onclick="downloadJsonData()" class="bg-peach-500 hover:bg-peach-400 active:scale-95 text-charcoal-950 font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-lg shadow-peach-500/20">
+                    📄 下載 portfolio_data.json
+                </button>
+            </div>
+        </header>
+
+        <!-- 主題導航頁籤區 -->
+        <div class="glass-panel p-3 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto flex-1 py-1" id="theme-tabs-container">
+                <!-- 動態注入主題頁籤 -->
+            </div>
+
+            <div class="flex items-center gap-2 flex-shrink-0 flex-wrap w-full md:w-auto justify-end">
+                <button onclick="openThemeModal(false)" class="bg-peach-500/20 hover:bg-peach-500/30 text-peach-300 border border-peach-500/40 text-xs px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1">
+                    ➕ 新增主題
+                </button>
+                <button onclick="openThemeModal(true)" class="bg-charcoal-900 hover:bg-white/10 text-xs px-3 py-1.5 rounded-xl border border-white/10 transition text-gray-300">
+                    ✏️ 編輯主題
+                </button>
+                <button onclick="requestDeleteCurrentTheme()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs px-2.5 py-1.5 rounded-xl transition font-bold">
+                    🗑️ 刪除主題
+                </button>
+            </div>
+        </div>
+
+        <!-- 小類別與內容區 -->
+        <div class="flex flex-col gap-4 flex-1">
+
+            <div class="glass-panel p-3.5 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-peach-400">當前小類別列表 (可拖曳排序)：</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button onclick="openSubcategoryModal(false)" class="bg-peach-500/20 hover:bg-peach-500/30 text-peach-300 border border-peach-500/40 text-xs px-2.5 py-1.5 rounded-xl font-bold transition flex items-center gap-1">
+                            ➕ 新增小類別
+                        </button>
+                        <button onclick="openSubcategoryModal(true)" class="bg-charcoal-900 hover:bg-white/10 text-xs px-2.5 py-1.5 rounded-xl border border-white/10 transition text-gray-300">
+                            ✏️ 編輯小類別
+                        </button>
+                        <button onclick="requestDeleteCurrentSubcategory()" class="bg-rose-500/20 hover:bg-rose-500/30 text-xs px-2.5 py-1.5 rounded-xl border border-rose-500/40 transition text-rose-300 font-bold">
+                            🗑️ 刪除小類別
+                        </button>
+
+                        <div class="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block"></div>
+
+                        <button onclick="addItem()" class="bg-charcoal-900 hover:bg-white/10 text-xs px-3 py-1.5 rounded-xl border border-white/10 transition text-gray-200 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-peach-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            新增內容卡片
+                        </button>
+                    </div>
+                </div>
+
+                <div id="subcategory-tabs-container" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                    <!-- 動態注入小類別頁籤 -->
+                </div>
+            </div>
+
+            <!-- 內容卡片區 -->
+            <div class="glass-panel p-5 rounded-3xl flex-1 flex flex-col min-h-[480px]">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                    <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                        <span>內容排序與編輯區</span>
+                        <span id="item-count-badge" class="text-[10px] bg-peach-500/20 text-peach-400 border border-peach-500/30 px-2 py-0.5 rounded-full font-mono">0 張卡片</span>
+                    </h2>
+                    <span class="text-[11px] text-gray-400">空白欄位不會顯示在網頁上</span>
+                </div>
+
+                <div id="item-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 content-start">
+                    <!-- 動態注入內容卡片 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'PORTFOLIO_DATABASE_angle_0_-30';
+        const ANGLE_FOLDER = 'assets/angle_0_-30/';
+
+        let DATABASE = {};
+        let activeCatKey = "01";
+        let activeSubIdx = 0;
+        let dragSrcIndex = null;
+        let isEditingTheme = false;
+        let isEditingSubcategory = false;
+        let draggedTabKey = null;
+        let draggedSubTabIdx = null;
+        let pendingConfirmCallback = null;
+
+        function escapeHTML(str) {
+            return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        // 工具頁通常直接開在 angle_0_-30 資料夾內：JSON 的 assets/angle_0_-30/... 路徑改成相對路徑才能預覽
+        function previewPath(path) {
+            if (!path) return '';
+            if (/^(https?:|data:|blob:|\/)/.test(path)) return path;
+            const here = decodeURIComponent(location.pathname);
+            if (here.includes('/angle_0_-30/') && path.startsWith(ANGLE_FOLDER)) return path.slice(ANGLE_FOLDER.length);
+            return path;
+        }
+
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(generateCleanJson()));
+            } catch (e) {
+                console.warn('LocalStorage limit or restriction');
+            }
+        }
+
+        async function fetchLocalPortfolioJson() {
+            const pathsToTry = [
+                'portfolio_data.json',
+                'assets/angle_0_-30/portfolio_data.json',
+                './portfolio_data.json'
+            ];
+
+            let loadedData = null;
+            for (const path of pathsToTry) {
+                try {
+                    const res = await fetch(path, { cache: 'no-store' });
+                    if (res.ok) {
+                        loadedData = await res.json();
+                        if (loadedData && typeof loadedData === 'object' && Object.keys(loadedData).length > 0) {
+                            break;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            if (loadedData) {
+                DATABASE = loadedData;
+                normalizeDatabase();
+                saveToLocalStorage();
+                showToast("✅ 已成功讀取 portfolio_data.json！");
+            } else {
+                const localSaved = localStorage.getItem(STORAGE_KEY);
+                if (localSaved) {
+                    try {
+                        DATABASE = JSON.parse(localSaved);
+                        normalizeDatabase();
+                        showToast("✅ 已從本地快取同步最新資料庫！");
+                        return;
+                    } catch (e) {}
+                }
+                showToast("⚠️ 未找到相鄰 JSON，請點擊「選擇 JSON 檔案」匯入");
+            }
+        }
+
+        function triggerJsonImport() {
+            document.getElementById('json-file-input').click();
+        }
+
+        function handleJsonFileImport(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const jsonData = JSON.parse(evt.target.result);
+                    if (jsonData && typeof jsonData === 'object' && Object.keys(jsonData).length > 0) {
+                        DATABASE = jsonData;
+                        normalizeDatabase();
+                        saveToLocalStorage();
+                        showToast("✅ 已成功匯入 JSON 資料！");
+                    } else {
+                        showToast("⚠️ JSON 內容格式不正確");
+                    }
+                } catch (err) {
+                    showToast("⚠️ JSON 解析失敗");
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        }
+
+        // 補齊缺少的陣列，避免舊資料或手改的 JSON 讓畫面壞掉
+        function normalizeDatabase() {
+            Object.keys(DATABASE).forEach(k => {
+                const cat = DATABASE[k];
+                if (!Array.isArray(cat.subcategories)) cat.subcategories = [];
+                cat.subcategories.forEach(sub => {
+                    if (!Array.isArray(sub.items)) sub.items = [];
+                });
+            });
+            const keys = Object.keys(DATABASE);
+            if (keys.length > 0 && !DATABASE[activeCatKey]) activeCatKey = keys[0];
+            activeSubIdx = 0;
+            renderTabs();
+        }
+
+        function renderTabs() {
+            const tabsContainer = document.getElementById('theme-tabs-container');
+            const keys = Object.keys(DATABASE);
+            if (keys.length === 0) {
+                tabsContainer.innerHTML = '<span class="text-xs text-gray-500">尚無主題</span>';
+                renderSubcategoryTabs();
+                return;
+            }
+
+            if (!DATABASE[activeCatKey]) {
+                activeCatKey = keys[0];
+            }
+
+            let html = '';
+            keys.forEach((catKey, idx) => {
+                const cat = DATABASE[catKey];
+                const isActive = catKey === activeCatKey;
+                const displayNum = String(idx + 1).padStart(2, '0');
+                html += `
+                    <div draggable="true"
+                         data-tab-key="${catKey}"
+                         ondragstart="handleTabDragStart(event, '${catKey}')"
+                         ondragover="handleTabDragOver(event)"
+                         ondrop="handleTabDrop(event, '${catKey}')"
+                         ondragend="handleTabDragEnd(event)"
+                         onclick="switchCategory('${catKey}')"
+                         class="px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-grab active:cursor-grabbing flex-shrink-0 flex items-center gap-1.5 border select-none ${isActive ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20' : 'text-gray-300 hover:text-white hover:bg-white/5 border-white/10'}">
+                        <span class="opacity-50 text-[10px]">⋮⋮</span>
+                        <span>${displayNum}. ${escapeHTML(cat.title)}</span>
+                    </div>
+                `;
+            });
+            tabsContainer.innerHTML = html;
+            renderSubcategoryTabs();
+        }
+
+        function handleTabDragStart(e, key) {
+            draggedTabKey = key;
+            e.currentTarget.classList.add('tab-dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleTabDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleTabDrop(e, targetKey) {
+            e.preventDefault();
+            if (!draggedTabKey || draggedTabKey === targetKey) return;
+
+            const keys = Object.keys(DATABASE);
+            const fromIndex = keys.indexOf(draggedTabKey);
+            const toIndex = keys.indexOf(targetKey);
+            if (fromIndex === -1 || toIndex === -1) return;
+
+            const entries = keys.map(k => [k, DATABASE[k]]);
+            const [movedEntry] = entries.splice(fromIndex, 1);
+            entries.splice(toIndex, 0, movedEntry);
+
+            // JSON 物件的數字型 key 會被 JS 自動依數字排序，所以換順序時要重新編號 key
+            const newDatabase = {};
+            let newActiveKey = activeCatKey;
+            entries.forEach(([k, themeObj], idx) => {
+                const newKey = String(idx + 1).padStart(2, '0');
+                newDatabase[newKey] = themeObj;
+                if (k === activeCatKey) newActiveKey = newKey;
+            });
+
+            DATABASE = newDatabase;
+            activeCatKey = newActiveKey;
+            saveToLocalStorage();
+            renderTabs();
+            showToast("已更換主題顯示順序！");
+        }
+
+        function handleTabDragEnd(e) {
+            e.currentTarget.classList.remove('tab-dragging');
+            draggedTabKey = null;
+        }
+
+        function switchCategory(catKey) {
+            activeCatKey = catKey;
+            activeSubIdx = 0;
+            renderTabs();
+        }
+
+        function openThemeModal(editMode = false) {
+            if (editMode && !DATABASE[activeCatKey]) return;
+            isEditingTheme = editMode;
+            const modal = document.getElementById('theme-modal');
+            const modalTitle = document.getElementById('theme-modal-title');
+            const keyInput = document.getElementById('modal-theme-key');
+            const titleInput = document.getElementById('modal-theme-title');
+            const tagInput = document.getElementById('modal-theme-tag');
+            const descInput = document.getElementById('modal-theme-desc');
+            const folderInput = document.getElementById('modal-theme-folder');
+
+            if (editMode) {
+                const cur = DATABASE[activeCatKey];
+                modalTitle.innerText = `編輯主題：${cur.title}`;
+                keyInput.value = activeCatKey;
+                titleInput.value = cur.title || '';
+                tagInput.value = cur.tag || '';
+                descInput.value = cur.desc || '';
+                folderInput.value = cur.folder || `${ANGLE_FOLDER}${activeCatKey}/`;
+            } else {
+                const used = Object.keys(DATABASE).map(k => parseInt(k, 10) || 0);
+                const nextNum = String((used.length ? Math.max(...used) : 0) + 1).padStart(2, '0');
+                modalTitle.innerText = "新增主題";
+                keyInput.value = nextNum;
+                titleInput.value = '';
+                tagInput.value = '';
+                descInput.value = '';
+                folderInput.value = `${ANGLE_FOLDER}${nextNum}/`;
+            }
+
+            modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        }
+
+        function closeThemeModal() {
+            document.getElementById('theme-modal').classList.add('hidden', 'opacity-0', 'pointer-events-none');
+        }
+
+        function saveThemeModal() {
+            const key = document.getElementById('modal-theme-key').value.trim();
+            const title = document.getElementById('modal-theme-title').value.trim();
+            const tag = document.getElementById('modal-theme-tag').value.trim();
+            const desc = document.getElementById('modal-theme-desc').value.trim();
+            const folder = document.getElementById('modal-theme-folder').value.trim();
+
+            if (!title) {
+                showToast("⚠️ 請填寫主題名稱！");
+                return;
+            }
+
+            if (isEditingTheme) {
+                const cur = DATABASE[activeCatKey];
+                cur.title = title;
+                cur.tag = tag;
+                cur.desc = desc;
+                cur.folder = folder;
+            } else {
+                DATABASE[key] = {
+                    title: title,
+                    tag: tag || 'About Me',
+                    desc: desc,
+                    folder: folder || `${ANGLE_FOLDER}${key}/`,
+                    subcategories: [
+                        { name: "預設小類別", folder: "A/", style: "cards", items: [] }
+                    ]
+                };
+                activeCatKey = key;
+                activeSubIdx = 0;
+            }
+
+            closeThemeModal();
+            saveToLocalStorage();
+            renderTabs();
+            showToast("已儲存主題資訊！");
+        }
+
+        function requestDeleteCurrentTheme() {
+            const keys = Object.keys(DATABASE);
+            if (keys.length <= 1) {
+                showToast("⚠️ 最少需保留一個主題！");
+                return;
+            }
+
+            const curTitle = DATABASE[activeCatKey] ? DATABASE[activeCatKey].title : activeCatKey;
+            openConfirmModal("刪除主題", `確定要刪除主題「${curTitle}」嗎？`, function() {
+                delete DATABASE[activeCatKey];
+                activeCatKey = Object.keys(DATABASE)[0];
+                activeSubIdx = 0;
+                saveToLocalStorage();
+                renderTabs();
+                showToast("已成功刪除主題！");
+            });
+        }
+
+        function currentSubcats() {
+            return DATABASE[activeCatKey] ? DATABASE[activeCatKey].subcategories : null;
+        }
+
+        function renderSubcategoryTabs() {
+            const subContainer = document.getElementById('subcategory-tabs-container');
+            const subcats = currentSubcats();
+            if (!subcats || subcats.length === 0) {
+                subContainer.innerHTML = '<span class="text-xs text-gray-500">尚無小類別</span>';
+                renderItemGrid();
+                return;
+            }
+
+            if (activeSubIdx >= subcats.length) {
+                activeSubIdx = Math.max(0, subcats.length - 1);
+            }
+
+            let html = '';
+            subcats.forEach((sub, idx) => {
+                const isActive = idx === activeSubIdx;
+                const styleLabel = sub.style === 'timeline' ? '時間軸' : '卡片';
+                html += `
+                    <div draggable="true"
+                         data-sub-idx="${idx}"
+                         ondragstart="handleSubTabDragStart(event, ${idx})"
+                         ondragover="handleSubTabDragOver(event)"
+                         ondrop="handleSubTabDrop(event, ${idx})"
+                         ondragend="handleSubTabDragEnd(event)"
+                         onclick="switchSubcategory(${idx})"
+                         class="px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-grab active:cursor-grabbing flex-shrink-0 flex items-center gap-1.5 border select-none ${isActive ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20' : 'text-gray-300 hover:text-white hover:bg-white/5 border-white/10'}">
+                        <span class="opacity-50 text-[10px]">⋮⋮</span>
+                        <span class="font-mono ${isActive ? 'text-charcoal-950 font-extrabold' : 'text-peach-300'}">${escapeHTML(sub.folder || '')}</span>
+                        <span>${escapeHTML(sub.name)}</span>
+                        <span class="text-[10px] opacity-60">(${styleLabel} · ${sub.items ? sub.items.length : 0})</span>
+                    </div>
+                `;
+            });
+
+            subContainer.innerHTML = html;
+            renderItemGrid();
+        }
+
+        function handleSubTabDragStart(e, subIdx) {
+            draggedSubTabIdx = subIdx;
+            e.currentTarget.classList.add('sub-tab-dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleSubTabDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleSubTabDrop(e, targetSubIdx) {
+            e.preventDefault();
+            if (draggedSubTabIdx === null || draggedSubTabIdx === targetSubIdx) return;
+
+            const subcats = currentSubcats();
+            const [movedSubcat] = subcats.splice(draggedSubTabIdx, 1);
+            subcats.splice(targetSubIdx, 0, movedSubcat);
+
+            if (activeSubIdx === draggedSubTabIdx) {
+                activeSubIdx = targetSubIdx;
+            } else if (activeSubIdx > draggedSubTabIdx && activeSubIdx <= targetSubIdx) {
+                activeSubIdx--;
+            } else if (activeSubIdx < draggedSubTabIdx && activeSubIdx >= targetSubIdx) {
+                activeSubIdx++;
+            }
+
+            saveToLocalStorage();
+            renderSubcategoryTabs();
+            showToast("已更換小類別顯示順序！");
+        }
+
+        function handleSubTabDragEnd(e) {
+            e.currentTarget.classList.remove('sub-tab-dragging');
+            draggedSubTabIdx = null;
+        }
+
+        function switchSubcategory(subIdx) {
+            activeSubIdx = parseInt(subIdx, 10);
+            renderSubcategoryTabs();
+        }
+
+        function openSubcategoryModal(editMode = false) {
+            const subcats = currentSubcats();
+            if (!subcats) return;
+            isEditingSubcategory = editMode && !!subcats[activeSubIdx];
+
+            const nameInput = document.getElementById('modal-sub-name');
+            const folderInput = document.getElementById('modal-sub-folder');
+            const styleInput = document.getElementById('modal-sub-style');
+
+            if (isEditingSubcategory) {
+                const cur = subcats[activeSubIdx];
+                nameInput.value = cur.name || '';
+                folderInput.value = cur.folder || '';
+                styleInput.value = cur.style === 'timeline' ? 'timeline' : 'cards';
+            } else {
+                nameInput.value = '';
+                folderInput.value = String.fromCharCode(65 + subcats.length) + '/';
+                styleInput.value = 'cards';
+            }
+
+            document.getElementById('subcategory-modal').classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        }
+
+        function closeSubcategoryModal() {
+            document.getElementById('subcategory-modal').classList.add('hidden', 'opacity-0', 'pointer-events-none');
+        }
+
+        function saveSubcategoryModal() {
+            const name = document.getElementById('modal-sub-name').value.trim();
+            let folder = document.getElementById('modal-sub-folder').value.trim();
+            const style = document.getElementById('modal-sub-style').value;
+
+            if (!name) {
+                showToast("⚠️ 請填寫小類別名稱！");
+                return;
+            }
+
+            if (folder && !folder.endsWith('/')) {
+                folder += '/';
+            }
+
+            const subcats = currentSubcats();
+            if (isEditingSubcategory && subcats[activeSubIdx]) {
+                subcats[activeSubIdx].name = name;
+                subcats[activeSubIdx].folder = folder;
+                subcats[activeSubIdx].style = style;
+            } else {
+                subcats.push({ name: name, folder: folder, style: style, items: [] });
+                activeSubIdx = subcats.length - 1;
+            }
+
+            closeSubcategoryModal();
+            saveToLocalStorage();
+            renderSubcategoryTabs();
+            showToast("已成功儲存小類別！");
+        }
+
+        function requestDeleteCurrentSubcategory() {
+            const subcats = currentSubcats();
+            if (!subcats || subcats.length <= 1) {
+                showToast("⚠️ 最少需保留一個小類別！");
+                return;
+            }
+
+            const curSubName = subcats[activeSubIdx] ? subcats[activeSubIdx].name : '';
+            openConfirmModal("刪除小類別", `確定要刪除小類別「${curSubName}」嗎？`, function() {
+                subcats.splice(activeSubIdx, 1);
+                activeSubIdx = 0;
+                saveToLocalStorage();
+                renderSubcategoryTabs();
+                showToast("已成功刪除小類別！");
+            });
+        }
+
+        function currentItems() {
+            const subcats = currentSubcats();
+            return subcats && subcats[activeSubIdx] ? subcats[activeSubIdx].items : null;
+        }
+
+        function renderItemGrid() {
+            const gridEl = document.getElementById('item-grid');
+            const badgeEl = document.getElementById('item-count-badge');
+            const items = currentItems();
+
+            if (!items) {
+                badgeEl.innerText = '0 張卡片';
+                gridEl.innerHTML = `<div class="col-span-full py-12 text-center text-gray-500 text-xs">請選擇或新增主題與小類別</div>`;
+                return;
+            }
+
+            badgeEl.innerText = `${items.length} 張卡片`;
+
+            if (items.length === 0) {
+                gridEl.innerHTML = `
+                    <div class="col-span-full py-16 text-center text-gray-500 text-xs flex flex-col items-center gap-2">
+                        <span>此小類別尚無內容</span>
+                        <button onclick="addItem()" class="bg-peach-500/20 text-peach-300 border border-peach-500/30 px-3.5 py-2 rounded-xl hover:bg-peach-500/30 font-bold transition">
+                            點此新增內容卡片
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            gridEl.innerHTML = items.map((item, idx) => {
+                const fields = Array.isArray(item.fields) ? item.fields : [];
+                const img = previewPath(item.image);
+                return `
+                    <div class="item-card group relative bg-charcoal-900 border border-white/10 rounded-2xl shadow-lg p-3 flex flex-col gap-2 transition-all duration-200 hover:border-peach-500/60"
+                         draggable="false"
+                         data-index="${idx}"
+                         ondragstart="handleDragStart(event, ${idx})"
+                         ondragover="handleDragOver(event)"
+                         ondrop="handleDrop(event, ${idx})"
+                         ondragend="handleDragEnd(event)">
+
+                        <!-- 只有按住這一列才能拖曳，避免在輸入框選字時拖動卡片 -->
+                        <div class="flex justify-between items-center px-1 cursor-grab active:cursor-grabbing"
+                             onmousedown="this.closest('.item-card').draggable = true"
+                             onmouseup="this.closest('.item-card').draggable = false">
+                            <span class="font-mono text-[10px] text-peach-400 font-bold">⋮⋮ #${idx + 1}</span>
+                            <button onclick="removeItem(${idx})" title="刪除卡片" class="p-1 hover:bg-rose-500/20 rounded text-rose-400 transition text-[10px]">✕</button>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="field-label">標題 (title)</label>
+                                <input type="text" class="field-input" value="${escapeHTML(item.title)}" onchange="updateItemField(${idx}, 'title', this.value)">
+                            </div>
+                            <div>
+                                <label class="field-label">小標 / 期間 (meta)</label>
+                                <input type="text" class="field-input" value="${escapeHTML(item.meta)}" onchange="updateItemField(${idx}, 'meta', this.value)">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="field-label">內文 (text，可換行)</label>
+                                <textarea rows="3" class="field-input resize-y" onchange="updateItemField(${idx}, 'text', this.value)">${escapeHTML(item.text)}</textarea>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="field-label">條列重點 (points，一行一點)</label>
+                                <textarea rows="2" class="field-input resize-y" onchange="updateItemLines(${idx}, 'points', this.value)">${escapeHTML((item.points || []).join('\n'))}</textarea>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="field-label">標籤 (tags，用逗號分隔)</label>
+                                <input type="text" class="field-input" value="${escapeHTML((item.tags || []).join(', '))}" onchange="updateItemTags(${idx}, this.value)">
+                            </div>
+
+                            <div class="col-span-2">
+                                <div class="flex items-center justify-between">
+                                    <label class="field-label">資料欄位 (fields，例如：所在地 / 台北)</label>
+                                    <button onclick="addItemFieldRow(${idx})" class="text-[10px] text-peach-300 hover:text-peach-400 font-bold">＋ 新增欄位</button>
+                                </div>
+                                <div class="space-y-1.5">
+                                    ${fields.map((f, fi) => `
+                                        <div class="flex gap-1.5 items-center">
+                                            <input type="text" class="field-input !w-1/3" placeholder="名稱" value="${escapeHTML(f.label)}" onchange="updateItemFieldRow(${idx}, ${fi}, 'label', this.value)">
+                                            <input type="text" class="field-input flex-1" placeholder="內容" value="${escapeHTML(f.value)}" onchange="updateItemFieldRow(${idx}, ${fi}, 'value', this.value)">
+                                            <button onclick="removeItemFieldRow(${idx}, ${fi})" class="p-1 hover:bg-rose-500/20 rounded text-rose-400 text-[10px] flex-shrink-0">✕</button>
+                                        </div>
+                                    `).join('') || '<div class="text-[10px] text-gray-600">（無）</div>'}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="field-label">連結文字 (link.label)</label>
+                                <input type="text" class="field-input" value="${escapeHTML(item.link ? item.link.label : '')}" onchange="updateItemLink(${idx}, 'label', this.value)">
+                            </div>
+                            <div>
+                                <label class="field-label">連結網址 (link.url，https://)</label>
+                                <input type="text" class="field-input font-mono" value="${escapeHTML(item.link ? item.link.url : '')}" onchange="updateItemLink(${idx}, 'url', this.value)">
+                            </div>
+
+                            <div class="col-span-2 flex gap-2 items-end">
+                                <div class="flex-1">
+                                    <label class="field-label text-peach-400">圖片路徑 (image，選填)</label>
+                                    <input type="text" class="field-input font-mono text-peach-300" placeholder="${escapeHTML(DATABASE[activeCatKey].folder || ANGLE_FOLDER)}${escapeHTML(DATABASE[activeCatKey].subcategories[activeSubIdx].folder || '')}photo.webp" value="${escapeHTML(item.image)}" onchange="updateItemField(${idx}, 'image', this.value, true)">
+                                </div>
+                                ${img ? `<img src="${escapeHTML(img)}" alt="" class="w-12 h-12 object-contain rounded-lg border border-white/10 bg-black/40 flex-shrink-0" onerror="this.style.opacity=0.2">` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleDragStart(e, idx) {
+            dragSrcIndex = idx;
+            e.currentTarget.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDrop(e, targetIdx) {
+            e.preventDefault();
+            if (dragSrcIndex === null || dragSrcIndex === targetIdx) return;
+
+            const items = currentItems();
+            const movedItem = items.splice(dragSrcIndex, 1)[0];
+            items.splice(targetIdx, 0, movedItem);
+
+            saveToLocalStorage();
+            renderItemGrid();
+            showToast("已更換卡片順序！");
+        }
+
+        function handleDragEnd(e) {
+            e.currentTarget.classList.remove('dragging');
+            e.currentTarget.draggable = false;
+            dragSrcIndex = null;
+        }
+
+        function addItem() {
+            const items = currentItems();
+            if (!items) {
+                showToast("⚠️ 請先新增小類別！");
+                return;
+            }
+            items.push({ title: '新內容', meta: '', text: '' });
+            saveToLocalStorage();
+            renderSubcategoryTabs();
+            showToast("已新增內容卡片！");
+        }
+
+        function removeItem(idx) {
+            const items = currentItems();
+            const name = items[idx] && items[idx].title ? items[idx].title : `#${idx + 1}`;
+            openConfirmModal("刪除卡片", `確定要刪除「${name}」嗎？`, function() {
+                items.splice(idx, 1);
+                saveToLocalStorage();
+                renderSubcategoryTabs();
+                showToast("已刪除卡片！");
+            });
+        }
+
+        function updateItemField(idx, key, val, rerender) {
+            currentItems()[idx][key] = val;
+            saveToLocalStorage();
+            if (rerender) renderItemGrid();
+        }
+
+        function updateItemLines(idx, key, val) {
+            currentItems()[idx][key] = val.split('\n').map(s => s.trim()).filter(Boolean);
+            saveToLocalStorage();
+        }
+
+        function updateItemTags(idx, val) {
+            currentItems()[idx].tags = val.split(/[,，、]/).map(s => s.trim()).filter(Boolean);
+            saveToLocalStorage();
+        }
+
+        function updateItemLink(idx, key, val) {
+            const item = currentItems()[idx];
+            item.link = item.link || { label: '', url: '' };
+            item.link[key] = val.trim();
+            saveToLocalStorage();
+        }
+
+        function addItemFieldRow(idx) {
+            const item = currentItems()[idx];
+            item.fields = Array.isArray(item.fields) ? item.fields : [];
+            item.fields.push({ label: '', value: '' });
+            saveToLocalStorage();
+            renderItemGrid();
+        }
+
+        function updateItemFieldRow(idx, fi, key, val) {
+            currentItems()[idx].fields[fi][key] = val;
+            saveToLocalStorage();
+        }
+
+        function removeItemFieldRow(idx, fi) {
+            currentItems()[idx].fields.splice(fi, 1);
+            saveToLocalStorage();
+            renderItemGrid();
+        }
+
+        // 輸出前清掉空白欄位，讓 JSON 保持精簡
+        function generateCleanJson() {
+            const cleanDB = JSON.parse(JSON.stringify(DATABASE));
+            Object.keys(cleanDB).forEach(cKey => {
+                (cleanDB[cKey].subcategories || []).forEach(sub => {
+                    (sub.items || []).forEach(item => {
+                        ['title', 'meta', 'text'].forEach(k => {
+                            if (k in item && !String(item[k] || '').trim()) delete item[k];
+                        });
+                        if (Array.isArray(item.points) && item.points.length === 0) delete item.points;
+                        if (Array.isArray(item.tags) && item.tags.length === 0) delete item.tags;
+                        if (Array.isArray(item.fields)) {
+                            item.fields = item.fields.filter(f => String(f.label || '').trim() || String(f.value || '').trim());
+                            if (item.fields.length === 0) delete item.fields;
+                        }
+                        if (item.link && !item.link.label && !item.link.url) delete item.link;
+                    });
+                });
+            });
+            return cleanDB;
+        }
+
+        function downloadJsonData() {
+            const jsonStr = JSON.stringify(generateCleanJson(), null, 4);
+            const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'portfolio_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("📄 已成功下載 portfolio_data.json！");
+        }
+
+        function openConfirmModal(title, msg, onConfirm) {
+            document.getElementById('confirm-modal-title').innerText = title;
+            document.getElementById('confirm-modal-msg').innerText = msg;
+            pendingConfirmCallback = onConfirm;
+            document.getElementById('confirm-modal').classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden', 'opacity-0', 'pointer-events-none');
+            pendingConfirmCallback = null;
+        }
+
+        function executeConfirmAction() {
+            if (typeof pendingConfirmCallback === 'function') {
+                pendingConfirmCallback();
+            }
+            closeConfirmModal();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.innerText = msg;
+            toast.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
+            }, 2500);
+        }
+
+        window.onload = function() {
+            fetchLocalPortfolioJson().finally(() => renderTabs());
+        };
+    </script>
+</body>
+</html>

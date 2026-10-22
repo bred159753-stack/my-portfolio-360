@@ -220,6 +220,29 @@
             const aspectRatioCache = {};
             const imageStore = (window.__portfolioImages = window.__portfolioImages || { promises: new Map(), resolved: {} });
 
+            // 網頁顯示改用 tools/build_web_images.py 產生的壓縮圖（web），原圖路徑留在 original
+            // JSON 有 width/height 時直接記下長寬比，不必等圖片下載完才能排版
+            function withWebSrc(item) {
+                if (!item) return item;
+                const out = item.web ? { ...item, src: item.web, original: item.src } : item;
+                if (item.width && item.height && !aspectRatioCache[out.src]) {
+                    aspectRatioCache[out.src] = item.width / item.height;
+                }
+                return out;
+            }
+
+            // 已知長寬比時先固定尺寸並以縮圖墊底，大圖還沒載完也不會是空白
+            function placeholderStyle(item, maxW, maxH) {
+                const r = aspectRatioCache[item.src];
+                if (!r) return '';
+                const w = Math.max(1, Math.round(Math.min(maxW, maxH * r)));
+                const h = Math.max(1, Math.round(w / r));
+                const bg = item.thumbSrc && !isItemReady(item.src)
+                    ? ` background:url('${item.thumbSrc}') center/cover no-repeat;`
+                    : '';
+                return ` width:${w}px; height:${h}px;${bg}`;
+            }
+
             function deriveThumbSrc(catKey, item) {
                 if (item.thumb) return item.thumb;
                 if (item.thumbSrc) return item.thumbSrc;
@@ -298,7 +321,7 @@
                 if (cat && Array.isArray(cat.subcategories)) {
                     cat.subcategories.forEach((s) => (s.items || []).forEach((it) => {
                         list.push({
-                            ...it,
+                            ...withWebSrc(it),
                             thumbSrc: deriveThumbSrc(catKey, it)
                         });
                     }));
@@ -425,7 +448,7 @@
                             subCat.items.forEach((item) => {
                                 const thumbUrl = deriveThumbSrc(catKey, item);
                                 flatImageList.push({
-                                    ...item,
+                                    ...withWebSrc(item),
                                     thumbSrc: thumbUrl,
                                     subCatName: subCat.name,
                                     globalIndex: globalIndex
@@ -439,14 +462,16 @@
                 activeGlobalImageIndex = 0;
 
                 const myToken = ++loadToken;
-                const allReady = flatImageList.length > 0 && flatImageList.every(it => isItemReady(it.src));
+                // 只等畫面上第一批看得到的圖，其餘在顯示後於背景載入
+                const firstBatch = flatImageList.slice(0, 3);
+                const allReady = firstBatch.length > 0 && firstBatch.every(it => isItemReady(it.src));
 
                 const finishAndRender = () => {
                     setLoaderVisible(false);
                     renderLightboxImage(false);
                     renderThumbStrip();
                     if (showToast) triggerSubcategoryToast(`主題：${categoryData.title}`);
-                    preloadOtherThemesQuietly();
+                    preloadItems(flatImageList.slice(firstBatch.length), null, 2, 60000).then(preloadOtherThemesQuietly);
                 };
 
                 if (allReady || flatImageList.length === 0) {
@@ -461,12 +486,12 @@
                 renderSubcategoryTags();
                 const counterEl = document.getElementById('angle00-lightbox-counter');
                 if (counterEl) counterEl.innerText = `0 / ${flatImageList.length}`;
-                setLoaderVisible(true, `載入中 0 / ${flatImageList.length}`);
+                setLoaderVisible(true, `載入中 0 / ${firstBatch.length}`);
 
-                preloadItems(flatImageList, (done, total) => {
+                preloadItems(firstBatch, (done, total) => {
                     if (myToken !== loadToken) return;
                     setLoaderVisible(true, `載入中 ${done} / ${total}`);
-                }).then(() => {
+                }, 3, 8000).then(() => {
                     if (myToken !== loadToken) return;
                     finishAndRender();
                 });
@@ -657,7 +682,8 @@
                                 <img src="${item.src}" 
                                      draggable="false"
                                      decoding="async"
-                                     style="max-height:${pcImgMaxH}px; max-width:${pcImgMaxW}px;" class="w-auto h-auto object-contain rounded-2xl shadow-2xl border border-white/20 transition-all duration-300 pointer-events-none select-none"
+                                     onload="this.style.background=''"
+                                     style="max-height:${pcImgMaxH}px; max-width:${pcImgMaxW}px;${placeholderStyle(item, pcImgMaxW, pcImgMaxH)}" class="w-auto h-auto object-contain rounded-2xl shadow-2xl border border-white/20 transition-all duration-300 pointer-events-none select-none"
                                      onerror="this.onerror=null; this.src='${item.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';">
 
                                 <div class="mt-3 px-3.5 py-1 rounded-full glass-panel border border-white/10 text-center max-w-[360px] shadow-lg truncate">
@@ -690,7 +716,8 @@
                                  src="${currentItem.src}" 
                                  draggable="false"
                                  decoding="async"
-                                 style="max-height:${mobImgMaxH}px; max-width:100%;" class="w-auto h-auto object-contain rounded-xl shadow-2xl transition-transform duration-200 select-none border border-white/20"
+                                 onload="this.style.background=''"
+                                 style="max-height:${mobImgMaxH}px; max-width:100%;${placeholderStyle(currentItem, stageW, mobImgMaxH)}" class="w-auto h-auto object-contain rounded-xl shadow-2xl transition-transform duration-200 select-none border border-white/20"
                                  onerror="this.onerror=null; this.src='${currentItem.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';"
                                  alt="Full Artwork Detail">
 

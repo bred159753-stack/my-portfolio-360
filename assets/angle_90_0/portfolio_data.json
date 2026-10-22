@@ -48,91 +48,130 @@
                             "thumb": "assets/angle_90_0/01/pre/CG (10).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (10)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (10).webp",
+                            "width": 1920,
+                            "height": 868
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (4).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (4).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (4)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (4).webp",
+                            "width": 1920,
+                            "height": 1029
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (9).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (9).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (9)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (9).webp",
+                            "width": 1920,
+                            "height": 918
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (5).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (5).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (5)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (5).webp",
+                            "width": 1920,
+                            "height": 830
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (6).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (6).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (6)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (6).webp",
+                            "width": 1920,
+                            "height": 868
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (7).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (7).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (7)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (7).webp",
+                            "width": 1920,
+                            "height": 803
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (8).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (8).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (8)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (8).webp",
+                            "width": 1920,
+                            "height": 868
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (11).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (11).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (11)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (11).webp",
+                            "width": 1080,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (15).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (15).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (15)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (15).webp",
+                            "width": 1920,
+                            "height": 960
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (16).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (16).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (16)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (16).webp",
+                            "width": 1920,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (12).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (12).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (12)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (12).webp",
+                            "width": 1920,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (13).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (13).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (13)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (13).webp",
+                            "width": 1920,
+                            "height": 960
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (14).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (14).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (14)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (14).webp",
+                            "width": 1920,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (1).png",
@@ -144,21 +183,30 @@
                                     "theme": "01",
                                     "sub": "s1"
                                 }
-                            ]
+                            ],
+                            "web": "assets/angle_90_0/01/A/web/CG (1).webp",
+                            "width": 1920,
+                            "height": 768
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (2).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (2).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (2)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (2).webp",
+                            "width": 1920,
+                            "height": 768
                         },
                         {
                             "src": "assets/angle_90_0/01/A/CG (3).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (3).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (3)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/A/web/CG (3).webp",
+                            "width": 648,
+                            "height": 1080
                         }
                     ]
                 },
@@ -171,49 +219,70 @@
                             "thumb": "assets/angle_90_0/01/pre/CG (18).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (18)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/B/web/CG (18).webp",
+                            "width": 1662,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/01/B/CG (19).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (19).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (19)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/B/web/CG (19).webp",
+                            "width": 1800,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/01/B/CG (20).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (20).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (20)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/B/web/CG (20).webp",
+                            "width": 1920,
+                            "height": 864
                         },
                         {
                             "src": "assets/angle_90_0/01/B/CG (21).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (21).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (21)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/B/web/CG (21).webp",
+                            "width": 1440,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/01/B/CG (22).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (22).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (22)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/B/web/CG (22).webp",
+                            "width": 1920,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/01/B/CG (23).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (23).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (23)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/B/web/CG (23).webp",
+                            "width": 1920,
+                            "height": 512
                         },
                         {
                             "src": "assets/angle_90_0/01/B/CG (24).png",
                             "thumb": "assets/angle_90_0/01/pre/CG (24).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CG (24)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/01/B/web/CG (24).webp",
+                            "width": 600,
+                            "height": 1080
                         }
                     ]
                 }
@@ -251,63 +320,90 @@
                             "thumb": "assets/angle_90_0/02/pre/LC (1).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "LC (1)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/02/A/web/LC (1).webp",
+                            "width": 1400,
+                            "height": 2100
                         },
                         {
                             "src": "assets/angle_90_0/02/A/LC (2).png",
                             "thumb": "assets/angle_90_0/02/pre/LC (2).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "LC (2)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/02/A/web/LC (2).webp",
+                            "width": 2560,
+                            "height": 1367
                         },
                         {
                             "src": "assets/angle_90_0/02/A/LC (3).png",
                             "thumb": "assets/angle_90_0/02/pre/LC (3).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "LC (3)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/02/A/web/LC (3).webp",
+                            "width": 1664,
+                            "height": 2100
                         },
                         {
                             "src": "assets/angle_90_0/02/A/LC (4).png",
                             "thumb": "assets/angle_90_0/02/pre/LC (4).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "LC (4)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/02/A/web/LC (4).webp",
+                            "width": 1476,
+                            "height": 2100
                         },
                         {
                             "src": "assets/angle_90_0/02/A/LC (5).png",
                             "thumb": "assets/angle_90_0/02/pre/LC (5).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "LC (5)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/02/A/web/LC (5).webp",
+                            "width": 1773,
+                            "height": 2100
                         },
                         {
                             "src": "assets/angle_90_0/02/A/LC (6).png",
                             "thumb": "assets/angle_90_0/02/pre/LC (6).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "LC (6)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/02/A/web/LC (6).webp",
+                            "width": 1470,
+                            "height": 2100
                         },
                         {
                             "src": "assets/angle_90_0/02/A/LC (7).png",
                             "thumb": "assets/angle_90_0/02/pre/LC (7).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "LC (7)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/02/A/web/LC (7).webp",
+                            "width": 1501,
+                            "height": 2100
                         },
                         {
                             "src": "assets/angle_90_0/02/A/LC (8).png",
                             "thumb": "assets/angle_90_0/02/pre/LC (8).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "LC (8)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/02/A/web/LC (8).webp",
+                            "width": 1575,
+                            "height": 2100
                         },
                         {
                             "src": "assets/angle_90_0/02/A/LC (9).png",
                             "thumb": "assets/angle_90_0/02/pre/LC (9).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "LC (9)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/02/A/web/LC (9).webp",
+                            "width": 1473,
+                            "height": 2100
                         }
                     ]
                 }
@@ -366,98 +462,140 @@
                             "thumb": "assets/angle_90_0/03/pre/WY (4).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY (4)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY (4).webp",
+                            "width": 1920,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY (1).png",
                             "thumb": "assets/angle_90_0/03/pre/WY (1).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY (1)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY (1).webp",
+                            "width": 1080,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY (2).png",
                             "thumb": "assets/angle_90_0/03/pre/WY (2).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY (2)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY (2).webp",
+                            "width": 1920,
+                            "height": 345
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY (3).png",
                             "thumb": "assets/angle_90_0/03/pre/WY (3).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY (3)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY (3).webp",
+                            "width": 1920,
+                            "height": 291
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY (5).png",
                             "thumb": "assets/angle_90_0/03/pre/WY (5).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY (5)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY (5).webp",
+                            "width": 540,
+                            "height": 302
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY (6).jpg",
                             "thumb": "assets/angle_90_0/03/pre/WY (6).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY (6)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY (6).webp",
+                            "width": 2560,
+                            "height": 2160
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY (7).jpg",
                             "thumb": "assets/angle_90_0/03/pre/WY (7).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY (7)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY (7).webp",
+                            "width": 1280,
+                            "height": 720
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY_2 (1).png",
                             "thumb": "assets/angle_90_0/03/pre/WY_2 (1).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY_2 (1)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY_2 (1).webp",
+                            "width": 1080,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY_2 (7).png",
                             "thumb": "assets/angle_90_0/03/pre/WY_2 (7).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY_2 (7)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY_2 (7).webp",
+                            "width": 1920,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY_2 (5).png",
                             "thumb": "assets/angle_90_0/03/pre/WY_2 (5).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY_2 (5)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY_2 (5).webp",
+                            "width": 1136,
+                            "height": 687
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY_2 (4).png",
                             "thumb": "assets/angle_90_0/03/pre/WY_2 (4).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY_2 (4)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY_2 (4).webp",
+                            "width": 1584,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY_2 (6).png",
                             "thumb": "assets/angle_90_0/03/pre/WY_2 (6).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY_2 (6)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY_2 (6).webp",
+                            "width": 1920,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY_2 (3).png",
                             "thumb": "assets/angle_90_0/03/pre/WY_2 (3).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY_2 (3)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY_2 (3).webp",
+                            "width": 1920,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/03/A/WY_2 (2).png",
                             "thumb": "assets/angle_90_0/03/pre/WY_2 (2).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "WY_2 (2)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY_2 (2).webp",
+                            "width": 1920,
+                            "height": 768
                         }
                     ]
                 },
@@ -524,84 +662,120 @@
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (11).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (11)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (11).webp",
+                            "width": 394,
+                            "height": 526
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (2).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (2).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (2)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (2).webp",
+                            "width": 845,
+                            "height": 397
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (10).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (10).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (10)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (10).webp",
+                            "width": 548,
+                            "height": 614
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (1).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (1).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (1)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (1).webp",
+                            "width": 735,
+                            "height": 650
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (4).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (4).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (4)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (4).webp",
+                            "width": 1346,
+                            "height": 734
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (5).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (5).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (5)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (5).webp",
+                            "width": 1947,
+                            "height": 264
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (6).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (6).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (6)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (6).webp",
+                            "width": 506,
+                            "height": 203
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (7).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (7).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (7)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (7).webp",
+                            "width": 506,
+                            "height": 203
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (8).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (8).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (8)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (8).webp",
+                            "width": 506,
+                            "height": 203
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (9).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (9).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (9)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (9).webp",
+                            "width": 506,
+                            "height": 203
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (12).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (12).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (12)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (12).webp",
+                            "width": 517,
+                            "height": 215
                         },
                         {
                             "src": "assets/angle_90_0/03/C/Side-scroller (13).png",
                             "thumb": "assets/angle_90_0/03/pre/Side-scroller (13).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "Side-scroller (13)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/03/C/web/Side-scroller (13).webp",
+                            "width": 679,
+                            "height": 215
                         }
                     ]
                 }
@@ -677,84 +851,120 @@
                             "thumb": "assets/angle_90_0/04/pre/CQ (1).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (1)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQ (1).webp",
+                            "width": 1920,
+                            "height": 1057
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQ (2).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (2).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (2)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQ (2).webp",
+                            "width": 1218,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQ (3).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (3).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (3)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQ (3).webp",
+                            "width": 1446,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQ (4).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (4).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (4)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQ (4).webp",
+                            "width": 1641,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQ (5).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (5).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (5)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQ (5).webp",
+                            "width": 1390,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQII (5).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (5).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (5)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQII (5).webp",
+                            "width": 1612,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQII (11).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (11).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (11)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQII (11).webp",
+                            "width": 1674,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQII (12).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (12).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (12)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQII (12).webp",
+                            "width": 1674,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQII (9).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (9).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (9)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQII (9).webp",
+                            "width": 570,
+                            "height": 1019
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQ (6).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (6).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (6)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQ (6).webp",
+                            "width": 771,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQ (7).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (7).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (7)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQ (7).webp",
+                            "width": 1920,
+                            "height": 993
                         },
                         {
                             "src": "assets/angle_90_0/04/A/CQ (15).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (15).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (15)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/A/web/CQ (15).webp",
+                            "width": 611,
+                            "height": 1080
                         }
                     ]
                 },
@@ -767,126 +977,180 @@
                             "thumb": "assets/angle_90_0/04/pre/CQ (8).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (8)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQ (8).webp",
+                            "width": 586,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQ (9).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (9).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (9)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQ (9).webp",
+                            "width": 586,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQ (23).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (23).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (23)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQ (23).webp",
+                            "width": 424,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQ (24).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (24).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (24)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQ (24).webp",
+                            "width": 533,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQ (25).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (25).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (25)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQ (25).webp",
+                            "width": 573,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQ (26).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (26).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (26)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQ (26).webp",
+                            "width": 1197,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQ (27).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (27).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (27)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQ (27).webp",
+                            "width": 1191,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (13).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (13).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (13)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (13).webp",
+                            "width": 312,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (1).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (1).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (1)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (1).webp",
+                            "width": 912,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (14).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (14).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (14)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (14).webp",
+                            "width": 439,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (15).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (15).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (15)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (15).webp",
+                            "width": 439,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (16).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (16).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (16)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (16).webp",
+                            "width": 387,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (10).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (10).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (10)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (10).webp",
+                            "width": 816,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (17).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (17).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (17)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (17).webp",
+                            "width": 704,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (18).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (18).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (18)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (18).webp",
+                            "width": 1174,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (19).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (19).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (19)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (19).webp",
+                            "width": 1276,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (7).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (7).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (7)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (7).webp",
+                            "width": 1920,
+                            "height": 1027
                         },
                         {
                             "src": "assets/angle_90_0/04/B/CQII (8).png",
                             "thumb": "assets/angle_90_0/04/pre/CQII (8).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQII (8)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/B/web/CQII (8).webp",
+                            "width": 1253,
+                            "height": 959
                         }
                     ]
                 },
@@ -899,49 +1163,70 @@
                             "thumb": "assets/angle_90_0/04/pre/CQ (10).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (10)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/C/web/CQ (10).webp",
+                            "width": 1200,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/C/CQ (16).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (16).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (16)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/C/web/CQ (16).webp",
+                            "width": 1647,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/C/CQ (19).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (19).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (19)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/C/web/CQ (19).webp",
+                            "width": 1920,
+                            "height": 606
                         },
                         {
                             "src": "assets/angle_90_0/04/C/CQ (17).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (17).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (17)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/C/web/CQ (17).webp",
+                            "width": 1915,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/C/CQ (18).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (18).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (18)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/C/web/CQ (18).webp",
+                            "width": 1915,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/C/CQ (32).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (32).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (32)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/C/web/CQ (32).webp",
+                            "width": 1594,
+                            "height": 1000
                         },
                         {
                             "src": "assets/angle_90_0/04/C/CQ (33).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (33).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (33)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/C/web/CQ (33).webp",
+                            "width": 1155,
+                            "height": 1000
                         }
                     ]
                 },
@@ -954,28 +1239,40 @@
                             "thumb": "assets/angle_90_0/04/pre/CQ (11).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (11)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/D/web/CQ (11).webp",
+                            "width": 1920,
+                            "height": 968
                         },
                         {
                             "src": "assets/angle_90_0/04/D/CQ (12).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (12).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (12)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/D/web/CQ (12).webp",
+                            "width": 1920,
+                            "height": 846
                         },
                         {
                             "src": "assets/angle_90_0/04/D/CQ (13).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (13).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (13)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/D/web/CQ (13).webp",
+                            "width": 1680,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/D/CQ (14).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (14).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (14)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/D/web/CQ (14).webp",
+                            "width": 1920,
+                            "height": 844
                         }
                     ]
                 },
@@ -988,28 +1285,40 @@
                             "thumb": "assets/angle_90_0/04/pre/CQ (28).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (28)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/E/web/CQ (28).webp",
+                            "width": 1069,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/E/CQ (29).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (29).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (29)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/E/web/CQ (29).webp",
+                            "width": 1920,
+                            "height": 1050
                         },
                         {
                             "src": "assets/angle_90_0/04/E/CQ (30).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (30).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (30)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/E/web/CQ (30).webp",
+                            "width": 797,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/04/E/CQ (31).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (31).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (31)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/E/web/CQ (31).webp",
+                            "width": 1000,
+                            "height": 1000
                         }
                     ]
                 },
@@ -1022,14 +1331,20 @@
                             "thumb": "assets/angle_90_0/04/pre/CQ (34).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (34)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/F/web/CQ (34).webp",
+                            "width": 937,
+                            "height": 1000
                         },
                         {
                             "src": "assets/angle_90_0/04/F/CQ (35).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (35).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "CQ (35)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/04/F/web/CQ (35).webp",
+                            "width": 1284,
+                            "height": 1000
                         }
                     ]
                 }
@@ -1101,77 +1416,110 @@
                             "thumb": "assets/angle_90_0/05/pre/BWY (15).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (15)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (15).webp",
+                            "width": 1920,
+                            "height": 922
                         },
                         {
                             "src": "assets/angle_90_0/05/A/BWY (41).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (41).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (41)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (41).webp",
+                            "width": 1920,
+                            "height": 808
                         },
                         {
                             "src": "assets/angle_90_0/05/A/BWY (39).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (39).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (39)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (39).webp",
+                            "width": 1186,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/A/BWY (40).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (40).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (40)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (40).webp",
+                            "width": 1920,
+                            "height": 878
                         },
                         {
                             "src": "assets/angle_90_0/05/A/BWY (1).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (1).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (1)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (1).webp",
+                            "width": 1425,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/A/BWY (12).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (12).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (12)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (12).webp",
+                            "width": 1920,
+                            "height": 788
                         },
                         {
                             "src": "assets/angle_90_0/05/A/BWY (13).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (13).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (13)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (13).webp",
+                            "width": 1364,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/A/BWY (26).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (26).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (26)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (26).webp",
+                            "width": 1920,
+                            "height": 830
                         },
                         {
                             "src": "assets/angle_90_0/05/A/BWY (27).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (27).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (27)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (27).webp",
+                            "width": 712,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/A/BWY (14).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (14).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (14)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (14).webp",
+                            "width": 728,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/A/BWY (2).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (2).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (2)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/A/web/BWY (2).webp",
+                            "width": 1085,
+                            "height": 1080
                         }
                     ]
                 },
@@ -1184,168 +1532,240 @@
                             "thumb": "assets/angle_90_0/05/pre/BWY (8).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (8)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (8).webp",
+                            "width": 1852,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (16).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (16).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (16)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (16).webp",
+                            "width": 1837,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (17).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (17).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (17)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (17).webp",
+                            "width": 1920,
+                            "height": 1078
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (18).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (18).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (18)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (18).webp",
+                            "width": 1313,
+                            "height": 912
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (19).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (19).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (19)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (19).webp",
+                            "width": 1600,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (20).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (20).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (20)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (20).webp",
+                            "width": 1600,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (21).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (21).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (21)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (21).webp",
+                            "width": 1657,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (22).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (22).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (22)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (22).webp",
+                            "width": 1657,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (23).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (23).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (23)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (23).webp",
+                            "width": 1539,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (24).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (24).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (24)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (24).webp",
+                            "width": 1539,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (28).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (28).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (28)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (28).webp",
+                            "width": 1920,
+                            "height": 1055
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (29).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (29).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (29)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (29).webp",
+                            "width": 1920,
+                            "height": 1055
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (31).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (31).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (31)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (31).webp",
+                            "width": 1722,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (32).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (32).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (32)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (32).webp",
+                            "width": 1722,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (33).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (33).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (33)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (33).webp",
+                            "width": 1916,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (34).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (34).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (34)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (34).webp",
+                            "width": 1916,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (35).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (35).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (35)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (35).webp",
+                            "width": 1920,
+                            "height": 913
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (36).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (36).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (36)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (36).webp",
+                            "width": 1920,
+                            "height": 913
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (37).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (37).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (37)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (37).webp",
+                            "width": 1776,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (38).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (38).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (38)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (38).webp",
+                            "width": 1776,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (42).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (42).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (42)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (42).webp",
+                            "width": 1920,
+                            "height": 807
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (43).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (43).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (43)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (43).webp",
+                            "width": 1920,
+                            "height": 976
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (25).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (25).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (25)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (25).webp",
+                            "width": 1553,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/B/BWY (30).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (30).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (30)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/B/web/BWY (30).webp",
+                            "width": 1920,
+                            "height": 797
                         }
                     ]
                 },
@@ -1358,35 +1778,50 @@
                             "thumb": "assets/angle_90_0/05/pre/BWY (11).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (11)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/C/web/BWY (11).webp",
+                            "width": 1320,
+                            "height": 980
                         },
                         {
                             "src": "assets/angle_90_0/05/C/BWY (10).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (10).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (10)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/C/web/BWY (10).webp",
+                            "width": 1320,
+                            "height": 980
                         },
                         {
                             "src": "assets/angle_90_0/05/C/B.紅寶石_20220930_2 1.png",
                             "thumb": "assets/angle_90_0/05/pre/B.紅寶石_20220930_2 1.jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "B.紅寶石_20220930_2 1",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/C/web/B.紅寶石_20220930_2 1.webp",
+                            "width": 1513,
+                            "height": 631
                         },
                         {
                             "src": "assets/angle_90_0/05/C/B.開箱_20220926_3 1.png",
                             "thumb": "assets/angle_90_0/05/pre/B.開箱_20220926_3 1.jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "B.開箱_20220926_3 1",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/C/web/B.開箱_20220926_3 1.webp",
+                            "width": 1513,
+                            "height": 639
                         },
                         {
                             "src": "assets/angle_90_0/05/C/BWY (9).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (9).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (9)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/C/web/BWY (9).webp",
+                            "width": 1920,
+                            "height": 1007
                         }
                     ]
                 },
@@ -1399,21 +1834,30 @@
                             "thumb": "assets/angle_90_0/05/pre/BWY (4).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (4)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/D/web/BWY (4).webp",
+                            "width": 691,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/D/BWY (6).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (6).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (6)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/D/web/BWY (6).webp",
+                            "width": 691,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/05/D/BWY (7).png",
                             "thumb": "assets/angle_90_0/05/pre/BWY (7).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "BWY (7)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/05/D/web/BWY (7).webp",
+                            "width": 691,
+                            "height": 1080
                         }
                     ]
                 }
@@ -1463,14 +1907,20 @@
                             "thumb": "assets/angle_90_0/06/pre/ZD (1).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (1)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/A/web/ZD (1).webp",
+                            "width": 1920,
+                            "height": 944
                         },
                         {
                             "src": "assets/angle_90_0/06/A/ZD (2).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (2).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (2)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/A/web/ZD (2).webp",
+                            "width": 1920,
+                            "height": 944
                         }
                     ]
                 },
@@ -1483,84 +1933,120 @@
                             "thumb": "assets/angle_90_0/06/pre/ZD (19).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (19)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (19).webp",
+                            "width": 1920,
+                            "height": 907
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (20).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (20).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (20)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (20).webp",
+                            "width": 1920,
+                            "height": 952
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (14).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (14).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (14)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (14).webp",
+                            "width": 1909,
+                            "height": 923
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (7).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (7).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (7)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (7).webp",
+                            "width": 1920,
+                            "height": 684
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (11).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (11).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (11)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (11).webp",
+                            "width": 1920,
+                            "height": 461
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (15).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (15).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (15)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (15).webp",
+                            "width": 1920,
+                            "height": 493
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (13).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (13).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (13)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (13).webp",
+                            "width": 1920,
+                            "height": 422
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (12).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (12).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (12)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (12).webp",
+                            "width": 1800,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (16).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (16).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (16)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (16).webp",
+                            "width": 1920,
+                            "height": 874
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (10).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (10).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (10)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (10).webp",
+                            "width": 1920,
+                            "height": 908
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (17).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (17).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (17)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (17).webp",
+                            "width": 1920,
+                            "height": 858
                         },
                         {
                             "src": "assets/angle_90_0/06/B/ZD (18).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (18).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (18)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/B/web/ZD (18).webp",
+                            "width": 1920,
+                            "height": 870
                         }
                     ]
                 },
@@ -1573,49 +2059,70 @@
                             "thumb": "assets/angle_90_0/06/pre/ZD (4).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (4)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/C/web/ZD (4).webp",
+                            "width": 1920,
+                            "height": 727
                         },
                         {
                             "src": "assets/angle_90_0/06/C/ZD (5).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (5).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (5)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/C/web/ZD (5).webp",
+                            "width": 1920,
+                            "height": 671
                         },
                         {
                             "src": "assets/angle_90_0/06/C/ZD (3).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (3).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (3)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/C/web/ZD (3).webp",
+                            "width": 1920,
+                            "height": 629
                         },
                         {
                             "src": "assets/angle_90_0/06/C/ZD (6).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (6).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (6)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/C/web/ZD (6).webp",
+                            "width": 1920,
+                            "height": 567
                         },
                         {
                             "src": "assets/angle_90_0/06/C/ZD (22).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (22).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (22)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/C/web/ZD (22).webp",
+                            "width": 1667,
+                            "height": 1080
                         },
                         {
                             "src": "assets/angle_90_0/06/C/ZD (23).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (23).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (23)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/C/web/ZD (23).webp",
+                            "width": 1920,
+                            "height": 1028
                         },
                         {
                             "src": "assets/angle_90_0/06/C/ZD (24).png",
                             "thumb": "assets/angle_90_0/06/pre/ZD (24).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
                             "name": "ZD (24)",
-                            "design": []
+                            "design": [],
+                            "web": "assets/angle_90_0/06/C/web/ZD (24).webp",
+                            "width": 1920,
+                            "height": 1058
                         }
                     ]
                 }

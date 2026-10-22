@@ -187,6 +187,11 @@
                         </div>
                     </div>
 
+                    <label class="w-full flex items-center gap-2 text-xs text-gray-300 font-medium cursor-pointer select-none">
+                        <input type="checkbox" id="edit-board-show-preview" checked onchange="updateLivePreviewFromInput()" class="w-4 h-4 accent-peach-500 rounded">
+                        <span>開啟當前主題預覽圖 <span class="text-[10.5px] text-gray-500">(取消勾選：不顯示縮圖群，也沒有展開／縮回按鈕)</span></span>
+                    </label>
+
                     <div class="w-full flex-1 flex items-center justify-center py-12">
                         <!-- Real-time Preview Node -->
                         <div id="preview-card-node" class="relative w-64 p-4 rounded-2xl text-left border border-peach-500/30 glass-card shadow-2xl">
@@ -448,6 +453,7 @@
                 marginBottomDesktop: 0,
                 maskPercentDesktop: 22,
                 preFolder: `${folder}pre/`,
+                showPreviewStrip: true,
                 preImages: [],
                 images: []
             };
@@ -562,6 +568,7 @@
             document.getElementById('edit-board-category').value = item.category || '';
             document.getElementById('edit-board-desc').value = item.desc || '';
             document.getElementById('edit-board-custom-html').checked = !!item.hasCustomHtml;
+            document.getElementById('edit-board-show-preview').checked = item.showPreviewStrip !== false;
 
             // Android (Mobile < 600px)
             document.getElementById('edit-thumb-size-mobile').value = item.thumbSizeMobile !== undefined ? item.thumbSizeMobile : 64;
@@ -608,6 +615,7 @@
             const desc = document.getElementById('edit-board-desc').value;
 
             const isDesktop = previewDeviceMode === 'desktop';
+            const showPreviewStrip = document.getElementById('edit-board-show-preview').checked;
 
             const thumbSize = isDesktop
                 ? (parseInt(document.getElementById('edit-thumb-size-desktop').value) || 128)
@@ -647,7 +655,7 @@
                     ${title || 'Board Title'}
                 </div>
 
-                <button class="btn-toggle-preview absolute -top-3 right-3 w-6 h-6 rounded-full bg-charcoal-900 border border-peach-500/50 text-peach-300 hover:text-white hover:bg-peach-500 hover:text-charcoal-950 flex items-center justify-center text-[10px] font-bold shadow-lg z-40 transition cursor-pointer pointer-events-auto" title="展開預覽縮圖群">
+                ${showPreviewStrip ? `<button class="btn-toggle-preview absolute -top-3 right-3 w-6 h-6 rounded-full bg-charcoal-900 border border-peach-500/50 text-peach-300 hover:text-white hover:bg-peach-500 hover:text-charcoal-950 flex items-center justify-center text-[10px] font-bold shadow-lg z-40 transition cursor-pointer pointer-events-auto" title="展開預覽縮圖群">
                     ${wasExpanded ? '▲' : '▼'}
                 </button>
 
@@ -656,7 +664,7 @@
                     <div class="thumb-track">
                         ${thumbsHTML}
                     </div>
-                </div>
+                </div>` : ''}
 
                 <p class="text-gray-200 text-xs line-clamp-3 mb-3 leading-relaxed pt-1 relative z-10">
                     ${desc || ''}
@@ -1158,6 +1166,7 @@
             item.desc = document.getElementById('edit-board-desc').value.trim();
             item.yaw = parseInt(document.getElementById('edit-board-yaw').value) || 0;
             item.pitch = parseInt(document.getElementById('edit-board-pitch').value) || 0;
+            item.showPreviewStrip = document.getElementById('edit-board-show-preview').checked;
 
             // 儲存 Android (Mobile < 600px) 參數
             item.thumbSizeMobile = parseInt(document.getElementById('edit-thumb-size-mobile').value) || 64;
@@ -1190,11 +1199,12 @@
                 const item = BOARD_DATA[key];
                 const yaw = item.yaw;
                 const pitch = item.pitch;
-                const folder = item.folder || `assets/angle_${key}/`;
+                const panelKey = `${yaw}_${pitch}`;
+                const folder = item.folder || `assets/angle_${panelKey}/`;
                 const preFolder = item.preFolder || `${folder}pre/`;
 
                 return {
-                    key: item.key || key,
+                    key: panelKey,
                     yaw: yaw,
                     pitch: pitch,
                     position: {
@@ -1218,6 +1228,7 @@
                     stripWidthDesktop: item.stripWidthDesktop !== undefined ? item.stripWidthDesktop : 0,
                     marginBottomDesktop: item.marginBottomDesktop !== undefined ? item.marginBottomDesktop : 0,
                     maskPercentDesktop: item.maskPercentDesktop !== undefined ? item.maskPercentDesktop : 22,
+                    showPreviewStrip: item.showPreviewStrip !== false,
                     preFolder: preFolder,
                     preImages: item.preImages || [],
                     images: item.images || []
@@ -1273,9 +1284,11 @@
             if (panelList.length > 0) {
                 panelList.forEach(p => {
                     if (typeof p !== 'object' || !p) return;
-                    const key = p.key || `${p.yaw}_${p.pitch}`;
-                    const yaw = p.yaw !== undefined ? p.yaw : Number(key.split('_')[0]);
-                    const pitch = p.pitch !== undefined ? p.pitch : Number(key.split('_')[1]);
+                    // Key 一律是 Yaw_Pitch（例如 0_-30），舊資料的 "0-30" 也會被修正
+                    const rawKey = p.key || '';
+                    const yaw = p.yaw !== undefined ? Number(p.yaw) : Number(rawKey.split('_')[0]);
+                    const pitch = p.pitch !== undefined ? Number(p.pitch) : Number(rawKey.split('_')[1]);
+                    const key = `${yaw}_${pitch}`;
                     const folder = p.folder || `assets/angle_${key}/`;
                     const preFolder = p.preFolder || `${folder}pre/`;
 
@@ -1309,6 +1322,7 @@
                         stripWidthDesktop: p.stripWidthDesktop !== undefined ? Number(p.stripWidthDesktop) : 0,
                         marginBottomDesktop: p.marginBottomDesktop !== undefined ? Number(p.marginBottomDesktop) : 0,
                         maskPercentDesktop: p.maskPercentDesktop !== undefined ? Number(p.maskPercentDesktop) : 22,
+                        showPreviewStrip: p.showPreviewStrip !== false,
                         preFolder: preFolder,
                         preImages: preImages,
                         images: Array.isArray(p.images) ? p.images : []

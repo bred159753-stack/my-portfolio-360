@@ -41,25 +41,37 @@
                         "src": "assets/angle_0_0/01/A/T01.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T01.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-雷文&伊瑞莉雅-Sentinel造型"
+                        "name": "英雄聯盟-雷文&伊瑞莉雅-Sentinel造型",
+                        "web": "assets/angle_0_0/01/A/web/T01.webp",
+                        "width": 1920,
+                        "height": 796
                     },
                     {
                         "src": "assets/angle_0_0/01/A/T02.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T02.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "陰陽師-不知火"
+                        "name": "陰陽師-不知火",
+                        "web": "assets/angle_0_0/01/A/web/T02.webp",
+                        "width": 1720,
+                        "height": 1025
                     },
                     {
                         "src": "assets/angle_0_0/01/A/T03.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T03.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "初音未來-Sci-fi"
+                        "name": "初音未來-Sci-fi",
+                        "web": "assets/angle_0_0/01/A/web/T03.webp",
+                        "width": 1920,
+                        "height": 1076
                     },
                     {
                         "src": "assets/angle_0_0/01/A/T04.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T04.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "影之刃-弦者"
+                        "name": "影之刃-弦者",
+                        "web": "assets/angle_0_0/01/A/web/T04.webp",
+                        "width": 1800,
+                        "height": 1059
                     }
                 ]
             },
@@ -71,61 +83,91 @@
                         "src": "assets/angle_0_0/01/B/T10.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T10.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "影之刃-弦者-插畫方案"
+                        "name": "影之刃-弦者-插畫方案",
+                        "web": "assets/angle_0_0/01/B/web/T10.webp",
+                        "width": 661,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/01/B/T17.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T17.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "--插畫方案"
+                        "name": "--插畫方案",
+                        "web": "assets/angle_0_0/01/B/web/T17.webp",
+                        "width": 1132,
+                        "height": 1000
                     },
                     {
                         "src": "assets/angle_0_0/01/B/T14.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T14.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "超異域公主連結☆Re:Dive-泳裝咲戀-插畫方案"
+                        "name": "超異域公主連結☆Re:Dive-泳裝咲戀-插畫方案",
+                        "web": "assets/angle_0_0/01/B/web/T14.webp",
+                        "width": 1521,
+                        "height": 640
                     },
                     {
                         "src": "assets/angle_0_0/01/B/T12.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T12.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-Spirit Blossom Life-插畫方案"
+                        "name": "英雄聯盟-Spirit Blossom Life-插畫方案",
+                        "web": "assets/angle_0_0/01/B/web/T12.webp",
+                        "width": 600,
+                        "height": 552
                     },
                     {
                         "src": "assets/angle_0_0/01/B/T13.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T13.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-Spirit Blossom Life-插畫方案"
+                        "name": "英雄聯盟-Spirit Blossom Life-插畫方案",
+                        "web": "assets/angle_0_0/01/B/web/T13.webp",
+                        "width": 969,
+                        "height": 600
                     },
                     {
                         "src": "assets/angle_0_0/01/B/T21.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T21.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-Spirit Blossom Life-插畫草稿"
+                        "name": "英雄聯盟-Spirit Blossom Life-插畫草稿",
+                        "web": "assets/angle_0_0/01/B/web/T21.webp",
+                        "width": 1867,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/01/B/T20_0.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T20_0.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-Spirit Blossom Life-插畫草稿"
+                        "name": "英雄聯盟-Spirit Blossom Life-插畫草稿",
+                        "web": "assets/angle_0_0/01/B/web/T20_0.webp",
+                        "width": 1920,
+                        "height": 975
                     },
                     {
                         "src": "assets/angle_0_0/01/B/T20_1.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T20_1.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-Spirit Blossom Life-插畫草稿"
+                        "name": "英雄聯盟-Spirit Blossom Life-插畫草稿",
+                        "web": "assets/angle_0_0/01/B/web/T20_1.webp",
+                        "width": 1920,
+                        "height": 1040
                     },
                     {
                         "src": "assets/angle_0_0/01/B/T15.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T15.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-黛安娜(Sentinel)-插畫方案"
+                        "name": "英雄聯盟-黛安娜(Sentinel)-插畫方案",
+                        "web": "assets/angle_0_0/01/B/web/T15.webp",
+                        "width": 778,
+                        "height": 500
                     },
                     {
                         "src": "assets/angle_0_0/01/B/T16.png",
                         "thumb": "assets/angle_0_0/01/pre/T16.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-阿卡莉(女巫集會)-插畫方案"
+                        "name": "英雄聯盟-阿卡莉(女巫集會)-插畫方案",
+                        "web": "assets/angle_0_0/01/B/web/T16.webp",
+                        "width": 916,
+                        "height": 1080
                     }
                 ]
             },
@@ -137,43 +179,64 @@
                         "src": "assets/angle_0_0/01/C/T18.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T18.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "格鬥火光暗冰-角色概念"
+                        "name": "格鬥火光暗冰-角色概念",
+                        "web": "assets/angle_0_0/01/C/web/T18.webp",
+                        "width": 1920,
+                        "height": 841
                     },
                     {
                         "src": "assets/angle_0_0/01/C/T19.png",
                         "thumb": "assets/angle_0_0/01/pre/T19.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "果多測試-寇格魔chroma"
+                        "name": "果多測試-寇格魔chroma",
+                        "web": "assets/angle_0_0/01/C/web/T19.webp",
+                        "width": 1506,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/01/C/T24.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T24.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-奧爾-皮膚概念"
+                        "name": "英雄聯盟-奧爾-皮膚概念",
+                        "web": "assets/angle_0_0/01/C/web/T24.webp",
+                        "width": 1040,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/01/C/T23.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T23.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-奧爾-皮膚概念"
+                        "name": "英雄聯盟-奧爾-皮膚概念",
+                        "web": "assets/angle_0_0/01/C/web/T23.webp",
+                        "width": 1920,
+                        "height": 914
                     },
                     {
                         "src": "assets/angle_0_0/01/C/T22.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T22.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-拉克斯-皮膚概念"
+                        "name": "英雄聯盟-拉克斯-皮膚概念",
+                        "web": "assets/angle_0_0/01/C/web/T22.webp",
+                        "width": 1920,
+                        "height": 914
                     },
                     {
                         "src": "assets/angle_0_0/01/C/T25.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T25.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-艾希-皮膚設計"
+                        "name": "英雄聯盟-艾希-皮膚設計",
+                        "web": "assets/angle_0_0/01/C/web/T25.webp",
+                        "width": 1920,
+                        "height": 765
                     },
                     {
                         "src": "assets/angle_0_0/01/C/T26.jpg",
                         "thumb": "assets/angle_0_0/01/pre/T26.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "外星教主-角色概念"
+                        "name": "外星教主-角色概念",
+                        "web": "assets/angle_0_0/01/C/web/T26.webp",
+                        "width": 1920,
+                        "height": 1060
                     }
                 ]
             }
@@ -235,85 +298,127 @@
                         "src": "assets/angle_0_0/02/A/001.jpg",
                         "thumb": "assets/angle_0_0/02/pre/001.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-阿璃-THE BADDEST"
+                        "name": "英雄聯盟-阿璃-THE BADDEST",
+                        "web": "assets/angle_0_0/02/A/web/001.webp",
+                        "width": 781,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/A/003.jpg",
                         "thumb": "assets/angle_0_0/02/pre/003.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-阿卡利-Spirit Blossom"
+                        "name": "英雄聯盟-阿卡利-Spirit Blossom",
+                        "web": "assets/angle_0_0/02/A/web/003.webp",
+                        "width": 815,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/A/004.jpg",
                         "thumb": "assets/angle_0_0/02/pre/004.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-阿璃-Spirit Blossom"
+                        "name": "英雄聯盟-阿璃-Spirit Blossom",
+                        "web": "assets/angle_0_0/02/A/web/004.webp",
+                        "width": 806,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/A/002.jpg",
                         "thumb": "assets/angle_0_0/02/pre/002.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-凱莎-瀉藍水龍"
+                        "name": "英雄聯盟-凱莎-瀉藍水龍",
+                        "web": "assets/angle_0_0/02/A/web/002.webp",
+                        "width": 1503,
+                        "height": 900
                     },
                     {
                         "src": "assets/angle_0_0/02/A/006.jpg",
                         "thumb": "assets/angle_0_0/02/pre/006.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-卡特蓮娜-戰爭女皇"
+                        "name": "英雄聯盟-卡特蓮娜-戰爭女皇",
+                        "web": "assets/angle_0_0/02/A/web/006.webp",
+                        "width": 817,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/A/005.jpg",
                         "thumb": "assets/angle_0_0/02/pre/005.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-伊澤瑞爾-戰爭學院"
+                        "name": "英雄聯盟-伊澤瑞爾-戰爭學院",
+                        "web": "assets/angle_0_0/02/A/web/005.webp",
+                        "width": 1503,
+                        "height": 900
                     },
                     {
                         "src": "assets/angle_0_0/02/A/007.jpg",
                         "thumb": "assets/angle_0_0/02/pre/007.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-犽宿-Spirit Blossom"
+                        "name": "英雄聯盟-犽宿-Spirit Blossom",
+                        "web": "assets/angle_0_0/02/A/web/007.webp",
+                        "width": 815,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/A/009.jpg",
                         "thumb": "assets/angle_0_0/02/pre/009.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-伊瑞莉雅-Spirit Blossom"
+                        "name": "英雄聯盟-伊瑞莉雅-Spirit Blossom",
+                        "web": "assets/angle_0_0/02/A/web/009.webp",
+                        "width": 766,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/A/008.jpg",
                         "thumb": "assets/angle_0_0/02/pre/008.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-犽凝-Spirit Blossom"
+                        "name": "英雄聯盟-犽凝-Spirit Blossom",
+                        "web": "assets/angle_0_0/02/A/web/008.webp",
+                        "width": 682,
+                        "height": 900
                     },
                     {
                         "src": "assets/angle_0_0/02/A/013.png",
                         "thumb": "assets/angle_0_0/02/pre/013.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-星朵拉-Spirit Blossom"
+                        "name": "英雄聯盟-星朵拉-Spirit Blossom",
+                        "web": "assets/angle_0_0/02/A/web/013.webp",
+                        "width": 988,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/A/012.png",
                         "thumb": "assets/angle_0_0/02/pre/012.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-拉克斯-戰爭學院"
+                        "name": "英雄聯盟-拉克斯-戰爭學院",
+                        "web": "assets/angle_0_0/02/A/web/012.webp",
+                        "width": 993,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/A/014.png",
                         "thumb": "assets/angle_0_0/02/pre/014.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "英雄聯盟-索拉卡-睡衣守護者"
+                        "name": "英雄聯盟-索拉卡-睡衣守護者",
+                        "web": "assets/angle_0_0/02/A/web/014.webp",
+                        "width": 816,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/A/020.jpg",
                         "thumb": "assets/angle_0_0/02/pre/020.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "戰爭公主"
+                        "name": "戰爭公主",
+                        "web": "assets/angle_0_0/02/A/web/020.webp",
+                        "width": 759,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/A/015.png",
                         "thumb": "assets/angle_0_0/02/pre/015.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "火龍女"
+                        "name": "火龍女",
+                        "web": "assets/angle_0_0/02/A/web/015.webp",
+                        "width": 1024,
+                        "height": 1024
                     }
                 ]
             },
@@ -325,127 +430,190 @@
                         "src": "assets/angle_0_0/02/B/B02.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B02.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "冰之魔法師"
+                        "name": "冰之魔法師",
+                        "web": "assets/angle_0_0/02/B/web/B02.webp",
+                        "width": 634,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B03.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B03.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "星之占卜師"
+                        "name": "星之占卜師",
+                        "web": "assets/angle_0_0/02/B/web/B03.webp",
+                        "width": 827,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B04.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B04.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "人魚"
+                        "name": "人魚",
+                        "web": "assets/angle_0_0/02/B/web/B04.webp",
+                        "width": 1121,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B05.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B05.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "閻魔"
+                        "name": "閻魔",
+                        "web": "assets/angle_0_0/02/B/web/B05.webp",
+                        "width": 994,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B06.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B06.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "火蝴"
+                        "name": "火蝴",
+                        "web": "assets/angle_0_0/02/B/web/B06.webp",
+                        "width": 1200,
+                        "height": 1043
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B07.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B07.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "光鎧"
+                        "name": "光鎧",
+                        "web": "assets/angle_0_0/02/B/web/B07.webp",
+                        "width": 648,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B08.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B08.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "水之魔法師"
+                        "name": "水之魔法師",
+                        "web": "assets/angle_0_0/02/B/web/B08.webp",
+                        "width": 692,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B09.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B09.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "水龍宮公主"
+                        "name": "水龍宮公主",
+                        "web": "assets/angle_0_0/02/B/web/B09.webp",
+                        "width": 780,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B10.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B10.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": ""
+                        "name": "",
+                        "web": "assets/angle_0_0/02/B/web/B10.webp",
+                        "width": 780,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B11.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B11.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "炎之魔法師"
+                        "name": "炎之魔法師",
+                        "web": "assets/angle_0_0/02/B/web/B11.webp",
+                        "width": 702,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B21.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B21.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "部落女戰士"
+                        "name": "部落女戰士",
+                        "web": "assets/angle_0_0/02/B/web/B21.webp",
+                        "width": 643,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B22.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B22.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "墨之魔法師"
+                        "name": "墨之魔法師",
+                        "web": "assets/angle_0_0/02/B/web/B22.webp",
+                        "width": 911,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B12.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B12.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "月兔戰錘"
+                        "name": "月兔戰錘",
+                        "web": "assets/angle_0_0/02/B/web/B12.webp",
+                        "width": 1164,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B20.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B20.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "闇之召喚師"
+                        "name": "闇之召喚師",
+                        "web": "assets/angle_0_0/02/B/web/B20.webp",
+                        "width": 733,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B13.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B13.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "雙刀女戰士"
+                        "name": "雙刀女戰士",
+                        "web": "assets/angle_0_0/02/B/web/B13.webp",
+                        "width": 960,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B14.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B14.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "白鎧騎士"
+                        "name": "白鎧騎士",
+                        "web": "assets/angle_0_0/02/B/web/B14.webp",
+                        "width": 757,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B15.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B15.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "黑鎧騎士"
+                        "name": "黑鎧騎士",
+                        "web": "assets/angle_0_0/02/B/web/B15.webp",
+                        "width": 628,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B16.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B16.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "沙悟淨"
+                        "name": "沙悟淨",
+                        "web": "assets/angle_0_0/02/B/web/B16.webp",
+                        "width": 1004,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B17.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B17.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "緋紅女巫-Sci-fi"
+                        "name": "緋紅女巫-Sci-fi",
+                        "web": "assets/angle_0_0/02/B/web/B17.webp",
+                        "width": 1001,
+                        "height": 1024
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B18.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B18.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "機甲光龍"
+                        "name": "機甲光龍",
+                        "web": "assets/angle_0_0/02/B/web/B18.webp",
+                        "width": 1200,
+                        "height": 1034
                     },
                     {
                         "src": "assets/angle_0_0/02/B/B19.jpg",
                         "thumb": "assets/angle_0_0/02/pre/B19.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "機甲趙雲"
+                        "name": "機甲趙雲",
+                        "web": "assets/angle_0_0/02/B/web/B19.webp",
+                        "width": 1191,
+                        "height": 1080
                     }
                 ]
             },
@@ -457,85 +625,127 @@
                         "src": "assets/angle_0_0/02/C/3167d2a97c107ec64a1687da5f4b17a9.jpg",
                         "thumb": "assets/angle_0_0/02/pre/3167d2a97c107ec64a1687da5f4b17a9.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "01"
+                        "name": "01",
+                        "web": "assets/angle_0_0/02/C/web/3167d2a97c107ec64a1687da5f4b17a9.webp",
+                        "width": 1000,
+                        "height": 560
                     },
                     {
                         "src": "assets/angle_0_0/02/C/4a8521b3884d6533ad221f3af8980508.jpg",
                         "thumb": "assets/angle_0_0/02/pre/4a8521b3884d6533ad221f3af8980508.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "02"
+                        "name": "02",
+                        "web": "assets/angle_0_0/02/C/web/4a8521b3884d6533ad221f3af8980508.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/8cba8efb52bffbb29b78f20aaebf3993.jpg",
                         "thumb": "assets/angle_0_0/02/pre/8cba8efb52bffbb29b78f20aaebf3993.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "03"
+                        "name": "03",
+                        "web": "assets/angle_0_0/02/C/web/8cba8efb52bffbb29b78f20aaebf3993.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/857cc28ccd1695ce378e8d6021a1b8b9.jpg",
                         "thumb": "assets/angle_0_0/02/pre/857cc28ccd1695ce378e8d6021a1b8b9.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "04"
+                        "name": "04",
+                        "web": "assets/angle_0_0/02/C/web/857cc28ccd1695ce378e8d6021a1b8b9.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/3a6d0462ac9c0990c2ab31bfc01787dd.jpg",
                         "thumb": "assets/angle_0_0/02/pre/3a6d0462ac9c0990c2ab31bfc01787dd.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "05"
+                        "name": "05",
+                        "web": "assets/angle_0_0/02/C/web/3a6d0462ac9c0990c2ab31bfc01787dd.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/26045c86e8ff3928d69de44f5089a397.jpg",
                         "thumb": "assets/angle_0_0/02/pre/26045c86e8ff3928d69de44f5089a397.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "06"
+                        "name": "06",
+                        "web": "assets/angle_0_0/02/C/web/26045c86e8ff3928d69de44f5089a397.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/ca75be791d749216f385a98bfff2eebd.jpg",
                         "thumb": "assets/angle_0_0/02/pre/ca75be791d749216f385a98bfff2eebd.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "07"
+                        "name": "07",
+                        "web": "assets/angle_0_0/02/C/web/ca75be791d749216f385a98bfff2eebd.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/547e44af9a01ef9822ccbcff551345a9.jpg",
                         "thumb": "assets/angle_0_0/02/pre/547e44af9a01ef9822ccbcff551345a9.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "08"
+                        "name": "08",
+                        "web": "assets/angle_0_0/02/C/web/547e44af9a01ef9822ccbcff551345a9.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/bd817537f34352cf44cbc110ee495ad2.jpg",
                         "thumb": "assets/angle_0_0/02/pre/bd817537f34352cf44cbc110ee495ad2.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "09"
+                        "name": "09",
+                        "web": "assets/angle_0_0/02/C/web/bd817537f34352cf44cbc110ee495ad2.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/fe5631878187201879ea035c5260c4af.jpg",
                         "thumb": "assets/angle_0_0/02/pre/fe5631878187201879ea035c5260c4af.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "10"
+                        "name": "10",
+                        "web": "assets/angle_0_0/02/C/web/fe5631878187201879ea035c5260c4af.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/576c577fff0b517bdc49c42c875e30d6.jpg",
                         "thumb": "assets/angle_0_0/02/pre/576c577fff0b517bdc49c42c875e30d6.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "11"
+                        "name": "11",
+                        "web": "assets/angle_0_0/02/C/web/576c577fff0b517bdc49c42c875e30d6.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/c1164b9382162d88ea7a0830bf785bba.jpg",
                         "thumb": "assets/angle_0_0/02/pre/c1164b9382162d88ea7a0830bf785bba.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "12"
+                        "name": "12",
+                        "web": "assets/angle_0_0/02/C/web/c1164b9382162d88ea7a0830bf785bba.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/b27758f2fbe5df93789c88268cc8225c.jpg",
                         "thumb": "assets/angle_0_0/02/pre/b27758f2fbe5df93789c88268cc8225c.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "13"
+                        "name": "13",
+                        "web": "assets/angle_0_0/02/C/web/b27758f2fbe5df93789c88268cc8225c.webp",
+                        "width": 1456,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/02/C/e8bd3197e1158c1f4d0f7ebe86402a9c.jpg",
                         "thumb": "assets/angle_0_0/02/pre/e8bd3197e1158c1f4d0f7ebe86402a9c.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "14"
+                        "name": "14",
+                        "web": "assets/angle_0_0/02/C/web/e8bd3197e1158c1f4d0f7ebe86402a9c.webp",
+                        "width": 1456,
+                        "height": 816
                     }
                 ]
             }
@@ -591,175 +801,262 @@
                         "src": "assets/angle_0_0/03/A/日系插畫 (1).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (1).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "博麗靈夢"
+                        "name": "博麗靈夢",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (1).webp",
+                        "width": 647,
+                        "height": 1000
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (2).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (2).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "初音未來"
+                        "name": "初音未來",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (2).webp",
+                        "width": 1778,
+                        "height": 1000
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (3).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (3).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "FGO01"
+                        "name": "FGO01",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (3).webp",
+                        "width": 1920,
+                        "height": 386
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (25).jpg",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (25).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "FGO02"
+                        "name": "FGO02",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (25).webp",
+                        "width": 1394,
+                        "height": 989
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (4).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (4).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "FGO03"
+                        "name": "FGO03",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (4).webp",
+                        "width": 1485,
+                        "height": 1000
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (5).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (5).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "FGO04"
+                        "name": "FGO04",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (5).webp",
+                        "width": 1671,
+                        "height": 1000
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (6).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (6).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "FGO05"
+                        "name": "FGO05",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (6).webp",
+                        "width": 1875,
+                        "height": 1000
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (7).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (7).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "FGO06"
+                        "name": "FGO06",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (7).webp",
+                        "width": 728,
+                        "height": 1000
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (8).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (8).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "FGO07"
+                        "name": "FGO07",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (8).webp",
+                        "width": 690,
+                        "height": 1000
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (9).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (9).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "時之女神"
+                        "name": "時之女神",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (9).webp",
+                        "width": 663,
+                        "height": 1000
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (10).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (10).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "時之女神-方案"
+                        "name": "時之女神-方案",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (10).webp",
+                        "width": 1920,
+                        "height": 816
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (11).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (11).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "庭院散步"
+                        "name": "庭院散步",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (11).webp",
+                        "width": 1920,
+                        "height": 887
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (12).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (12).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "公主連結01"
+                        "name": "公主連結01",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (12).webp",
+                        "width": 837,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (13).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (13).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "公主連結02"
+                        "name": "公主連結02",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (13).webp",
+                        "width": 836,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (14).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (14).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "公主連結03"
+                        "name": "公主連結03",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (14).webp",
+                        "width": 836,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (15).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (15).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "hololive01"
+                        "name": "hololive01",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (15).webp",
+                        "width": 829,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (16).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (16).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "hololive02"
+                        "name": "hololive02",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (16).webp",
+                        "width": 829,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (17).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (17).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "hololive03"
+                        "name": "hololive03",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (17).webp",
+                        "width": 1753,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (18).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (18).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "hololive04"
+                        "name": "hololive04",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (18).webp",
+                        "width": 1920,
+                        "height": 914
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (19).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (19).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "hololive05"
+                        "name": "hololive05",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (19).webp",
+                        "width": 572,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (20).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (20).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "安妮亞"
+                        "name": "安妮亞",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (20).webp",
+                        "width": 1190,
+                        "height": 667
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (21).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (21).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "新世紀福音戰士"
+                        "name": "新世紀福音戰士",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (21).webp",
+                        "width": 848,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (22).png",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (22).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "賽馬娘"
+                        "name": "賽馬娘",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (22).webp",
+                        "width": 1833,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (23).jpg",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (23).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "FGO"
+                        "name": "FGO",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (23).webp",
+                        "width": 597,
+                        "height": 817
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (24).jpg",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (24).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "FGO"
+                        "name": "FGO",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (24).webp",
+                        "width": 1000,
+                        "height": 574
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (26).jpg",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (26).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "無題01"
+                        "name": "無題01",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (26).webp",
+                        "width": 1568,
+                        "height": 878
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (27).jpg",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (27).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "無題02"
+                        "name": "無題02",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (27).webp",
+                        "width": 635,
+                        "height": 817
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (28).jpg",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (28).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "無題03"
+                        "name": "無題03",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (28).webp",
+                        "width": 493,
+                        "height": 800
                     },
                     {
                         "src": "assets/angle_0_0/03/A/日系插畫 (29).jpg",
                         "thumb": "assets/angle_0_0/03/pre/日系插畫 (29).jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "無題04"
+                        "name": "無題04",
+                        "web": "assets/angle_0_0/03/A/web/日系插畫 (29).webp",
+                        "width": 745,
+                        "height": 1080
                     }
                 ]
             },
@@ -771,121 +1068,181 @@
                         "src": "assets/angle_0_0/03/B/471300541_1114987176830920_7037973112094776942_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471300541_1114987176830920_7037973112094776942_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "01"
+                        "name": "01",
+                        "web": "assets/angle_0_0/03/B/web/471300541_1114987176830920_7037973112094776942_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471487449_1114987313497573_8688005394641479791_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471487449_1114987313497573_8688005394641479791_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "02"
+                        "name": "02",
+                        "web": "assets/angle_0_0/03/B/web/471487449_1114987313497573_8688005394641479791_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471465521_1114987500164221_115321812189139874_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471465521_1114987500164221_115321812189139874_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "03"
+                        "name": "03",
+                        "web": "assets/angle_0_0/03/B/web/471465521_1114987500164221_115321812189139874_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471183797_1114987146830923_5909759392109440687_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471183797_1114987146830923_5909759392109440687_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "04"
+                        "name": "04",
+                        "web": "assets/angle_0_0/03/B/web/471183797_1114987146830923_5909759392109440687_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471503593_1114987076830930_6590372533194462303_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471503593_1114987076830930_6590372533194462303_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "05"
+                        "name": "05",
+                        "web": "assets/angle_0_0/03/B/web/471503593_1114987076830930_6590372533194462303_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471199910_1114987066830931_4403454851536212453_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471199910_1114987066830931_4403454851536212453_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "06"
+                        "name": "06",
+                        "web": "assets/angle_0_0/03/B/web/471199910_1114987066830931_4403454851536212453_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471425005_1114987056830932_7967943718949504561_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471425005_1114987056830932_7967943718949504561_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "07"
+                        "name": "07",
+                        "web": "assets/angle_0_0/03/B/web/471425005_1114987056830932_7967943718949504561_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/472098480_1114987013497603_9030566133682405472_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/472098480_1114987013497603_9030566133682405472_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "08"
+                        "name": "08",
+                        "web": "assets/angle_0_0/03/B/web/472098480_1114987013497603_9030566133682405472_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471619803_1114987156830922_646613526970034131_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471619803_1114987156830922_646613526970034131_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "09"
+                        "name": "09",
+                        "web": "assets/angle_0_0/03/B/web/471619803_1114987156830922_646613526970034131_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471201938_1114987473497557_9046061671321317677_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471201938_1114987473497557_9046061671321317677_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "10"
+                        "name": "10",
+                        "web": "assets/angle_0_0/03/B/web/471201938_1114987473497557_9046061671321317677_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471475943_1114987220164249_2921702297080988029_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471475943_1114987220164249_2921702297080988029_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "11"
+                        "name": "11",
+                        "web": "assets/angle_0_0/03/B/web/471475943_1114987220164249_2921702297080988029_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471204751_1114987490164222_4583558828026254621_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471204751_1114987490164222_4583558828026254621_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "12"
+                        "name": "12",
+                        "web": "assets/angle_0_0/03/B/web/471204751_1114987490164222_4583558828026254621_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471510065_1114987496830888_2906258023542884227_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471510065_1114987496830888_2906258023542884227_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "13"
+                        "name": "13",
+                        "web": "assets/angle_0_0/03/B/web/471510065_1114987496830888_2906258023542884227_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471512875_1114987163497588_923774849346020566_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471512875_1114987163497588_923774849346020566_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "14"
+                        "name": "14",
+                        "web": "assets/angle_0_0/03/B/web/471512875_1114987163497588_923774849346020566_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/471374203_1114987180164253_8519775722735570970_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/471374203_1114987180164253_8519775722735570970_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "15"
+                        "name": "15",
+                        "web": "assets/angle_0_0/03/B/web/471374203_1114987180164253_8519775722735570970_n.webp",
+                        "width": 719,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/473015436_1123353075994330_8768599572879595215_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/473015436_1123353075994330_8768599572879595215_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "16"
+                        "name": "16",
+                        "web": "assets/angle_0_0/03/B/web/473015436_1123353075994330_8768599572879595215_n.webp",
+                        "width": 1272,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/470529038_1115591073437197_8047971653685418016_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/470529038_1115591073437197_8047971653685418016_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "17"
+                        "name": "17",
+                        "web": "assets/angle_0_0/03/B/web/470529038_1115591073437197_8047971653685418016_n.webp",
+                        "width": 1729,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/473152772_1123352045994433_2860532979711464847_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/473152772_1123352045994433_2860532979711464847_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "18"
+                        "name": "18",
+                        "web": "assets/angle_0_0/03/B/web/473152772_1123352045994433_2860532979711464847_n.webp",
+                        "width": 1272,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/473100927_1123364642659840_3341099686243769821_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/473100927_1123364642659840_3341099686243769821_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "19"
+                        "name": "19",
+                        "web": "assets/angle_0_0/03/B/web/473100927_1123364642659840_3341099686243769821_n.webp",
+                        "width": 1272,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/03/B/473080568_1123905832605721_5541755308055338270_n.jpg",
                         "thumb": "assets/angle_0_0/03/pre/473080568_1123905832605721_5541755308055338270_n.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "20"
+                        "name": "20",
+                        "web": "assets/angle_0_0/03/B/web/473080568_1123905832605721_5541755308055338270_n.webp",
+                        "width": 1272,
+                        "height": 1080
                     }
                 ]
             }
@@ -943,127 +1300,190 @@
                         "src": "assets/angle_0_0/04/A/Life 01.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 01.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 01"
+                        "name": "Life 01",
+                        "web": "assets/angle_0_0/04/A/web/Life 01.webp",
+                        "width": 814,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 02.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 02.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 02"
+                        "name": "Life 02",
+                        "web": "assets/angle_0_0/04/A/web/Life 02.webp",
+                        "width": 1100,
+                        "height": 1047
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 03.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 03.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 03"
+                        "name": "Life 03",
+                        "web": "assets/angle_0_0/04/A/web/Life 03.webp",
+                        "width": 900,
+                        "height": 844
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 04.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 04.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 04"
+                        "name": "Life 04",
+                        "web": "assets/angle_0_0/04/A/web/Life 04.webp",
+                        "width": 1200,
+                        "height": 986
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 05.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 05.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 05"
+                        "name": "Life 05",
+                        "web": "assets/angle_0_0/04/A/web/Life 05.webp",
+                        "width": 944,
+                        "height": 999
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 06.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 06.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 06"
+                        "name": "Life 06",
+                        "web": "assets/angle_0_0/04/A/web/Life 06.webp",
+                        "width": 1581,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 07.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 07.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 07"
+                        "name": "Life 07",
+                        "web": "assets/angle_0_0/04/A/web/Life 07.webp",
+                        "width": 1668,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 08.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 08.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 08"
+                        "name": "Life 08",
+                        "web": "assets/angle_0_0/04/A/web/Life 08.webp",
+                        "width": 784,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 09.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 09.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 09"
+                        "name": "Life 09",
+                        "web": "assets/angle_0_0/04/A/web/Life 09.webp",
+                        "width": 1920,
+                        "height": 953
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 11.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 11.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 11"
+                        "name": "Life 11",
+                        "web": "assets/angle_0_0/04/A/web/Life 11.webp",
+                        "width": 900,
+                        "height": 786
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 12.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 12.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 12"
+                        "name": "Life 12",
+                        "web": "assets/angle_0_0/04/A/web/Life 12.webp",
+                        "width": 1200,
+                        "height": 906
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 13.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 13.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 13"
+                        "name": "Life 13",
+                        "web": "assets/angle_0_0/04/A/web/Life 13.webp",
+                        "width": 1300,
+                        "height": 702
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 14.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 14.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 14"
+                        "name": "Life 14",
+                        "web": "assets/angle_0_0/04/A/web/Life 14.webp",
+                        "width": 1214,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 15.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 15.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 15"
+                        "name": "Life 15",
+                        "web": "assets/angle_0_0/04/A/web/Life 15.webp",
+                        "width": 1900,
+                        "height": 1019
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 16.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 16.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 16"
+                        "name": "Life 16",
+                        "web": "assets/angle_0_0/04/A/web/Life 16.webp",
+                        "width": 868,
+                        "height": 1080
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 17.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 17.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 17"
+                        "name": "Life 17",
+                        "web": "assets/angle_0_0/04/A/web/Life 17.webp",
+                        "width": 900,
+                        "height": 640
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 18.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 18.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 18"
+                        "name": "Life 18",
+                        "web": "assets/angle_0_0/04/A/web/Life 18.webp",
+                        "width": 1200,
+                        "height": 1010
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 19.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 19.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 19"
+                        "name": "Life 19",
+                        "web": "assets/angle_0_0/04/A/web/Life 19.webp",
+                        "width": 950,
+                        "height": 727
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 21.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 21.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 21"
+                        "name": "Life 21",
+                        "web": "assets/angle_0_0/04/A/web/Life 21.webp",
+                        "width": 756,
+                        "height": 755
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 22.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 22.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 22"
+                        "name": "Life 22",
+                        "web": "assets/angle_0_0/04/A/web/Life 22.webp",
+                        "width": 756,
+                        "height": 755
                     },
                     {
                         "src": "assets/angle_0_0/04/A/Life 23.png",
                         "thumb": "assets/angle_0_0/04/pre/Life 23.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "Life 23"
+                        "name": "Life 23",
+                        "web": "assets/angle_0_0/04/A/web/Life 23.webp",
+                        "width": 756,
+                        "height": 755
                     }
                 ]
             },
@@ -1075,61 +1495,91 @@
                         "src": "assets/angle_0_0/04/B/fadb8705b6208321d4f95509dfaff687.jpg",
                         "thumb": "assets/angle_0_0/04/pre/fadb8705b6208321d4f95509dfaff687.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "01"
+                        "name": "01",
+                        "web": "assets/angle_0_0/04/B/web/fadb8705b6208321d4f95509dfaff687.webp",
+                        "width": 300,
+                        "height": 533
                     },
                     {
                         "src": "assets/angle_0_0/04/B/fe7d9ba01791a01a3d88a2226e2496e1.jpg",
                         "thumb": "assets/angle_0_0/04/pre/fe7d9ba01791a01a3d88a2226e2496e1.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "02"
+                        "name": "02",
+                        "web": "assets/angle_0_0/04/B/web/fe7d9ba01791a01a3d88a2226e2496e1.webp",
+                        "width": 500,
+                        "height": 692
                     },
                     {
                         "src": "assets/angle_0_0/04/B/a6ccbc9e75998d333b3d5fb6f7770fde.jpg",
                         "thumb": "assets/angle_0_0/04/pre/a6ccbc9e75998d333b3d5fb6f7770fde.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "03"
+                        "name": "03",
+                        "web": "assets/angle_0_0/04/B/web/a6ccbc9e75998d333b3d5fb6f7770fde.webp",
+                        "width": 500,
+                        "height": 692
                     },
                     {
                         "src": "assets/angle_0_0/04/B/f04f4ec852c21a7840597da57be8b720.jpg",
                         "thumb": "assets/angle_0_0/04/pre/f04f4ec852c21a7840597da57be8b720.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "04"
+                        "name": "04",
+                        "web": "assets/angle_0_0/04/B/web/f04f4ec852c21a7840597da57be8b720.webp",
+                        "width": 500,
+                        "height": 692
                     },
                     {
                         "src": "assets/angle_0_0/04/B/4adcc4c2837188898d693612908f9d1e.jpg",
                         "thumb": "assets/angle_0_0/04/pre/4adcc4c2837188898d693612908f9d1e.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "05"
+                        "name": "05",
+                        "web": "assets/angle_0_0/04/B/web/4adcc4c2837188898d693612908f9d1e.webp",
+                        "width": 500,
+                        "height": 692
                     },
                     {
                         "src": "assets/angle_0_0/04/B/c185aae873c22732c02b1b3188cd7c08.jpg",
                         "thumb": "assets/angle_0_0/04/pre/c185aae873c22732c02b1b3188cd7c08.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "06"
+                        "name": "06",
+                        "web": "assets/angle_0_0/04/B/web/c185aae873c22732c02b1b3188cd7c08.webp",
+                        "width": 500,
+                        "height": 692
                     },
                     {
                         "src": "assets/angle_0_0/04/B/b5cc13e5af5fa673bc405d2414b26d9f.jpg",
                         "thumb": "assets/angle_0_0/04/pre/b5cc13e5af5fa673bc405d2414b26d9f.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "07"
+                        "name": "07",
+                        "web": "assets/angle_0_0/04/B/web/b5cc13e5af5fa673bc405d2414b26d9f.webp",
+                        "width": 500,
+                        "height": 692
                     },
                     {
                         "src": "assets/angle_0_0/04/B/1da032bc2504ee29f2bf323bbd7767aa.jpg",
                         "thumb": "assets/angle_0_0/04/pre/1da032bc2504ee29f2bf323bbd7767aa.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "08"
+                        "name": "08",
+                        "web": "assets/angle_0_0/04/B/web/1da032bc2504ee29f2bf323bbd7767aa.webp",
+                        "width": 500,
+                        "height": 692
                     },
                     {
                         "src": "assets/angle_0_0/04/B/8434d0a0cdf4a791b0d0c8be94a5e1ab.jpg",
                         "thumb": "assets/angle_0_0/04/pre/8434d0a0cdf4a791b0d0c8be94a5e1ab.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "09"
+                        "name": "09",
+                        "web": "assets/angle_0_0/04/B/web/8434d0a0cdf4a791b0d0c8be94a5e1ab.webp",
+                        "width": 500,
+                        "height": 692
                     },
                     {
                         "src": "assets/angle_0_0/04/B/c8ed6e0ce3f9632276448c1ad2ea247b.jpg",
                         "thumb": "assets/angle_0_0/04/pre/c8ed6e0ce3f9632276448c1ad2ea247b.jpg",
                         "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                        "name": "10"
+                        "name": "10",
+                        "web": "assets/angle_0_0/04/B/web/c8ed6e0ce3f9632276448c1ad2ea247b.webp",
+                        "width": 500,
+                        "height": 692
                     }
                 ]
             }

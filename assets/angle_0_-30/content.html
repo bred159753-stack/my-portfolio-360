@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+    <title>關於我 - 自我介紹</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        peach: {
+                            300: '#fde5be',
+                            400: '#fcd8a0',
+                            500: '#fcd191',
+                            600: '#e0b879',
+                        },
+                        charcoal: {
+                            800: '#2c2c31',
+                            850: '#232327',
+                            900: '#1c1c1f',
+                            950: '#141416',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141416;
+            color: #f3f4f6;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="p-1 md:p-2 pt-1 md:pt-1 h-screen bg-charcoal-950 selection:bg-peach-500 selection:text-charcoal-950 overflow-hidden">
+
+    <style>
+        #angle0n30-wrapper { height: 100%; max-height: 100%; padding-top: env(safe-area-inset-top, 0px); box-sizing: border-box; }
+        #angle0n30-wrapper .glass-panel {
+            background: rgba(35, 35, 39, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        #angle0n30-wrapper .no-scrollbar::-webkit-scrollbar { display: none; }
+        #angle0n30-wrapper .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* 內容區：直向捲動，保留細捲軸 */
+        #angle0n30-stage {
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(252, 209, 145, 0.35) transparent;
+        }
+        #angle0n30-stage::-webkit-scrollbar { width: 6px; }
+        #angle0n30-stage::-webkit-scrollbar-thumb { background: rgba(252, 209, 145, 0.35); border-radius: 999px; }
+
+        /* 小類別列：手機版橫向滑動 */
+        #angle0n30-subcat-tags { touch-action: pan-x; overscroll-behavior-x: contain; }
+
+        /* 切換小類別時的淡入 */
+        .angle0n30-fade-in { animation: angle0n30-fade 0.35s ease both; }
+        @keyframes angle0n30-fade {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 履歷時間軸 */
+        .angle0n30-timeline { position: relative; padding-left: 1.25rem; }
+        .angle0n30-timeline::before {
+            content: ''; position: absolute; left: 0.3rem; top: 0.4rem; bottom: 0.4rem;
+            width: 2px; background: linear-gradient(180deg, rgba(252, 209, 145, 0.7), rgba(252, 209, 145, 0.08));
+            border-radius: 2px;
+        }
+        .angle0n30-timeline-dot {
+            position: absolute; left: -1.25rem; top: 1.1rem; margin-left: 0.05rem;
+            width: 0.75rem; height: 0.75rem; border-radius: 999px;
+            background: #fcd191; box-shadow: 0 0 0 4px rgba(252, 209, 145, 0.18);
+        }
+
+        /* 主題面板收折（手機版） */
+        #angle0n30-theme-collapse {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 300px; opacity: 1; overflow: hidden;
+        }
+        #angle0n30-theme-collapse.is-collapsed { max-height: 0; opacity: 0; pointer-events: none; }
+        @media (min-width: 768px) {
+            #angle0n30-theme-collapse,
+            #angle0n30-theme-collapse.is-collapsed { max-height: none; opacity: 1; pointer-events: auto; overflow: visible; }
+        }
+    </style>
+
+    <div id="angle0n30-wrapper" class="relative w-full h-full max-w-[1536px] mx-auto text-gray-100 flex flex-col justify-between overflow-hidden pt-0 gap-2">
+
+        <!-- 1. 上方：主題選擇 -->
+        <div class="w-full flex flex-col items-center justify-center relative z-40 flex-shrink-0">
+            <div id="angle0n30-theme-collapse" class="w-full flex justify-center">
+                <div class="glass-panel px-3 md:px-4 py-1.5 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center gap-2 max-w-[70vw] md:max-w-none">
+                    <div id="angle0n30-theme-tags" class="flex flex-wrap md:flex-nowrap justify-center items-center gap-1.5 md:gap-2 md:overflow-x-auto no-scrollbar md:max-w-[calc(100vw-6.5rem)]">
+                        <!-- 主題按鈕由 JS 產生 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 手機版主題面板收折 -->
+            <button id="angle0n30-theme-toggle" onclick="window.angle0n30ToggleThemePanel()"
+                    class="md:hidden glass-panel px-6 py-1 rounded-b-2xl border-t-0 -mt-[1px] max-w-[70vw] text-gray-300 flex items-center justify-center gap-2 shadow-xl cursor-pointer active:scale-95 transition"
+                    title="收折/展開主題">
+                <div class="w-8 h-1 bg-peach-500/70 rounded-full"></div>
+                <span id="angle0n30-theme-toggle-icon" class="text-[10px] text-peach-400 font-bold">▲</span>
+            </button>
+
+            <!-- 關閉 -->
+            <button onclick="window.angle0n30CloseModal()"
+                    class="absolute right-0 top-0 md:top-1/2 md:-translate-y-1/2 w-8 h-8 rounded-xl bg-charcoal-900/90 hover:bg-rose-500/30 hover:border-rose-400/50 flex items-center justify-center text-xs text-gray-300 hover:text-white transition border border-white/10 shadow-md flex-shrink-0 cursor-pointer"
+                    title="關閉面板">
+                ✕
+            </button>
+        </div>
+
+        <!-- 2. 主面板 -->
+        <div class="glass-panel rounded-3xl p-3 md:p-5 border border-white/10 shadow-2xl flex-1 min-h-0 w-full flex flex-col overflow-hidden">
+
+            <!-- 小類別列 -->
+            <header class="flex items-center justify-between gap-2 pb-2.5 border-b border-white/10 z-30 flex-shrink-0">
+                <div id="angle0n30-subcat-tags" class="flex flex-nowrap md:flex-wrap items-center gap-1.5 min-w-0 overflow-x-auto md:overflow-x-visible no-scrollbar py-0.5">
+                    <!-- 小類別按鈕由 JS 產生 -->
+                </div>
+
+                <div class="flex items-center gap-2 ml-auto flex-shrink-0">
+                    <span id="angle0n30-counter" class="font-mono bg-white/10 px-3 py-1 rounded-full text-xs text-peach-300 font-bold">
+                        1 / 1
+                    </span>
+                </div>
+            </header>
+
+            <!-- 內容區 -->
+            <div id="angle0n30-stage" class="relative flex-1 min-h-0 w-full pt-3 md:pt-4 pr-1">
+                <div id="angle0n30-loader" class="h-full flex items-center justify-center text-xs font-semibold text-peach-300 tracking-wide">載入中…</div>
+                <div id="angle0n30-content"></div>
+            </div>
+
+            <!-- 底部：上一個 / 下一個小類別 -->
+            <footer class="w-full pt-2 border-t border-white/10 flex-shrink-0 flex items-center justify-between gap-2" style="padding-bottom: env(safe-area-inset-bottom, 0px);">
+                <button id="angle0n30-prev" onclick="window.angle0n30Nav(-1)"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold glass-panel text-gray-300 hover:text-white hover:bg-white/10 border border-white/10 transition active:scale-95 truncate max-w-[45%]">
+                    ‹
+                </button>
+                <button id="angle0n30-next" onclick="window.angle0n30Nav(1)"
+                        class="px-3 py-1.5 rounded-xl text-xs font-bold glass-panel text-gray-300 hover:text-white hover:bg-white/10 border border-white/10 transition active:scale-95 truncate max-w-[45%] ml-auto">
+                    ›
+                </button>
+            </footer>
+        </div>
+
+        <div id="angle0n30-toast"
+             class="absolute left-1/2 -translate-x-1/2 top-24 z-50 px-4 py-1.5 rounded-full bg-peach-500 text-charcoal-950 font-bold text-xs shadow-2xl transition-all duration-500 opacity-0 pointer-events-none">
+            <span id="angle0n30-toast-text"></span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            let DATABASE = {};
+            let activeCategoryKey = '01';
+            let activeSubIdx = 0;
+            let dataBaseUrl = '';
+            let toastTimer = null;
+
+            function escapeHTML(str) {
+                return String(str == null ? '' : str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            }
+
+            // JSON 內的圖片路徑以網站根目錄為準 (assets/angle_0_-30/...)；
+            // 直接開啟本資料夾的 content.html 時改成相對路徑
+            function resolveAsset(path) {
+                if (!path) return '';
+                if (/^(https?:|data:|blob:|\/)/.test(path)) return path;
+                if (dataBaseUrl === 'portfolio_data.json' && path.startsWith('assets/angle_0_-30/')) {
+                    return path.slice('assets/angle_0_-30/'.length);
+                }
+                return path;
+            }
+
+            function safeUrl(url) {
+                const u = String(url || '').trim();
+                return /^(https?:|mailto:)/i.test(u) ? u : '';
+            }
+
+            window.initAngle0n30App = async function() {
+                const panelFolder = window.__currentPanelFolder;
+                const pathsToTry = [
+                    ...(panelFolder ? [panelFolder + 'portfolio_data.json'] : []),
+                    'assets/angle_0_-30/portfolio_data.json',
+                    'portfolio_data.json'
+                ];
+
+                for (const path of pathsToTry) {
+                    try {
+                        const res = await fetch(path, { cache: 'no-store' });
+                        if (!res.ok) continue;
+                        const rawJson = await res.json();
+                        if (rawJson && typeof rawJson === 'object' && Object.keys(rawJson).length > 0) {
+                            DATABASE = rawJson;
+                            dataBaseUrl = path;
+                            break;
+                        }
+                    } catch (e) {}
+                }
+
+                const loader = document.getElementById('angle0n30-loader');
+                const keys = Object.keys(DATABASE);
+                if (keys.length === 0) {
+                    if (loader) loader.innerText = '找不到 portfolio_data.json';
+                    return;
+                }
+                if (loader) loader.remove();
+
+                activeCategoryKey = keys[0];
+                renderThemeTags();
+                renderSubcategory(false);
+                setupSwipe();
+            };
+
+            function renderThemeTags() {
+                const tagsContainer = document.getElementById('angle0n30-theme-tags');
+                if (!tagsContainer) return;
+
+                let html = '';
+                Object.keys(DATABASE).forEach(catKey => {
+                    const cat = DATABASE[catKey];
+                    if (!cat || !cat.title) return;
+                    const isActive = catKey === activeCategoryKey;
+                    html += `
+                        <button onclick="window.angle0n30SelectTheme('${catKey}')"
+                                class="px-3 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border flex-shrink-0 cursor-pointer ${
+                                    isActive
+                                    ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20 font-extrabold'
+                                    : 'glass-panel text-gray-300 hover:text-white hover:bg-white/10 border-white/10'
+                                }">
+                            ${escapeHTML(cat.title)}
+                        </button>
+                    `;
+                });
+                tagsContainer.innerHTML = html;
+            }
+
+            function renderSubcategoryTags() {
+                const subcatContainer = document.getElementById('angle0n30-subcat-tags');
+                if (!subcatContainer) return;
+                const cat = DATABASE[activeCategoryKey];
+                const subs = (cat && Array.isArray(cat.subcategories)) ? cat.subcategories : [];
+
+                subcatContainer.innerHTML = subs.map((sub, idx) => {
+                    const isActive = idx === activeSubIdx;
+                    return `
+                        <button onclick="window.angle0n30SelectSub(${idx})" data-sub-idx="${idx}"
+                                class="px-2.5 py-1 rounded-xl text-xs font-bold transition flex-shrink-0 cursor-pointer border ${
+                                    isActive
+                                    ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20 font-extrabold'
+                                    : 'glass-panel text-gray-300 hover:text-white hover:bg-white/10 border-white/10'
+                                }">
+                            ${escapeHTML(sub.name)}
+                        </button>
+                    `;
+                }).join('');
+
+                const activeBtn = subcatContainer.querySelector(`[data-sub-idx="${activeSubIdx}"]`);
+                if (activeBtn && subcatContainer.scrollWidth > subcatContainer.clientWidth) {
+                    subcatContainer.scrollTo({
+                        left: activeBtn.offsetLeft - (subcatContainer.clientWidth - activeBtn.offsetWidth) / 2,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+
+            function renderItem(item, style) {
+                const isTimeline = style === 'timeline';
+                const img = resolveAsset(item.image);
+                const link = item.link ? safeUrl(item.link.url) : '';
+
+                const fields = Array.isArray(item.fields) && item.fields.length ? `
+                    <dl class="grid grid-cols-[auto,1fr] gap-x-4 gap-y-1.5 text-xs mt-3">
+                        ${item.fields.map(f => `
+                            <dt class="text-gray-400 whitespace-nowrap">${escapeHTML(f.label)}</dt>
+                            <dd class="text-gray-100 font-medium break-words">${escapeHTML(f.value)}</dd>
+                        `).join('')}
+                    </dl>` : '';
+
+                const points = Array.isArray(item.points) && item.points.length ? `
+                    <ul class="mt-2.5 space-y-1 text-xs text-gray-300">
+                        ${item.points.map(p => `
+                            <li class="flex gap-2"><span class="text-peach-400 flex-shrink-0">•</span><span>${escapeHTML(p)}</span></li>
+                        `).join('')}
+                    </ul>` : '';
+
+                const tags = Array.isArray(item.tags) && item.tags.length ? `
+                    <div class="mt-3 flex flex-wrap gap-1.5">
+                        ${item.tags.map(t => `
+                            <span class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-peach-500/10 text-peach-300 border border-peach-500/25">${escapeHTML(t)}</span>
+                        `).join('')}
+                    </div>` : '';
+
+                const linkHtml = link ? `
+                    <a href="${escapeHTML(link)}" target="_blank" rel="noopener noreferrer"
+                       class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-peach-500 hover:bg-peach-400 text-charcoal-950 shadow-lg shadow-peach-500/20 transition">
+                        ${escapeHTML(item.link.label || '前往連結')} ↗
+                    </a>` : '';
+
+                const imgHtml = img ? `
+                    <img src="${escapeHTML(img)}" alt="" draggable="false" decoding="async"
+                         class="w-full md:w-40 max-h-56 md:max-h-48 object-contain rounded-xl border border-white/15 bg-black/30 flex-shrink-0 select-none"
+                         onerror="this.remove()">` : '';
+
+                return `
+                    <article class="relative">
+                        ${isTimeline ? '<span class="angle0n30-timeline-dot"></span>' : ''}
+                        <div class="rounded-2xl bg-charcoal-900/70 border border-white/10 p-4 md:p-5 shadow-lg flex flex-col md:flex-row gap-4 h-full">
+                            ${imgHtml}
+                            <div class="min-w-0 flex-1">
+                                ${item.meta ? `<div class="text-[11px] font-semibold text-peach-400 tracking-wide mb-1">${escapeHTML(item.meta)}</div>` : ''}
+                                ${item.title ? `<h3 class="text-sm md:text-base font-bold text-white">${escapeHTML(item.title)}</h3>` : ''}
+                                ${item.text ? `<p class="mt-1.5 text-xs md:text-[13px] leading-relaxed text-gray-300 whitespace-pre-line">${escapeHTML(item.text)}</p>` : ''}
+                                ${fields}${points}${tags}${linkHtml}
+                            </div>
+                        </div>
+                    </article>
+                `;
+            }
+
+            function renderSubcategory(showToast) {
+                const cat = DATABASE[activeCategoryKey];
+                const subs = (cat && Array.isArray(cat.subcategories)) ? cat.subcategories : [];
+                if (activeSubIdx >= subs.length) activeSubIdx = Math.max(0, subs.length - 1);
+                const sub = subs[activeSubIdx];
+
+                renderSubcategoryTags();
+
+                const counterEl = document.getElementById('angle0n30-counter');
+                if (counterEl) counterEl.innerText = subs.length ? `${activeSubIdx + 1} / ${subs.length}` : '0 / 0';
+
+                const prevBtn = document.getElementById('angle0n30-prev');
+                const nextBtn = document.getElementById('angle0n30-next');
+                if (prevBtn) {
+                    prevBtn.style.visibility = activeSubIdx > 0 ? 'visible' : 'hidden';
+                    prevBtn.innerText = activeSubIdx > 0 ? `‹ ${subs[activeSubIdx - 1].name}` : '‹';
+                }
+                if (nextBtn) {
+                    nextBtn.style.visibility = activeSubIdx < subs.length - 1 ? 'visible' : 'hidden';
+                    nextBtn.innerText = activeSubIdx < subs.length - 1 ? `${subs[activeSubIdx + 1].name} ›` : '›';
+                }
+
+                const contentEl = document.getElementById('angle0n30-content');
+                const stageEl = document.getElementById('angle0n30-stage');
+                if (!contentEl) return;
+
+                if (!sub) {
+                    contentEl.innerHTML = '<div class="py-12 text-center text-xs text-gray-500">此主題尚無小類別</div>';
+                    return;
+                }
+
+                const items = Array.isArray(sub.items) ? sub.items : [];
+                const isTimeline = sub.style === 'timeline';
+                const listClass = isTimeline
+                    ? 'angle0n30-timeline flex flex-col gap-3 max-w-3xl'
+                    : 'grid grid-cols-1 lg:grid-cols-2 gap-3';
+
+                contentEl.innerHTML = `
+                    <div class="angle0n30-fade-in">
+                        <div class="mb-3 md:mb-4">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <span class="px-2.5 py-0.5 bg-peach-500/20 text-peach-300 text-[11px] font-semibold rounded-md border border-peach-500/30">${escapeHTML(cat.tag || cat.title)}</span>
+                                <h2 class="text-base md:text-lg font-extrabold text-white">${escapeHTML(sub.name)}</h2>
+                            </div>
+                            ${cat.desc ? `<p class="mt-1 text-[11px] text-gray-400">${escapeHTML(cat.desc)}</p>` : ''}
+                        </div>
+                        ${items.length
+                            ? `<div class="${listClass}">${items.map(it => renderItem(it, sub.style)).join('')}</div>`
+                            : '<div class="py-12 text-center text-xs text-gray-500">此小類別尚無內容</div>'}
+                    </div>
+                `;
+                if (stageEl) stageEl.scrollTop = 0;
+
+                if (showToast) triggerToast(showToast === true ? sub.name : showToast);
+            }
+
+            window.angle0n30SelectTheme = function(catKey) {
+                if (catKey === activeCategoryKey || !DATABASE[catKey]) return;
+                activeCategoryKey = catKey;
+                activeSubIdx = 0;
+                renderThemeTags();
+                renderSubcategory(`主題：${DATABASE[catKey].title}`);
+            };
+
+            window.angle0n30SelectSub = function(idx) {
+                if (idx === activeSubIdx) return;
+                activeSubIdx = idx;
+                renderSubcategory(false);
+            };
+
+            // 不循環：第一個往前 / 最後一個往後時停在原地
+            window.angle0n30Nav = function(direction) {
+                const cat = DATABASE[activeCategoryKey];
+                const total = (cat && Array.isArray(cat.subcategories)) ? cat.subcategories.length : 0;
+                const next = activeSubIdx + direction;
+                if (next < 0 || next >= total) return;
+                activeSubIdx = next;
+                renderSubcategory(true);
+            };
+
+            window.angle0n30ToggleThemePanel = function() {
+                const panel = document.getElementById('angle0n30-theme-collapse');
+                const icon = document.getElementById('angle0n30-theme-toggle-icon');
+                if (!panel) return;
+                const collapsed = panel.classList.toggle('is-collapsed');
+                if (icon) icon.innerText = collapsed ? '▼' : '▲';
+            };
+
+            function triggerToast(textMsg) {
+                const toastEl = document.getElementById('angle0n30-toast');
+                const toastTextEl = document.getElementById('angle0n30-toast-text');
+                if (!toastEl || !toastTextEl) return;
+                toastTextEl.innerText = textMsg;
+                toastEl.classList.remove('opacity-0');
+                toastEl.classList.add('opacity-100');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => {
+                    toastEl.classList.remove('opacity-100');
+                    toastEl.classList.add('opacity-0');
+                }, 1500);
+            }
+
+            // 內容區左右滑動切換小類別（直向捲動不受影響）
+            function setupSwipe() {
+                const stageEl = document.getElementById('angle0n30-stage');
+                if (!stageEl) return;
+                let sx = 0, sy = 0;
+                stageEl.addEventListener('touchstart', (e) => {
+                    sx = e.changedTouches[0].clientX;
+                    sy = e.changedTouches[0].clientY;
+                }, { passive: true });
+                stageEl.addEventListener('touchend', (e) => {
+                    const dx = e.changedTouches[0].clientX - sx;
+                    const dy = e.changedTouches[0].clientY - sy;
+                    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                        window.angle0n30Nav(dx < 0 ? 1 : -1);
+                    }
+                }, { passive: true });
+            }
+
+            window.angle0n30CloseModal = function() {
+                const modalDetails = document.getElementById('modal-details');
+                if (modalDetails) {
+                    modalDetails.classList.add('opacity-0', 'pointer-events-none', 'hidden');
+                }
+                if (typeof window.closeModalFallback === 'function') {
+                    try {
+                        window.closeModalFallback();
+                    } catch (e) {
+                        console.warn('closeModalFallback error:', e);
+                    }
+                }
+            };
+
+            window.initAngle0n30App();
+        })();
+    </script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="zh-TW" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
     <title>360° Spatial Portfolio</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -47,6 +47,10 @@
             color: #f3f4f6;
             touch-action: none;
         }
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
         #webgl-container {
             width: 100%;
             height: 100%;
@@ -56,6 +60,13 @@
             z-index: 1;
             cursor: grab;
             touch-action: none;
+            overflow: hidden;
+        }
+        /* canvas 尺寸交給 CSS，避免轉向時舊的 px 寬度撐大版面，手機瀏覽器因此整頁縮小 */
+        #webgl-container canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
         }
         #webgl-container:active {
             cursor: grabbing;
@@ -251,8 +262,26 @@
         }
         setAppHeight();
         window.addEventListener('resize', setAppHeight);
-        window.addEventListener('orientationchange', () => setTimeout(setAppHeight, 200));
         if (window.visualViewport) window.visualViewport.addEventListener('resize', setAppHeight);
+
+        // 版面實際寬高：用 documentElement.clientWidth/Height，不用 innerWidth
+        // (innerWidth 在手機上會被溢出的內容撐大，轉向回直式後就回不去)
+        function getViewSize() {
+            const de = document.documentElement;
+            return {
+                w: de.clientWidth || window.innerWidth,
+                h: de.clientHeight || window.innerHeight
+            };
+        }
+
+        // 手機轉向時部分瀏覽器 (iOS Safari) 的尺寸會晚一點才更新，
+        // 轉向後分兩次補發 resize，讓 360° 畫面與作品面板 (content.html) 都依最終尺寸重排
+        window.addEventListener('orientationchange', () => {
+            [250, 600].forEach(ms => setTimeout(() => {
+                setAppHeight();
+                window.dispatchEvent(new Event('resize'));
+            }, ms));
+        });
 
         /* ---------- 背景依序預載各 yaw/pitch 面板的作品圖片 ---------- */
         const BgPreloader = (function () {
@@ -281,7 +310,12 @@
                     if (typeof o === 'string') add(o);
                     else if (Array.isArray(o)) o.forEach(walk);
                     else if (o && typeof o === 'object') {
-                        Object.keys(o).forEach(k => { if (k !== 'fallback' && k !== 'bgFallback') walk(o[k]); });
+                        // 有壓縮圖 (web) 時只預載壓縮圖，不預載原圖 (src)
+                        Object.keys(o).forEach(k => {
+                            if (k === 'fallback' || k === 'bgFallback') return;
+                            if (k === 'src' && o.web) return;
+                            walk(o[k]);
+                        });
                     }
                 };
                 let gotJson = false;
@@ -316,7 +350,7 @@
                     const worker = async () => {
                         while (i < urls.length) {
                             // 使用者正在拖曳全景或開著作品面板時暫停，不搶頻寬
-                            while (isUserInteracting) await sleep(300);
+                            while (isUserInteracting || document.documentElement.classList.contains('modal-open')) await sleep(300);
                             const u = urls[i++];
                             await loadOne(u);
                             await sleep(40);
@@ -338,7 +372,7 @@
         })();
 
         function isDesktopViewport() {
-            return window.innerWidth >= 600;
+            return getViewSize().w >= 600;
         }
 
         function makeDefaultThumbs() {
@@ -358,7 +392,8 @@
                 let normalized = {};
                 if (Array.isArray(json.panels)) {
                     json.panels.forEach(p => {
-                        const key = p.key || `${p.yaw}_${p.pitch}`;
+                        // 一律用 yaw_pitch 當 key（例如 0_-30），拖曳吸附時算出的 key 才對得上
+                        const key = (p.yaw !== undefined && p.pitch !== undefined) ? `${p.yaw}_${p.pitch}` : p.key;
                         normalized[key] = p;
                     });
                 } else if (json && typeof json === 'object') {
@@ -393,6 +428,9 @@
                         it.marginBottomDesktop = it.marginBottomDesktop !== undefined ? Number(it.marginBottomDesktop) : 0;
                         it.maskPercentDesktop = it.maskPercentDesktop !== undefined ? Number(it.maskPercentDesktop) : 22;
 
+                        // 開啟當前主題預覽圖 (預設開啟)；關閉時不顯示縮圖列與展開/縮回按鈕
+                        it.showPreviewStrip = it.showPreviewStrip !== false;
+
                         it.preFolder = it.preFolder || base + 'pre/';
                         it.images = Array.isArray(it.images) ? it.images : [];
                         it.title = it.title || '';
@@ -410,7 +448,8 @@
             await loadBoardData();
 
             container = document.getElementById('webgl-container');
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
+            const initSize = getViewSize();
+            camera = new THREE.PerspectiveCamera(75, initSize.w / initSize.h, 1, 1100);
             scene = new THREE.Scene();
 
             const geometry = new THREE.SphereGeometry(500, 60, 40);
@@ -437,7 +476,7 @@
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(initSize.w, initSize.h, false);
             container.appendChild(renderer.domElement);
 
             createSpatialPanelElements();
@@ -508,7 +547,7 @@
                         ${escapeHTML(item.title)}
                     </div>
 
-                    <button class="btn-toggle-preview absolute -top-3 right-5 w-6 h-6 rounded-full bg-charcoal-900 border border-peach-500/50 text-peach-300 hover:bg-peach-500 hover:text-charcoal-950 flex items-center justify-center shadow-lg z-40 transition cursor-pointer pointer-events-auto" title="展開縮圖">
+                    ${item.showPreviewStrip !== false ? `<button class="btn-toggle-preview absolute -top-3 right-5 w-6 h-6 rounded-full bg-charcoal-900 border border-peach-500/50 text-peach-300 hover:bg-peach-500 hover:text-charcoal-950 flex items-center justify-center shadow-lg z-40 transition cursor-pointer pointer-events-auto" title="展開縮圖">
                         ${ICON_EXPAND}
                     </button>
 
@@ -517,7 +556,7 @@
                         <div class="thumb-viewport">
                             <div class="thumb-track"></div>
                         </div>
-                    </div>
+                    </div>` : ''}
 
                     <p class="text-gray-200 text-xs line-clamp-3 mb-3 leading-relaxed pt-1 w-full">
                         ${escapeHTML(item.desc)}
@@ -576,11 +615,12 @@
                 });
 
                 containerOverlay.appendChild(node);
-                spatialDomNodes[key] = {
+                // 保留 setupThumbStripController 先寫入的 controller，否則縮圖列不會自動展開
+                spatialDomNodes[key] = Object.assign(spatialDomNodes[key] || {}, {
                     element: node,
                     yaw: yaw,
                     pitch: pitch
-                };
+                });
             });
         }
 
@@ -670,7 +710,7 @@
                 const marginBottomMobile = item.marginBottomMobile !== undefined ? Number(item.marginBottomMobile) : 26;
                 const maskPercentMobile = item.maskPercentMobile !== undefined ? Number(item.maskPercentMobile) : 22;
 
-                const stripWidthDesktop = (item.stripWidthDesktop !== undefined && Number(item.stripWidthDesktop) > 0) ? Number(item.stripWidthDesktop) : window.innerWidth;
+                const stripWidthDesktop = (item.stripWidthDesktop !== undefined && Number(item.stripWidthDesktop) > 0) ? Number(item.stripWidthDesktop) : getViewSize().w;
                 const marginBottomDesktop = item.marginBottomDesktop !== undefined ? Number(item.marginBottomDesktop) : 0;
                 const maskPercentDesktop = item.maskPercentDesktop !== undefined ? Number(item.maskPercentDesktop) : 22;
 
@@ -749,7 +789,7 @@
                 });
 
                 const containerWidth = isDesktop 
-                    ? ((item.stripWidthDesktop && Number(item.stripWidthDesktop) > 0) ? Number(item.stripWidthDesktop) : window.innerWidth) 
+                    ? ((item.stripWidthDesktop && Number(item.stripWidthDesktop) > 0) ? Number(item.stripWidthDesktop) : getViewSize().w) 
                     : (item.stripWidthMobile || 312);
                 const centerScreen = containerWidth / 2;
 
@@ -764,6 +804,7 @@
             }
 
             st.rebuildLayout = function() {
+                if (st.open && st.anim) { st.anim.cancel(); st.anim = null; }
                 updateDimensionsAndLayout();
                 if (st.open) {
                     if (st.images) {
@@ -895,7 +936,10 @@
                     { transform: `${baseTransform} scale(1, 1)`, opacity: 1 }
                 ], { duration: 400, easing: 'cubic-bezier(0.22, 0.8, 0.3, 1)', fill: 'forwards' });
 
-                await st.anim.finished.catch(() => {});
+                const openAnim = st.anim;
+                await openAnim.finished.catch(() => {});
+                // 動畫結束後交還給 inline style，之後轉向重排時 transform 才會生效
+                if (st.open && st.anim === openAnim) { openAnim.cancel(); st.anim = null; }
             };
 
             st.closeStrip = async function() {
@@ -1092,6 +1136,7 @@
 
         function updateSpatialPanelPositions() {
             const radius = 400;
+            const viewSize = getViewSize();
 
             Object.keys(spatialDomNodes).forEach(key => {
                 const item = spatialDomNodes[key];
@@ -1114,8 +1159,8 @@
                 const projectedVec = vec.clone().project(camera);
 
                 if (dot > 0.2 && projectedVec.z < 1) {
-                    const screenX = (projectedVec.x * 0.5 + 0.5) * window.innerWidth;
-                    const screenY = (-(projectedVec.y * 0.5) + 0.5) * window.innerHeight;
+                    const screenX = (projectedVec.x * 0.5 + 0.5) * viewSize.w;
+                    const screenY = (-(projectedVec.y * 0.5) + 0.5) * viewSize.h;
 
                     const centerDist = Math.sqrt(
                         Math.pow(projectedVec.x, 2) + Math.pow(projectedVec.y, 2)
@@ -1213,9 +1258,11 @@
         }
 
         function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
+            if (!camera || !renderer) return;
+            const { w, h } = getViewSize();
+            camera.aspect = w / h;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(w, h, false);
 
             Object.keys(spatialDomNodes).forEach(k => {
                 const item = spatialDomNodes[k];
