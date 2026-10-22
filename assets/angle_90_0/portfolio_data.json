@@ -329,13 +329,20 @@
                 "assets/angle_90_0/03/pre/WY (1).jpg",
                 "assets/angle_90_0/03/pre/WY (2).jpg",
                 "assets/angle_90_0/03/pre/WY (3).jpg",
-                "assets/angle_90_0/03/pre/WY (10).jpg",
-                "assets/angle_90_0/03/pre/WY (9).jpg",
-                "assets/angle_90_0/03/pre/WY (7).jpg",
-                "assets/angle_90_0/03/pre/WY (8).jpg",
-                "assets/angle_90_0/03/pre/WY (6).jpg",
                 "assets/angle_90_0/03/pre/WY (5).jpg",
-                "assets/angle_90_0/03/pre/WY (11).jpg",
+                "assets/angle_90_0/03/pre/WY (6).jpg",
+                "assets/angle_90_0/03/pre/WY (7).jpg",
+                "assets/angle_90_0/03/pre/WY_2 (1).jpg",
+                "assets/angle_90_0/03/pre/WY_2 (7).jpg",
+                "assets/angle_90_0/03/pre/WY_2 (5).jpg",
+                "assets/angle_90_0/03/pre/WY_2 (4).jpg",
+                "assets/angle_90_0/03/pre/WY_2 (6).jpg",
+                "assets/angle_90_0/03/pre/WY_2 (3).jpg",
+                "assets/angle_90_0/03/pre/WY_2 (2).jpg",
+                "assets/angle_90_0/03/pre/A03_LuckyCoin_BGani.jpg",
+                "assets/angle_90_0/03/pre/A04_LuckyCoin_FGani.jpg",
+                "assets/angle_90_0/03/pre/A05_NG_NormalAni_icon11.jpg",
+                "assets/angle_90_0/03/pre/A06_NG_NormalAni_tentacle01.jpg",
                 "assets/angle_90_0/03/pre/Side-scroller (11).jpg",
                 "assets/angle_90_0/03/pre/Side-scroller (2).jpg",
                 "assets/angle_90_0/03/pre/Side-scroller (10).jpg",
@@ -383,41 +390,6 @@
                             "design": []
                         },
                         {
-                            "src": "assets/angle_90_0/03/A/WY (10).png",
-                            "thumb": "assets/angle_90_0/03/pre/WY (10).jpg",
-                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                            "name": "WY (10)",
-                            "design": []
-                        },
-                        {
-                            "src": "assets/angle_90_0/03/A/WY (9).png",
-                            "thumb": "assets/angle_90_0/03/pre/WY (9).jpg",
-                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                            "name": "WY (9)",
-                            "design": []
-                        },
-                        {
-                            "src": "assets/angle_90_0/03/A/WY (7).png",
-                            "thumb": "assets/angle_90_0/03/pre/WY (7).jpg",
-                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                            "name": "WY (7)",
-                            "design": []
-                        },
-                        {
-                            "src": "assets/angle_90_0/03/A/WY (8).png",
-                            "thumb": "assets/angle_90_0/03/pre/WY (8).jpg",
-                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                            "name": "WY (8)",
-                            "design": []
-                        },
-                        {
-                            "src": "assets/angle_90_0/03/A/WY (6).png",
-                            "thumb": "assets/angle_90_0/03/pre/WY (6).jpg",
-                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                            "name": "WY (6)",
-                            "design": []
-                        },
-                        {
                             "src": "assets/angle_90_0/03/A/WY (5).png",
                             "thumb": "assets/angle_90_0/03/pre/WY (5).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
@@ -425,10 +397,66 @@
                             "design": []
                         },
                         {
-                            "src": "assets/angle_90_0/03/A/WY (11).png",
-                            "thumb": "assets/angle_90_0/03/pre/WY (11).jpg",
+                            "src": "assets/angle_90_0/03/A/WY (6).jpg",
+                            "thumb": "assets/angle_90_0/03/pre/WY (6).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                            "name": "WY (11)",
+                            "name": "WY (6)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/A/WY (7).jpg",
+                            "thumb": "assets/angle_90_0/03/pre/WY (7).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "WY (7)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/A/WY_2 (1).png",
+                            "thumb": "assets/angle_90_0/03/pre/WY_2 (1).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "WY_2 (1)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/A/WY_2 (7).png",
+                            "thumb": "assets/angle_90_0/03/pre/WY_2 (7).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "WY_2 (7)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/A/WY_2 (5).png",
+                            "thumb": "assets/angle_90_0/03/pre/WY_2 (5).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "WY_2 (5)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/A/WY_2 (4).png",
+                            "thumb": "assets/angle_90_0/03/pre/WY_2 (4).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "WY_2 (4)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/A/WY_2 (6).png",
+                            "thumb": "assets/angle_90_0/03/pre/WY_2 (6).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "WY_2 (6)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/A/WY_2 (3).png",
+                            "thumb": "assets/angle_90_0/03/pre/WY_2 (3).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "WY_2 (3)",
+                            "design": []
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/A/WY_2 (2).png",
+                            "thumb": "assets/angle_90_0/03/pre/WY_2 (2).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "WY_2 (2)",
                             "design": []
                         }
                     ]
@@ -436,7 +464,56 @@
                 {
                     "name": "動態",
                     "folder": "B/",
-                    "items": []
+                    "items": [
+                        {
+                            "src": "assets/angle_90_0/03/B/A03_LuckyCoin_BGani.mp4",
+                            "thumb": "assets/angle_90_0/03/pre/A03_LuckyCoin_BGani.jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "A03_LuckyCoin_BGani",
+                            "design": [],
+                            "type": "video",
+                            "poster": "assets/angle_90_0/03/pre/A03_LuckyCoin_BGani_poster.jpg",
+                            "width": 1280,
+                            "height": 720,
+                            "duration": 10.4
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/B/A04_LuckyCoin_FGani.mp4",
+                            "thumb": "assets/angle_90_0/03/pre/A04_LuckyCoin_FGani.jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "A04_LuckyCoin_FGani",
+                            "design": [],
+                            "type": "video",
+                            "poster": "assets/angle_90_0/03/pre/A04_LuckyCoin_FGani_poster.jpg",
+                            "width": 1280,
+                            "height": 720,
+                            "duration": 21.17
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/B/A05_NG_NormalAni_icon11.mp4",
+                            "thumb": "assets/angle_90_0/03/pre/A05_NG_NormalAni_icon11.jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "A05_NG_NormalAni_icon11",
+                            "design": [],
+                            "type": "video",
+                            "poster": "assets/angle_90_0/03/pre/A05_NG_NormalAni_icon11_poster.jpg",
+                            "width": 1280,
+                            "height": 720,
+                            "duration": 16.93
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/B/A06_NG_NormalAni_tentacle01.mp4",
+                            "thumb": "assets/angle_90_0/03/pre/A06_NG_NormalAni_tentacle01.jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "A06_NG_NormalAni_tentacle01",
+                            "design": [],
+                            "type": "video",
+                            "poster": "assets/angle_90_0/03/pre/A06_NG_NormalAni_tentacle01_poster.jpg",
+                            "width": 1280,
+                            "height": 720,
+                            "duration": 7.07
+                        }
+                    ]
                 },
                 {
                     "name": "2D卷軸遊戲概念",

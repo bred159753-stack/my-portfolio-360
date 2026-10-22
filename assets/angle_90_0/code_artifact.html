@@ -289,8 +289,8 @@
 
                         <label class="company-only bg-charcoal-900 hover:bg-white/10 text-xs px-3 py-1.5 rounded-xl border border-white/10 cursor-pointer transition text-gray-200 flex items-center gap-1.5">
                             <svg class="w-3.5 h-3.5 text-peach-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                            批量新增本地圖片
-                            <input type="file" id="file-input" multiple accept="image/*" onchange="handleBatchFileUpload(event)" class="hidden">
+                            批量新增本地圖片 / 影片
+                            <input type="file" id="file-input" multiple accept="image/*,video/*" onchange="handleBatchFileUpload(event)" class="hidden">
                         </label>
 
                         <button onclick="autoRenumberItems()" class="company-only bg-charcoal-900 hover:bg-white/10 text-xs px-3 py-1.5 rounded-xl border border-white/10 transition text-gray-200">
@@ -323,6 +323,70 @@
 
     <script>
         const DEFAULT_FALLBACK_IMAGE = "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80";
+
+        // 影片作品：JSON 標記 type: "video"，或副檔名為常見影片格式
+        const VIDEO_EXT_RE = /\.(mp4|webm|m4v|mov|ogv)(?:[?#].*)?$/i;
+        function isVideoItem(item) {
+            return !!item && (item.type === 'video' || VIDEO_EXT_RE.test(item.src || ''));
+        }
+
+        function isVideoFile(file) {
+            return (file.type || '').startsWith('video/') || VIDEO_EXT_RE.test(file.name || '');
+        }
+
+        // 讀取影片長寬與秒數，寫進 JSON 讓 content.html 不必先下載影片就能排版
+        function readVideoMeta(url) {
+            return new Promise((resolve) => {
+                const v = document.createElement('video');
+                v.preload = 'metadata';
+                v.muted = true;
+                v.onloadedmetadata = () => resolve({
+                    width: v.videoWidth,
+                    height: v.videoHeight,
+                    duration: Math.round(v.duration * 100) / 100
+                });
+                v.onerror = () => resolve(null);
+                v.src = url;
+            });
+        }
+
+        function formatDuration(sec) {
+            if (!sec && sec !== 0) return '';
+            const s = Math.round(sec);
+            return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+        }
+
+        // 卡片預覽：圖片用 <img>，影片用 <video>（滑鼠移入播放，移出暫停）
+        function cardMediaHtml(item, idAttr) {
+            const fallbackImg = item.fallback || DEFAULT_FALLBACK_IMAGE;
+            if (isVideoItem(item)) {
+                return `
+                    <video ${idAttr}
+                           src="${item.previewBlob || item.src}"
+                           muted loop playsinline preload="metadata"
+                           class="interactive-img w-full h-full object-cover bg-black select-none pointer-events-none"
+                           data-original-src="${item.src}"
+                           onerror="handleSmartImageError(this)"></video>
+                    <span class="absolute top-1 left-1 text-[9px] font-bold bg-black/70 text-peach-300 px-1.5 py-0.5 rounded pointer-events-none">🎬 影片 ${formatDuration(item.duration)}</span>
+                `;
+            }
+            return `
+                <img ${idAttr}
+                     src="${item.previewBlob || item.thumb || item.src}"
+                     alt="${item.name}"
+                     class="interactive-img w-full h-full object-cover select-none pointer-events-none"
+                     data-original-src="${item.src}"
+                     data-fallback="${fallbackImg}"
+                     onerror="handleSmartImageError(this)">
+            `;
+        }
+
+        function toggleCardVideo(container, play) {
+            const v = container.querySelector('video');
+            if (!v) return;
+            if (play) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+            else v.pause();
+        }
 
         let DATABASE = {};
         let activeCatKey = "01";
@@ -1102,8 +1166,8 @@
                     <div class="col-span-full py-16 text-center text-gray-500 text-xs flex flex-col items-center gap-2">
                         <span>此小類別尚無圖片作品</span>
                         <label class="bg-peach-500/20 text-peach-300 border border-peach-500/30 px-3.5 py-2 rounded-xl cursor-pointer hover:bg-peach-500/30 font-bold transition">
-                            點此批量新增本地圖片
-                            <input type="file" multiple accept="image/*" onchange="handleBatchFileUpload(event)" class="hidden">
+                            點此批量新增本地圖片 / 影片
+                            <input type="file" multiple accept="image/*,video/*" onchange="handleBatchFileUpload(event)" class="hidden">
                         </label>
                     </div>
                 `;
@@ -1112,8 +1176,6 @@
 
             let html = '';
             subcat.items.forEach((item, idx) => {
-                const previewSrc = item.previewBlob || item.thumb || item.src;
-                const fallbackImg = item.fallback || DEFAULT_FALLBACK_IMAGE;
                 const isSelected = selectedItemIdx === idx;
                 const thumbPath = item.thumb || `assets/angle_90_0/${activeCatKey}/pre/thumb_${idx + 1}.jpg`;
 
@@ -1137,15 +1199,11 @@
 
                         <div class="interactive-img-container aspect-square rounded-xl overflow-hidden bg-black/40 mb-2 relative"
                              id="img-container-${idx}"
+                             onmouseenter="toggleCardVideo(this, true)"
+                             onmouseleave="toggleCardVideo(this, false)"
                              onmousedown="handleCardImgMouseDown(event, ${idx})"
                              onwheel="handleCardImgWheel(event, ${idx})">
-                            <img id="card-img-${idx}"
-                                 src="${previewSrc}" 
-                                 alt="${item.name}" 
-                                 class="interactive-img w-full h-full object-cover select-none pointer-events-none" 
-                                 data-original-src="${item.src}"
-                                 data-fallback="${fallbackImg}"
-                                 onerror="handleSmartImageError(this)">
+                            ${cardMediaHtml(item, `id="card-img-${idx}"`)}
                         </div>
 
                         <div class="space-y-1.5 text-[11px]" onclick="event.stopPropagation();">
@@ -1213,13 +1271,10 @@
                                 <button onclick="removeItemFromDesignSub('${cKey}', ${sIdx}, ${iIdx})" title="移出此類別" class="p-1 hover:bg-rose-500/20 rounded text-rose-400 transition text-[10px]">✕</button>
                             </div>
                         </div>
-                        <div class="aspect-square rounded-xl overflow-hidden bg-black/40 mb-2">
-                            <img src="${item.previewBlob || item.thumb || item.src}"
-                                 alt="${item.name}"
-                                 class="w-full h-full object-cover select-none pointer-events-none"
-                                 data-original-src="${item.src}"
-                                 data-fallback="${item.fallback || DEFAULT_FALLBACK_IMAGE}"
-                                 onerror="handleSmartImageError(this)">
+                        <div class="aspect-square rounded-xl overflow-hidden bg-black/40 mb-2 relative"
+                             onmouseenter="toggleCardVideo(this, true)"
+                             onmouseleave="toggleCardVideo(this, false)">
+                            ${cardMediaHtml(item, '')}
                         </div>
                         <div class="space-y-1 text-[10px]">
                             <div class="text-white font-bold truncate">${item.name}</div>
@@ -1339,6 +1394,14 @@
                 img.src = candidates[idx];
             } else {
                 img.onerror = null;
+                // 影片找不到時不能換成備用圖片 URL，改顯示提示文字
+                if (img.tagName === 'VIDEO') {
+                    const msg = document.createElement('div');
+                    msg.className = 'w-full h-full flex items-center justify-center text-center text-[10px] text-rose-300 p-2';
+                    msg.innerText = '⚠️ 找不到影片檔，請確認路徑';
+                    img.replaceWith(msg);
+                    return;
+                }
                 img.src = img.getAttribute('data-fallback') || DEFAULT_FALLBACK_IMAGE;
             }
         }
@@ -1358,8 +1421,8 @@
 
             const containerWidth = container.clientWidth;
             const containerHeight = container.clientHeight;
-            const naturalW = img.naturalWidth || containerWidth;
-            const naturalH = img.naturalHeight || containerHeight;
+            const naturalW = img.naturalWidth || img.videoWidth || containerWidth;
+            const naturalH = img.naturalHeight || img.videoHeight || containerHeight;
 
             const maxScaleX = naturalW > 0 ? (naturalW / containerWidth) : 3.0;
             const maxScaleY = naturalH > 0 ? (naturalH / containerHeight) : 3.0;
@@ -1507,8 +1570,12 @@
         }
 
         function updateItemSrc(idx, val) {
-            DATABASE[activeCatKey].subcategories[activeSubIdx].items[idx].src = val;
+            const item = DATABASE[activeCatKey].subcategories[activeSubIdx].items[idx];
+            item.src = val;
+            if (VIDEO_EXT_RE.test(val)) item.type = 'video';
+            else delete item.type;
             saveToLocalStorage();
+            renderImageGrid();
         }
 
         function updateItemThumb(idx, val) {
@@ -1525,26 +1592,46 @@
             const cat = DATABASE[activeCatKey];
             const subcat = cat.subcategories[activeSubIdx];
 
+            const metaJobs = [];
+            let videoCount = 0;
+
             files.forEach((file) => {
                 const fileNameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
                 const generatedSrc = `${cat.folder}${subcat.folder || ''}${file.name}`;
                 const generatedThumb = `${cat.preFolder || `assets/angle_90_0/${activeCatKey}/pre/`}${fileNameWithoutExt}.jpg`;
                 const previewBlob = URL.createObjectURL(file);
 
-                subcat.items.push({
+                const item = {
                     src: generatedSrc,
                     thumb: generatedThumb,
                     fallback: DEFAULT_FALLBACK_IMAGE,
                     name: fileNameWithoutExt,
                     previewBlob: previewBlob
-                });
+                };
+
+                if (isVideoFile(file)) {
+                    videoCount++;
+                    item.type = 'video';
+                    metaJobs.push(readVideoMeta(previewBlob).then(meta => { if (meta) Object.assign(item, meta); }));
+                }
+
+                subcat.items.push(item);
             });
 
             saveToLocalStorage();
             renderImageGrid();
             renderSubcategoryTabs();
-            showToast(`已成功新增 ${files.length} 張圖片！`);
+            const imageCount = files.length - videoCount;
+            showToast(`已成功新增 ${imageCount} 張圖片${videoCount ? `、${videoCount} 部影片` : ''}！`);
             e.target.value = '';
+
+            // 影片的長寬與秒數讀到後再存一次
+            if (metaJobs.length) {
+                Promise.all(metaJobs).then(() => {
+                    saveToLocalStorage();
+                    renderImageGrid();
+                });
+            }
         }
 
         function autoRenumberItems() {
@@ -1646,7 +1733,7 @@
                 const thumbFileName = thumbPath.split('/').pop() || `thumb_${i+1}.jpg`;
 
                 try {
-                    const blob = await createSquareCroppedBlob(imgSrc, targetSize);
+                    const blob = await createSquareCroppedBlob(imgSrc, targetSize, isVideoItem(item));
                     if (blob) {
                         preFolderInZip.file(thumbFileName, blob);
                         processedCount++;
@@ -1674,8 +1761,39 @@
             showToast(`✅ 已成功匯出 ${processedCount} 張正方形縮圖至 ZIP！`);
         }
 
-        async function createSquareCroppedBlob(imageSrc, targetSize = 256) {
-            const img = await loadHTMLImageWithFallback(imageSrc);
+        /**
+         * 影片版的智慧載入：依序嘗試候選路徑，跳到約 30% 的位置取一格畫面當縮圖
+         */
+        function loadVideoFrameWithFallback(src) {
+            return new Promise((resolve) => {
+                const candidates = generatePathCandidates(src);
+                let index = 0;
+
+                function tryNext() {
+                    if (index >= candidates.length) {
+                        resolve(null);
+                        return;
+                    }
+
+                    const candidate = candidates[index++];
+                    const v = document.createElement('video');
+                    v.crossOrigin = "anonymous";
+                    v.muted = true;
+                    v.preload = 'auto';
+                    v.onloadedmetadata = () => {
+                        v.currentTime = Math.min(Math.max(0.1, v.duration * 0.3), Math.max(0, v.duration - 0.1));
+                    };
+                    v.onseeked = () => resolve(v);
+                    v.onerror = () => tryNext();
+                    v.src = candidate;
+                }
+
+                tryNext();
+            });
+        }
+
+        async function createSquareCroppedBlob(imageSrc, targetSize = 256, isVideo = false) {
+            const img = isVideo ? await loadVideoFrameWithFallback(imageSrc) : await loadHTMLImageWithFallback(imageSrc);
             if (!img) return null;
 
             return new Promise((resolve) => {
@@ -1685,8 +1803,8 @@
                     canvas.height = targetSize;
                     const ctx = canvas.getContext('2d');
 
-                    const naturalW = img.naturalWidth || img.width;
-                    const naturalH = img.naturalHeight || img.height;
+                    const naturalW = img.naturalWidth || img.videoWidth || img.width;
+                    const naturalH = img.naturalHeight || img.videoHeight || img.height;
                     const minDim = Math.min(naturalW, naturalH);
                     const sx = (naturalW - minDim) / 2;
                     const sy = (naturalH - minDim) / 2;

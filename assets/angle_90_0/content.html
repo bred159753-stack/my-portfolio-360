@@ -126,6 +126,17 @@
         @media (max-width: 767px) {
             #angle90-subcat-tags .angle90-subcat-btn.is-inactive { zoom: 0.5; }
         }
+        /* 影片作品：縮圖與側邊卡片上的播放標記 */
+        #angle90-wrapper .angle90-thumb-item { position: relative; }
+        #angle90-wrapper .angle90-play-badge {
+            position: absolute; inset: 0; margin: auto;
+            width: 28px; height: 28px; border-radius: 9999px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(20, 20, 22, 0.65); border: 1px solid rgba(255, 255, 255, 0.35);
+            color: #fcd191; font-size: 11px; padding-left: 2px; pointer-events: none;
+        }
+        #angle90-wrapper .angle90-play-badge.is-large { width: 56px; height: 56px; font-size: 20px; padding-left: 4px; }
+        #angle90-wrapper video.angle90-active-video { background: #000; object-fit: contain; }
     </style>
 
     <div id="angle90-wrapper" class="relative w-full h-full max-w-[1536px] mx-auto text-gray-100 flex flex-col justify-between overflow-hidden pt-0 gap-2">
@@ -263,6 +274,56 @@
                 return p;
             }
 
+            // 影片作品：JSON 標記 type: "video"，或副檔名為常見影片格式
+            const VIDEO_EXT_RE = /\.(mp4|webm|m4v|mov|ogv)(?:[?#].*)?$/i;
+            function isVideoItem(item) {
+                return !!item && (item.type === 'video' || VIDEO_EXT_RE.test(item.src || ''));
+            }
+
+            function knownVideoRatio(item) {
+                return item && item.width && item.height ? item.width / item.height : 0;
+            }
+
+            // 影片不能用 new Image() 預載：只讀取 metadata 取得長寬比，實際播放交給 <video>
+            function loadVideoEntry(item) {
+                const src = item.src;
+                if (imageStore.promises.has(src)) return imageStore.promises.get(src);
+
+                const ratio = knownVideoRatio(item);
+                if (ratio) {
+                    imageStore.resolved[src] = src;
+                    aspectRatioCache[src] = ratio;
+                    const ready = Promise.resolve(true);
+                    imageStore.promises.set(src, ready);
+                    return ready;
+                }
+
+                const p = new Promise((resolve) => {
+                    const v = document.createElement('video');
+                    let settled = false;
+                    const finish = (ok) => {
+                        if (settled) return;
+                        settled = true;
+                        v.removeAttribute('src');
+                        v.load();
+                        resolve(ok);
+                    };
+                    v.preload = 'metadata';
+                    v.muted = true;
+                    v.onloadedmetadata = () => {
+                        imageStore.resolved[src] = src;
+                        aspectRatioCache[src] = (v.videoWidth / Math.max(1, v.videoHeight)) || (16 / 9);
+                        finish(true);
+                    };
+                    v.onerror = () => finish(false);
+                    setTimeout(() => finish(false), 15000);
+                    v.src = src;
+                });
+
+                imageStore.promises.set(src, p);
+                return p;
+            }
+
             function isItemReady(src) {
                 return Object.prototype.hasOwnProperty.call(imageStore.resolved, src);
             }
@@ -276,9 +337,15 @@
                 const worker = async () => {
                     while (cursor < total) {
                         const it = items[cursor++];
-                        await loadImageEntry(it.src, it.fallback);
-                        if (it.thumbSrc) {
-                            await loadImageEntry(it.thumbSrc, it.src);
+                        if (isVideoItem(it)) {
+                            await loadVideoEntry(it);
+                            if (it.poster) await loadImageEntry(it.poster);
+                            if (it.thumbSrc) await loadImageEntry(it.thumbSrc, it.poster);
+                        } else {
+                            await loadImageEntry(it.src, it.fallback);
+                            if (it.thumbSrc) {
+                                await loadImageEntry(it.thumbSrc, it.src);
+                            }
                         }
                         done++;
                         if (onProgress) onProgress(done, total);
@@ -636,6 +703,14 @@
                     return;
                 }
 
+                if (isVideoItem(item)) {
+                    loadVideoEntry(item).then(() => {
+                        if (!aspectRatioCache[item.src]) aspectRatioCache[item.src] = 16 / 9;
+                        callback(aspectRatioCache[item.src]);
+                    });
+                    return;
+                }
+
                 const img = new Image();
                 img.onload = () => {
                     const ratio = img.naturalWidth / Math.max(1, img.naturalHeight);
@@ -647,6 +722,76 @@
                     callback(1.0);
                 };
                 img.src = item.src;
+            }
+
+            // 影片在舞台上的顯示尺寸：metadata 還沒到時先用 JSON 的 width/height，最後才用 16:9
+            function fitVideoSize(item, maxW, maxH) {
+                const r = aspectRatioCache[item.src] || knownVideoRatio(item) || (16 / 9);
+                const w = Math.max(1, Math.round(Math.min(maxW, maxH * r)));
+                return { w, h: Math.max(1, Math.round(w / r)) };
+            }
+
+            // 非中央的影片卡片只顯示靜態畫面（poster > 縮圖 > 影片第一格），不同時播放多部影片
+            function videoStillHtml(item, w, h, roundedCls) {
+                const still = item.poster || item.thumbSrc || '';
+                const media = still
+                    ? `<img src="${still}" draggable="false" decoding="async" class="w-full h-full object-cover ${roundedCls} shadow-2xl border border-white/20 pointer-events-none select-none">`
+                    : `<video src="${item.src}#t=0.1" muted playsinline preload="metadata" class="w-full h-full object-cover bg-black ${roundedCls} shadow-2xl border border-white/20 pointer-events-none"></video>`;
+                return `
+                    <div class="relative" style="width:${w}px; height:${h}px;">
+                        ${media}
+                        <span class="angle90-play-badge is-large">▶</span>
+                    </div>
+                `;
+            }
+
+            // 中央的影片：同一部影片重繪（縮放視窗、捲動縮圖列）時沿用原本的 <video>，不會重新載入或從頭播放
+            function mountActiveVideo(cardsWrapper, prevVideo, item, size, roundedCls) {
+                const slot = cardsWrapper.querySelector('.angle90-video-slot');
+                if (!slot) return;
+
+                let v = prevVideo && prevVideo.dataset.src === item.src ? prevVideo : null;
+                const isNew = !v;
+                if (isNew) {
+                    v = document.createElement('video');
+                    v.dataset.src = item.src;
+                    if (item.poster) v.poster = item.poster;
+                    v.controls = true;
+                    v.muted = true;          // 瀏覽器只允許靜音影片自動播放，可用控制列開啟聲音
+                    v.loop = true;
+                    v.autoplay = true;
+                    v.playsInline = true;
+                    v.preload = 'auto';
+                    v.setAttribute('playsinline', '');
+                    v.setAttribute('muted', '');
+                    v.addEventListener('click', (e) => e.stopPropagation());
+                    v.addEventListener('loadedmetadata', () => {
+                        const r = v.videoWidth / Math.max(1, v.videoHeight);
+                        if (r && Math.abs(r - (aspectRatioCache[item.src] || 0)) > 0.01) {
+                            aspectRatioCache[item.src] = r;
+                            renderLightboxImage(false);
+                        }
+                    });
+                    v.addEventListener('error', () => {
+                        const msg = document.createElement('div');
+                        msg.className = `flex items-center justify-center text-xs text-rose-300 bg-black/60 border border-rose-400/30 ${roundedCls}`;
+                        msg.style.width = v.style.width;
+                        msg.style.height = v.style.height;
+                        msg.innerText = `影片無法載入：${item.src}`;
+                        if (v.parentNode) v.replaceWith(msg);
+                    });
+                    v.src = item.src;
+                }
+
+                v.className = `angle90-active-video ${roundedCls} shadow-2xl border border-white/20 select-none`;
+                v.style.width = `${size.w}px`;
+                v.style.height = `${size.h}px`;
+                slot.replaceWith(v);
+
+                if (isNew) {
+                    const playing = v.play();
+                    if (playing && playing.catch) playing.catch(() => {});
+                }
             }
 
             function renderLightboxImage(showToast) {
@@ -672,6 +817,10 @@
                 const pcImgMaxH = Math.max(120, Math.floor((stageH - CAPTION_RESERVE) / PERSPECTIVE_ZOOM) - 8);
                 const pcImgMaxW = Math.max(160, Math.floor(stageW * 0.58));
                 const mobImgMaxH = Math.max(120, stageH - CAPTION_RESERVE - 8);
+
+                // innerHTML 重繪前先記住正在播放的影片，重繪後若仍是同一部就放回去
+                const prevVideo = cardsWrapper.querySelector('video.angle90-active-video');
+                const currentIsVideo = isVideoItem(currentItem);
 
                 if (isPC) {
                     if (btnPrev) btnPrev.style.display = 'none';
@@ -735,16 +884,29 @@
                             filterCss = 'brightness(25%) contrast(85%)';
                         }
 
-                        html += `
-                            <div onclick="event.stopPropagation(); window.angle90NavImage(${offset});"
-                                 class="pc-3d-card absolute flex flex-col items-center justify-center cursor-pointer select-none"
-                                 style="transform: ${transformCss}; z-index: ${zIndex}; opacity: ${opacity}; filter: ${filterCss};">
-                                
-                                <img src="${item.src}" 
+                        let mediaHtml;
+                        if (isVideoItem(item)) {
+                            const size = fitVideoSize(item, pcImgMaxW, pcImgMaxH);
+                            mediaHtml = offset === 0
+                                ? `<div class="angle90-video-slot" style="width:${size.w}px; height:${size.h}px;"></div>`
+                                : videoStillHtml(item, size.w, size.h, 'rounded-2xl');
+                        } else {
+                            mediaHtml = `
+                                <img src="${item.src}"
                                      draggable="false"
                                      decoding="async"
                                      style="max-height:${pcImgMaxH}px; max-width:${pcImgMaxW}px;" class="w-auto h-auto object-contain rounded-2xl shadow-2xl border border-white/20 transition-all duration-300 pointer-events-none select-none"
                                      onerror="this.onerror=null; this.src='${item.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';">
+                            `;
+                        }
+
+                        // 中央卡片不綁定切換，避免點擊影片控制列時整個舞台重繪
+                        html += `
+                            <div onclick="event.stopPropagation(); ${offset !== 0 ? `window.angle90NavImage(${offset});` : ''}"
+                                 class="pc-3d-card absolute flex flex-col items-center justify-center ${offset !== 0 ? 'cursor-pointer' : ''} select-none"
+                                 style="transform: ${transformCss}; z-index: ${zIndex}; opacity: ${opacity}; filter: ${filterCss};">
+
+                                ${mediaHtml}
 
                                 <div class="mt-3 px-3.5 py-1 rounded-full glass-panel border border-white/10 text-center max-w-[360px] shadow-lg truncate">
                                     <h4 class="text-xs font-bold text-white truncate">${item.name}</h4>
@@ -754,6 +916,10 @@
                     });
 
                     cardsWrapper.innerHTML = html;
+
+                    if (currentIsVideo) {
+                        mountActiveVideo(cardsWrapper, prevVideo, currentItem, fitVideoSize(currentItem, pcImgMaxW, pcImgMaxH), 'rounded-2xl');
+                    }
 
                     if (!aspectRatioCache[currentItem.src]) {
                         ensureImageAspectRatioLoaded(currentItem, () => {
@@ -770,21 +936,32 @@
                         btnNext.style.visibility = activeGlobalImageIndex < flatImageList.length - 1 ? 'visible' : 'hidden';
                     }
 
-                    cardsWrapper.innerHTML = `
-                        <div class="flex flex-col items-center justify-center" style="max-height:100%;">
-                            <img id="angle90-lightbox-img" 
-                                 src="${currentItem.src}" 
+                    const mobVideoSize = currentIsVideo ? fitVideoSize(currentItem, stageW, mobImgMaxH) : null;
+                    const mobMediaHtml = currentIsVideo
+                        ? `<div class="angle90-video-slot" style="width:${mobVideoSize.w}px; height:${mobVideoSize.h}px;"></div>`
+                        : `
+                            <img id="angle90-lightbox-img"
+                                 src="${currentItem.src}"
                                  draggable="false"
                                  decoding="async"
                                  style="max-height:${mobImgMaxH}px; max-width:100%;" class="w-auto h-auto object-contain rounded-xl shadow-2xl transition-transform duration-200 select-none border border-white/20"
                                  onerror="this.onerror=null; this.src='${currentItem.fallback || 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80'}';"
                                  alt="Full Artwork Detail">
+                        `;
+
+                    cardsWrapper.innerHTML = `
+                        <div class="flex flex-col items-center justify-center" style="max-height:100%;">
+                            ${mobMediaHtml}
 
                             <div class="mt-3 px-3.5 py-1 rounded-full glass-panel border border-white/10 text-center max-w-[300px] shadow-lg truncate">
                                 <h4 class="text-xs font-bold text-white truncate">${currentItem.name}</h4>
                             </div>
                         </div>
                     `;
+
+                    if (currentIsVideo) {
+                        mountActiveVideo(cardsWrapper, prevVideo, currentItem, mobVideoSize, 'rounded-xl');
+                    }
                 }
 
                 if (showToast) triggerSubcategoryToast(currentItem.subCatName);
@@ -803,7 +980,12 @@
                 let html = '<div style="width: calc(50% + 3rem); flex-shrink: 0; height: 1px; pointer-events: none;"></div>';
                 flatImageList.forEach((item, idx) => {
                     const isActive = idx === activeGlobalImageIndex;
-                    const thumbUrl = item.thumbSrc || item.src;
+                    const isVid = isVideoItem(item);
+                    const thumbUrl = item.thumbSrc || (isVid ? item.poster : item.src) || '';
+                    // 影片縮圖不存在時改用 poster，再沒有就隱藏（不能把 mp4 當圖片載入）
+                    const thumbOnError = isVid
+                        ? (item.poster && item.poster !== thumbUrl ? `this.onerror=null; this.src='${item.poster}';` : `this.onerror=null; this.style.visibility='hidden';`)
+                        : `this.onerror=null; this.src='${item.src}';`;
 
                     html += `
                         <div onclick="window.angle90JumpToImage(${idx})" 
@@ -815,8 +997,9 @@
                                  decoding="async" 
                                  fetchpriority="low" 
                                  class="w-full h-full object-cover select-none pointer-events-none" 
-                                 onerror="this.onerror=null; this.src='${item.src}';"
+                                 onerror="${thumbOnError}"
                             >
+                            ${isVid ? '<span class="angle90-play-badge">▶</span>' : ''}
                         </div>
                     `;
                 });
@@ -908,6 +1091,7 @@
             }
 
             window.angle90CloseModal = function() {
+                document.querySelectorAll('#angle90-wrapper video').forEach(v => { try { v.pause(); } catch (e) {} });
                 const modalDetails = document.getElementById('modal-details');
                 if (modalDetails) {
                     modalDetails.classList.add('opacity-0', 'pointer-events-none', 'hidden');
@@ -931,7 +1115,8 @@
                 lightboxEl.addEventListener('dragstart', (e) => e.preventDefault());
 
                 lightboxEl.addEventListener('mousedown', (e) => {
-                    if (e.target.closest('button') || e.target.closest('#angle90-thumb-strip')) return;
+                    // 在影片上拖曳是操作進度條，不當作切換作品
+                    if (e.target.closest('button') || e.target.closest('#angle90-thumb-strip') || e.target.closest('video')) return;
                     isMouseDown = true;
                     startX = e.clientX;
                 });
@@ -1111,7 +1296,8 @@
                 if (!lightboxEl) return;
 
                 lightboxEl.addEventListener('touchstart', (e) => {
-                    touchStartX = e.changedTouches[0].screenX;
+                    // 在影片上滑動是拖曳進度條：設成 NaN 讓 touchend 不觸發切換
+                    touchStartX = e.target.closest('video') ? NaN : e.changedTouches[0].screenX;
                 }, { passive: true });
 
                 lightboxEl.addEventListener('touchend', (e) => {

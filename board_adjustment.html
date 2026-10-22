@@ -157,7 +157,15 @@
                 <span class="text-xs font-bold text-peach-400 flex items-center gap-1.5">
                     <span>360 空間面板列表 (拖曳對調 360 角度定位)</span>
                 </span>
-                <span class="text-[11px] text-gray-400">拖曳頁籤以交換 Yaw & Pitch 定位</span>
+                <div class="flex items-center gap-2 flex-wrap justify-end">
+                    <span class="text-[11px] text-gray-400">拖曳頁籤以交換 Yaw & Pitch 定位</span>
+                    <button onclick="addNewBoard()" class="bg-peach-500/20 hover:bg-peach-500/30 text-peach-300 border border-peach-500/40 text-[11px] px-3 py-1 rounded-xl font-bold transition flex items-center gap-1">
+                        ➕ 新增主題面板
+                    </button>
+                    <button onclick="deleteBoard(activeBoardKey)" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[11px] px-3 py-1 rounded-xl font-bold transition flex items-center gap-1">
+                        🗑 刪除目前面板
+                    </button>
+                </div>
             </div>
             <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="board-tabs-container">
                 <!-- Draggable tabs -->
@@ -378,6 +386,7 @@
                         <span class="opacity-50 text-[10px]">⋮⋮</span>
                         <span class="font-mono text-[10px] ${isActive ? 'text-charcoal-950 font-extrabold' : 'text-peach-400'}">[Yaw:${item.yaw}, Pitch:${item.pitch}]</span>
                         <span>${item.title || key}</span>
+                        <button onclick="event.stopPropagation(); deleteBoard('${key}')" title="刪除此面板" class="ml-1 px-1 rounded text-[10px] transition ${isActive ? 'text-charcoal-950/70 hover:bg-charcoal-950/20' : 'text-rose-400 hover:bg-rose-500/20'}">✕</button>
                     </div>
                 `;
             });
@@ -385,6 +394,97 @@
             tabsContainer.innerHTML = html;
             fillFormValues();
             updateLivePreviewCard();
+        }
+
+        function persistBoardData() {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(BOARD_DATA));
+            } catch (e) {
+                console.warn("LocalStorage 寫入受限:", e);
+            }
+        }
+
+        // 找一個尚未被佔用的 Yaw / Pitch 位置給新面板
+        function findFreeBoardSlot() {
+            const used = new Set(Object.values(BOARD_DATA).map(it => `${Number(it.yaw)}_${Number(it.pitch)}`));
+            const pitches = [0, 30, -30, 60, -60];
+            const yaws = [0, 90, 180, 270, 45, 135, 225, 315];
+            for (const pitch of pitches) {
+                for (const yaw of yaws) {
+                    if (!used.has(`${yaw}_${pitch}`)) return { yaw, pitch };
+                }
+            }
+            for (let yaw = 0; yaw < 360; yaw += 15) {
+                if (!used.has(`${yaw}_0`)) return { yaw, pitch: 0 };
+            }
+            return { yaw: 0, pitch: 0 };
+        }
+
+        function addNewBoard() {
+            saveCurrentBoardToMemory(false);
+
+            const { yaw, pitch } = findFreeBoardSlot();
+            const key = `${yaw}_${pitch}`;
+            const folder = `assets/angle_${key}/`;
+
+            BOARD_DATA[key] = {
+                key: key,
+                yaw: yaw,
+                pitch: pitch,
+                title: '新主題面板',
+                category: '',
+                desc: '',
+                folder: folder,
+                hasCustomHtml: false,
+                detailFilePath: `${folder}content.html`,
+                link: `${folder}content.html`,
+                previewImage: `${folder}preview.jpg`,
+                thumbSizeMobile: 64,
+                stripWidthMobile: 312,
+                marginBottomMobile: 26,
+                maskPercentMobile: 22,
+                thumbSizeDesktop: 128,
+                stripWidthDesktop: 0,
+                marginBottomDesktop: 0,
+                maskPercentDesktop: 22,
+                preFolder: `${folder}pre/`,
+                preImages: [],
+                images: []
+            };
+
+            activeBoardKey = key;
+            persistBoardData();
+            renderTabs();
+
+            const tab = document.querySelector(`[data-tab-key="${key}"]`);
+            if (tab) tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            showToast(`➕ 已新增主題面板 [Yaw:${yaw}, Pitch:${pitch}]，資料夾：${folder}`);
+        }
+
+        function deleteBoard(key) {
+            const item = BOARD_DATA[key];
+            if (!item) return;
+
+            const keys = Object.keys(BOARD_DATA);
+            if (keys.length <= 1) {
+                showToast("⚠️ 至少需保留一個面板，無法刪除");
+                return;
+            }
+
+            const name = item.title || key;
+            if (!confirm(`確定要刪除面板「${name}」[Yaw:${item.yaw}, Pitch:${item.pitch}] 嗎？\n（只會從 board_data.json 移除，assets 資料夾內的檔案不會被刪除）`)) return;
+
+            if (key !== activeBoardKey) {
+                saveCurrentBoardToMemory(false);
+            } else {
+                const idx = keys.indexOf(key);
+                activeBoardKey = keys[idx + 1] || keys[idx - 1];
+            }
+
+            delete BOARD_DATA[key];
+            persistBoardData();
+            renderTabs();
+            showToast(`🗑 已刪除面板「${name}」，記得下載 board_data.json 以更新檔案`);
         }
 
         function handleTabDragStart(e, key) {
@@ -1179,7 +1279,7 @@
                     const folder = p.folder || `assets/angle_${key}/`;
                     const preFolder = p.preFolder || `${folder}pre/`;
 
-                    let preImages = Array.isArray(p.preImages) && p.preImages.length > 0
+                    let preImages = Array.isArray(p.preImages)
                         ? p.preImages
                         : [
                             `${preFolder}01.jpg`,

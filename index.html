@@ -209,45 +209,8 @@
                 <div class="glass-panel p-2 rounded-2xl flex flex-wrap justify-center items-center gap-1.5 shadow-2xl max-w-full overflow-x-auto no-scrollbar">
                     <span class="text-xs text-peach-400 font-semibold px-2 hidden lg:inline border-r border-white/10">快速切換：</span>
 
-                    <button data-yaw="0" data-pitch="-30" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
-                        關於我
-                    </button>
-
-                    <div class="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block"></div>
-
-                    <button data-yaw="0" data-pitch="0" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
-                        精選個人作品
-                    </button>
-                    <button data-yaw="90" data-pitch="0" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
-                        Web 應用
-                    </button>
-                    <button data-yaw="180" data-pitch="0" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
-                        3D 建模
-                    </button>
-                    <button data-yaw="270" data-pitch="0" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
-                        生成藝術
-                    </button>
-
-                    <div class="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block"></div>
-
-                    <button data-yaw="0" data-pitch="30" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
-                        UI/UX 介面
-                    </button>
-                    <button data-yaw="90" data-pitch="30" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
-                        App 開發
-                    </button>
-                    <button data-yaw="180" data-pitch="30" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
-                        動態視覺
-                    </button>
-                    <button data-yaw="270" data-pitch="30" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
-                        音效互動
-                    </button>
-
-                    <div class="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block"></div>
-
-                    <button data-yaw="0" data-pitch="60" class="btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1">
-                        全端架構
-                    </button>
+                    <!-- 依 board_data.json 自動產生，見 setupNavigationButtons() -->
+                    <div id="nav-buttons-container" class="contents"></div>
                 </div>
             </div>
         </footer>
@@ -1188,12 +1151,33 @@
         }
 
         function setupNavigationButtons() {
-            document.querySelectorAll('.btn-nav').forEach(btn => {
-                const y = parseInt(btn.dataset.yaw);
-                const p = parseInt(btn.dataset.pitch);
-                const key = `${y}_${p}`;
+            const navContainer = document.getElementById('nav-buttons-container');
+            if (!navContainer) return;
+
+            // 依 pitch 分組 (由下往上)，同組內依 yaw 排序，組與組之間加分隔線
+            const entries = Object.keys(PORTFOLIO_DATA).map(key => {
                 const d = PORTFOLIO_DATA[key];
-                if (d && d.category) btn.textContent = d.category;
+                const [ky, kp] = key.split('_').map(Number);
+                const y = d.yaw !== undefined ? Number(d.yaw) : ky;
+                const p = d.pitch !== undefined ? Number(d.pitch) : kp;
+                return { key, d, y, p };
+            }).sort((a, b) => (a.p - b.p) || (a.y - b.y));
+
+            navContainer.innerHTML = '';
+            let lastPitch = null;
+            entries.forEach(({ key, d, y, p }) => {
+                if (lastPitch !== null && p !== lastPitch) {
+                    const divider = document.createElement('div');
+                    divider.className = 'h-4 w-[1px] bg-white/10 mx-1 hidden sm:block';
+                    navContainer.appendChild(divider);
+                }
+                lastPitch = p;
+
+                const btn = document.createElement('button');
+                btn.dataset.yaw = y;
+                btn.dataset.pitch = p;
+                btn.className = 'btn-nav text-xs px-3 py-1.5 rounded-xl font-medium transition text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-1';
+                btn.textContent = d.category || d.title || key;
 
                 btn.addEventListener('click', () => {
                     targetLon = getTargetLonForYaw(lon, y);
@@ -1201,6 +1185,7 @@
                     isSnapping = true;
                     updateActivePanelAndPreviews(key, y, p);
                 });
+                navContainer.appendChild(btn);
             });
         }
 
