@@ -178,9 +178,9 @@
         "pitch": 0,
         "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
       },
-      "title": "AI原畫流程解說",
-      "category": "AI原畫流程解說",
-      "desc": "ComfyUI工作流介紹。Lovart、即夢...等必源AI改圖流程。",
+      "title": "非靜態展示",
+      "category": "非靜態展示",
+      "desc": "包含繪圖過程、動態分鏡、動畫、特效練習。",
       "folder": "assets/angle_270_0/",
       "hasCustomHtml": false,
       "detailFilePath": "assets/angle_270_0/content.html",
@@ -215,9 +215,9 @@
         "pitch": 30,
         "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
       },
-      "title": "商稿邀約申請",
-      "category": "商稿邀約申請",
-      "desc": "有合作意願可參考報價單，確認合作請填邀約清單。",
+      "title": "AI原畫流程解說",
+      "category": "AI原畫流程解說",
+      "desc": "ComfyUI工作流介紹。Lovart、即夢等必源AI改圖流程。",
       "folder": "assets/angle_0_30/",
       "hasCustomHtml": false,
       "detailFilePath": "assets/angle_0_30/content.html",
@@ -278,6 +278,37 @@
         "assets/angle_90_30/pre/04.jpg",
         "assets/angle_90_30/pre/05.jpg"
       ],
+      "images": []
+    },
+    {
+      "key": "270_30",
+      "yaw": 270,
+      "pitch": 30,
+      "position": {
+        "yaw": 270,
+        "pitch": 30,
+        "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
+      },
+      "title": "商稿邀約申請",
+      "category": "商稿邀約申請",
+      "desc": "有合作意願可參考報價單，確認合作請填邀約清單。",
+      "folder": "assets/angle_45_0/",
+      "hasCustomHtml": false,
+      "detailFilePath": "assets/angle_45_0/content.html",
+      "boardLink": "assets/angle_45_0/",
+      "previewImage": "assets/angle_45_0/preview.jpg",
+      "thumbSizeMobile": 64,
+      "stripWidthMobile": 312,
+      "marginBottomMobile": 26,
+      "maskPercentMobile": 22,
+      "thumbSizeDesktop": 128,
+      "stripWidthDesktop": 0,
+      "marginBottomDesktop": 0,
+      "maskPercentDesktop": 22,
+      "showPreviewStrip": false,
+      "underConstruction": true,
+      "preFolder": "assets/angle_45_0/pre/",
+      "preImages": [],
       "images": []
     }
   ]
