@@ -167,6 +167,16 @@
                     </button>
                 </div>
             </div>
+            <div class="flex items-center gap-2 flex-wrap px-1 text-[11px] text-gray-300">
+                <span class="font-bold text-peach-400">index.html 定位間隔：</span>
+                <label class="flex items-center gap-1">Yaw 每
+                    <input type="number" id="snap-yaw-step" min="1" max="360" onchange="applySnapGridFromInput()" class="w-16 bg-charcoal-900 border border-white/10 rounded-lg px-2 py-1 text-white font-mono focus:border-peach-500 focus:outline-none">°
+                </label>
+                <label class="flex items-center gap-1">Pitch 每
+                    <input type="number" id="snap-pitch-step" min="1" max="85" onchange="applySnapGridFromInput()" class="w-16 bg-charcoal-900 border border-white/10 rounded-lg px-2 py-1 text-white font-mono focus:border-peach-500 focus:outline-none">°
+                </label>
+                <span id="snap-grid-summary" class="text-gray-500 font-mono"></span>
+            </div>
             <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="board-tabs-container">
                 <!-- Draggable tabs -->
             </div>
@@ -232,8 +242,8 @@
                         <div>
                             <label class="block text-gray-400 mb-1">球面角度 (Yaw / Pitch)</label>
                             <div class="flex gap-2">
-                                <input type="number" id="edit-board-yaw" oninput="updateLivePreviewFromInput()" class="w-1/2 bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="Yaw (0, 90, 180, 270)">
-                                <input type="number" id="edit-board-pitch" oninput="updateLivePreviewFromInput()" class="w-1/2 bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="Pitch (-30, 0, 30, 60)">
+                                <input type="number" id="edit-board-yaw" oninput="updateLivePreviewFromInput()" class="w-1/2 bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="Yaw">
+                                <input type="number" id="edit-board-pitch" oninput="updateLivePreviewFromInput()" class="w-1/2 bg-charcoal-900 border border-white/10 rounded-xl px-3 py-2 text-white font-mono focus:border-peach-500 focus:outline-none" placeholder="Pitch">
                             </div>
                         </div>
                         <div>
@@ -332,6 +342,9 @@
     <script>
         const FALLBACK_THUMB = "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=300&q=80";
         const LOCAL_STORAGE_KEY = '3D_BOARD_ADJUSTMENT_DATA';
+        const SNAP_GRID_STORAGE_KEY = '3D_BOARD_SNAP_GRID';
+        // index.html 拖曳放開後吸附的定位點：Yaw = yawStep × N、Pitch = pitchStep × M
+        let SNAP_GRID = { yawStep: 90, pitchStep: 30 };
 
         let previewDeviceMode = 'mobile';
         let BOARD_DATA = {};
@@ -394,6 +407,7 @@
                          class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex-shrink-0 flex items-center gap-1.5 border select-none cursor-grab active:cursor-grabbing ${isActive ? 'bg-peach-500 text-charcoal-950 border-peach-500 shadow-md shadow-peach-500/20' : 'text-gray-300 hover:text-white hover:bg-white/5 border-white/10'}">
                         <span class="opacity-50 text-[10px]">⋮⋮</span>
                         <span class="font-mono text-[10px] ${isActive ? 'text-charcoal-950 font-extrabold' : 'text-peach-400'}">[Yaw:${item.yaw}, Pitch:${item.pitch}]</span>
+                        ${isOnSnapGrid(item) ? '' : `<span title="不在 index.html 定位點上，拖曳畫面時不會吸附到此面板" class="${isActive ? 'text-charcoal-950' : 'text-amber-400'}">⚠</span>`}
                         <span>${item.title || key}</span>
                         <button onclick="event.stopPropagation(); deleteBoard('${key}')" title="刪除此面板" class="ml-1 px-1 rounded text-[10px] transition ${isActive ? 'text-charcoal-950/70 hover:bg-charcoal-950/20' : 'text-rose-400 hover:bg-rose-500/20'}">✕</button>
                     </div>
@@ -413,18 +427,80 @@
             }
         }
 
-        // 找一個尚未被佔用的 Yaw / Pitch 位置給新面板
+        function sanitizeSnapGrid(grid) {
+            const yawStep = Math.round(Number(grid && grid.yawStep));
+            const pitchStep = Math.round(Number(grid && grid.pitchStep));
+            return {
+                yawStep: yawStep >= 1 && yawStep <= 360 ? yawStep : 90,
+                pitchStep: pitchStep >= 1 && pitchStep <= 85 ? pitchStep : 30
+            };
+        }
+
+        // 與 index.html 相同的算法：Yaw 取 0~359，Pitch 取 -85~85 (相機上下限) 內的倍數
+        function getSnapYawTargets() {
+            const list = [];
+            for (let y = 0; y < 360; y += SNAP_GRID.yawStep) list.push(y);
+            return list;
+        }
+
+        function getSnapPitchTargets() {
+            const list = [0];
+            for (let p = SNAP_GRID.pitchStep; p <= 85; p += SNAP_GRID.pitchStep) list.push(p, -p);
+            return list;
+        }
+
+        function isOnSnapGrid(item) {
+            return getSnapYawTargets().includes(Number(item.yaw)) && getSnapPitchTargets().includes(Number(item.pitch));
+        }
+
+        function persistSnapGrid() {
+            try {
+                localStorage.setItem(SNAP_GRID_STORAGE_KEY, JSON.stringify(SNAP_GRID));
+            } catch (e) {}
+        }
+
+        function syncSnapGridInputs() {
+            const yawInput = document.getElementById('snap-yaw-step');
+            const pitchInput = document.getElementById('snap-pitch-step');
+            if (yawInput) yawInput.value = SNAP_GRID.yawStep;
+            if (pitchInput) pitchInput.value = SNAP_GRID.pitchStep;
+
+            ['edit-board-yaw', 'edit-board-pitch'].forEach((id, i) => {
+                const el = document.getElementById(id);
+                if (el) el.step = i === 0 ? SNAP_GRID.yawStep : SNAP_GRID.pitchStep;
+            });
+
+            const summary = document.getElementById('snap-grid-summary');
+            if (summary) {
+                const pitches = getSnapPitchTargets().sort((a, b) => a - b);
+                summary.innerText = `→ ${getSnapYawTargets().length} × ${pitches.length} 個定位點，Pitch: ${pitches.join(', ')}`;
+            }
+        }
+
+        function applySnapGridFromInput() {
+            SNAP_GRID = sanitizeSnapGrid({
+                yawStep: document.getElementById('snap-yaw-step').value,
+                pitchStep: document.getElementById('snap-pitch-step').value
+            });
+            persistSnapGrid();
+            syncSnapGridInputs();
+            renderTabs();
+
+            const offGrid = Object.values(BOARD_DATA).filter(it => !isOnSnapGrid(it));
+            showToast(offGrid.length
+                ? `⚠️ 定位間隔已更新，但有 ${offGrid.length} 個面板不在定位點上 (頁籤標示 ⚠)`
+                : `✅ 定位間隔已更新：Yaw 每 ${SNAP_GRID.yawStep}°、Pitch 每 ${SNAP_GRID.pitchStep}°`);
+        }
+
+        // 找一個尚未被佔用的 Yaw / Pitch 定位點給新面板
         function findFreeBoardSlot() {
             const used = new Set(Object.values(BOARD_DATA).map(it => `${Number(it.yaw)}_${Number(it.pitch)}`));
-            const pitches = [0, 30, -30, 60, -60];
-            const yaws = [0, 90, 180, 270, 45, 135, 225, 315];
+            const pitches = getSnapPitchTargets();
+            const yaws = getSnapYawTargets();
             for (const pitch of pitches) {
                 for (const yaw of yaws) {
                     if (!used.has(`${yaw}_${pitch}`)) return { yaw, pitch };
                 }
-            }
-            for (let yaw = 0; yaw < 360; yaw += 15) {
-                if (!used.has(`${yaw}_0`)) return { yaw, pitch: 0 };
             }
             return { yaw: 0, pitch: 0 };
         }
@@ -1247,6 +1323,11 @@
             const exportObj = {
                 _readme: "index.html 會讀取此檔顯示所有面板。包含 Android (<600px) 與 平板&PC (>=600px 雙側展演) 獨立相應設定。",
                 version: 2,
+                snapGrid: {
+                    yawStep: SNAP_GRID.yawStep,
+                    pitchStep: SNAP_GRID.pitchStep,
+                    note: "index.html 定位點：Yaw = yawStep × N (0~359)，Pitch = pitchStep × M (-85~85)"
+                },
                 panels: exportPanels
             };
 
@@ -1286,6 +1367,12 @@
 
         function normalizeAndLoadBoardData(rawJson, saveToLocal = false) {
             if (!rawJson) return;
+
+            if (rawJson.snapGrid) {
+                SNAP_GRID = sanitizeSnapGrid(rawJson.snapGrid);
+                if (saveToLocal) persistSnapGrid();
+                syncSnapGridInputs();
+            }
 
             let normalized = {};
             let panelList = Array.isArray(rawJson.panels) ? rawJson.panels : (typeof rawJson === 'object' ? Object.values(rawJson) : []);
@@ -1374,6 +1461,12 @@
         }
 
         window.onload = function() {
+            try {
+                const savedGrid = localStorage.getItem(SNAP_GRID_STORAGE_KEY);
+                if (savedGrid) SNAP_GRID = sanitizeSnapGrid(JSON.parse(savedGrid));
+            } catch (e) {}
+            syncSnapGridInputs();
+
             const localSaved = localStorage.getItem(LOCAL_STORAGE_KEY);
             if (localSaved) {
                 try {

@@ -1,14 +1,19 @@
 {
   "_readme": "index.html 會讀取此檔顯示所有面板。包含 Android (<600px) 與 平板&PC (>=600px 雙側展演) 獨立相應設定。",
   "version": 2,
+  "snapGrid": {
+    "yawStep": 90,
+    "pitchStep": 45,
+    "note": "index.html 定位點：Yaw = yawStep × N (0~359)，Pitch = pitchStep × M (-85~85)"
+  },
   "panels": [
     {
-      "key": "0_-30",
+      "key": "0_-45",
       "yaw": 0,
-      "pitch": -30,
+      "pitch": -45,
       "position": {
         "yaw": 0,
-        "pitch": -30,
+        "pitch": -45,
         "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
       },
       "title": "關於我 & 履歷與聯繫",
@@ -207,12 +212,12 @@
       "images": []
     },
     {
-      "key": "0_30",
+      "key": "0_45",
       "yaw": 0,
-      "pitch": 30,
+      "pitch": 45,
       "position": {
         "yaw": 0,
-        "pitch": 30,
+        "pitch": 45,
         "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
       },
       "title": "AI原畫流程解說",
@@ -244,12 +249,12 @@
       "images": []
     },
     {
-      "key": "90_30",
+      "key": "90_45",
       "yaw": 90,
-      "pitch": 30,
+      "pitch": 45,
       "position": {
         "yaw": 90,
-        "pitch": 30,
+        "pitch": 45,
         "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
       },
       "title": "原畫設計、插畫基礎理論",
@@ -281,12 +286,12 @@
       "images": []
     },
     {
-      "key": "270_30",
+      "key": "270_45",
       "yaw": 270,
-      "pitch": 30,
+      "pitch": 45,
       "position": {
         "yaw": 270,
-        "pitch": 30,
+        "pitch": 45,
         "note": "面板中心點對應的球面角度 (yaw=水平, pitch=垂直)"
       },
       "title": "商稿邀約申請",

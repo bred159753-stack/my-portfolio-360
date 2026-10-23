@@ -237,8 +237,24 @@
 
     <script>
         let PORTFOLIO_DATA = {};
-        const YAW_TARGETS = [0, 90, 180, 270];
-        const PITCH_TARGETS = [-60, -30, 0, 30, 60];
+        // 拖曳放開後吸附的定位點，由 board_data.json 的 snapGrid 決定 (見 applySnapGrid)
+        let YAW_TARGETS = [0, 90, 180, 270];
+        let PITCH_TARGETS = [-60, -30, 0, 30, 60];
+
+        // Yaw = yawStep × N (0~359)，Pitch = pitchStep × M (相機上下限 -85~85 內)
+        function applySnapGrid(grid) {
+            const yawStep = Math.round(Number(grid && grid.yawStep));
+            const pitchStep = Math.round(Number(grid && grid.pitchStep));
+            if (yawStep >= 1 && yawStep <= 360) {
+                YAW_TARGETS = [];
+                for (let y = 0; y < 360; y += yawStep) YAW_TARGETS.push(y);
+            }
+            if (pitchStep >= 1 && pitchStep <= 85) {
+                PITCH_TARGETS = [0];
+                for (let p = pitchStep; p <= 85; p += pitchStep) PITCH_TARGETS.push(p, -p);
+                PITCH_TARGETS.sort((a, b) => a - b);
+            }
+        }
         const THUMB_GAP = 12;
 
         let container, scene, camera, renderer, sphereMesh;
@@ -389,6 +405,8 @@
                 if (!res.ok) throw new Error('board_data.json not found');
                 const json = await res.json();
 
+                if (json && json.snapGrid) applySnapGrid(json.snapGrid);
+
                 let normalized = {};
                 if (Array.isArray(json.panels)) {
                     json.panels.forEach(p => {
@@ -522,8 +540,7 @@
                 ctx.stroke();
             }
 
-            const pitchAngles = [-60, -30, 0, 30, 60];
-            pitchAngles.forEach(p => {
+            PITCH_TARGETS.forEach(p => {
                 const y = ((90 - p) / 180) * canvas.height;
                 ctx.beginPath();
                 ctx.strokeStyle = p === 0 ? 'rgba(252, 209, 145, 0.45)' : 'rgba(255, 255, 255, 0.06)';
