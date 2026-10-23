@@ -431,6 +431,9 @@
                         // 開啟當前主題預覽圖 (預設開啟)；關閉時不顯示縮圖列與展開/縮回按鈕
                         it.showPreviewStrip = it.showPreviewStrip !== false;
 
+                        // 施工中 (預設關閉)；開啟時「作品細節」按鈕改為施工中，且不開啟作品細節
+                        it.underConstruction = !!it.underConstruction;
+
                         it.preFolder = it.preFolder || base + 'pre/';
                         it.images = Array.isArray(it.images) ? it.images : [];
                         it.title = it.title || '';
@@ -562,8 +565,8 @@
                         ${escapeHTML(item.desc)}
                     </p>
                     <div class="pt-2 border-t border-white/10 text-xs font-semibold relative z-40">
-                        <button class="btn-expand-project w-full bg-peach-500 hover:bg-peach-400 text-charcoal-950 py-1.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-peach-500/20 font-bold relative z-40 pointer-events-auto">
-                            作品細節
+                        <button class="btn-expand-project w-full bg-peach-500 hover:bg-peach-400 text-charcoal-950 py-1.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-peach-500/20 font-bold relative z-40 pointer-events-auto ${item.underConstruction ? 'opacity-80 cursor-not-allowed' : ''}">
+                            ${item.underConstruction ? '🚧 施工中 🚧' : '作品細節'}
                         </button>
                     </div>
                 </div>
@@ -598,6 +601,7 @@
                     expandBtn.addEventListener('click', (e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        if (item.underConstruction) return;
                         openProjectDetailModal(key);
                     });
                 }

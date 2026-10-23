@@ -191,6 +191,10 @@
                         <input type="checkbox" id="edit-board-show-preview" checked onchange="updateLivePreviewFromInput()" class="w-4 h-4 accent-peach-500 rounded">
                         <span>開啟當前主題預覽圖 <span class="text-[10.5px] text-gray-500">(取消勾選：不顯示縮圖群，也沒有展開／縮回按鈕)</span></span>
                     </label>
+                    <label class="w-full flex items-center gap-2 text-xs text-gray-300 font-medium cursor-pointer select-none mt-1.5">
+                        <input type="checkbox" id="edit-board-under-construction" onchange="updateLivePreviewFromInput()" class="w-4 h-4 accent-peach-500 rounded">
+                        <span>施工中 <span class="text-[10.5px] text-gray-500">(勾選：「作品細節」按鈕改為 🚧 施工中 🚧，且不開啟作品細節)</span></span>
+                    </label>
 
                     <div class="w-full flex-1 flex items-center justify-center py-12">
                         <!-- Real-time Preview Node -->
@@ -302,7 +306,7 @@
                             <div class="flex justify-between items-center flex-wrap gap-2">
                                 <div>
                                     <label class="text-peach-400 font-bold block">9. 頂部正方形縮圖群管理 (可拖曳圖片調整順序)</label>
-                                    <p class="text-[10.5px] text-gray-400 mt-0.5">預覽縮圖檔名自動對應 01.jpg, 02.jpg...</p>
+                                    <p class="text-[10.5px] text-gray-400 mt-0.5">預覽縮圖檔名自動對應 01.jpg, 02.jpg... 請先輸出所有縮圖 會自動觸發存取目前的json</p>
                                 </div>
                                 <div class="flex items-center gap-2 flex-wrap">
                                     <button onclick="triggerBatchThumbUpload()" class="bg-peach-500/20 hover:bg-peach-500/30 text-peach-300 border border-peach-500/40 text-[11px] px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1">
@@ -454,6 +458,7 @@
                 maskPercentDesktop: 22,
                 preFolder: `${folder}pre/`,
                 showPreviewStrip: true,
+                underConstruction: false,
                 preImages: [],
                 images: []
             };
@@ -569,6 +574,7 @@
             document.getElementById('edit-board-desc').value = item.desc || '';
             document.getElementById('edit-board-custom-html').checked = !!item.hasCustomHtml;
             document.getElementById('edit-board-show-preview').checked = item.showPreviewStrip !== false;
+            document.getElementById('edit-board-under-construction').checked = !!item.underConstruction;
 
             // Android (Mobile < 600px)
             document.getElementById('edit-thumb-size-mobile').value = item.thumbSizeMobile !== undefined ? item.thumbSizeMobile : 64;
@@ -616,6 +622,7 @@
 
             const isDesktop = previewDeviceMode === 'desktop';
             const showPreviewStrip = document.getElementById('edit-board-show-preview').checked;
+            const underConstruction = document.getElementById('edit-board-under-construction').checked;
 
             const thumbSize = isDesktop
                 ? (parseInt(document.getElementById('edit-thumb-size-desktop').value) || 128)
@@ -671,8 +678,8 @@
                 </p>
 
                 <div class="pt-2 border-t border-white/10 text-xs font-semibold relative z-40">
-                    <button class="btn-expand-project w-full bg-peach-500 hover:bg-peach-400 text-charcoal-950 py-1.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-peach-500/20 font-bold relative z-40 pointer-events-auto">
-                        作品細節
+                    <button class="btn-expand-project w-full bg-peach-500 hover:bg-peach-400 text-charcoal-950 py-1.5 px-3 rounded-xl transition flex items-center justify-center gap-1.5 shadow-lg shadow-peach-500/20 font-bold relative z-40 pointer-events-auto ${underConstruction ? 'opacity-80 cursor-not-allowed' : ''}">
+                        ${underConstruction ? '🚧 施工中 🚧' : '作品細節'}
                     </button>
                 </div>
             `;
@@ -1167,6 +1174,7 @@
             item.yaw = parseInt(document.getElementById('edit-board-yaw').value) || 0;
             item.pitch = parseInt(document.getElementById('edit-board-pitch').value) || 0;
             item.showPreviewStrip = document.getElementById('edit-board-show-preview').checked;
+            item.underConstruction = document.getElementById('edit-board-under-construction').checked;
 
             // 儲存 Android (Mobile < 600px) 參數
             item.thumbSizeMobile = parseInt(document.getElementById('edit-thumb-size-mobile').value) || 64;
@@ -1229,6 +1237,7 @@
                     marginBottomDesktop: item.marginBottomDesktop !== undefined ? item.marginBottomDesktop : 0,
                     maskPercentDesktop: item.maskPercentDesktop !== undefined ? item.maskPercentDesktop : 22,
                     showPreviewStrip: item.showPreviewStrip !== false,
+                    underConstruction: !!item.underConstruction,
                     preFolder: preFolder,
                     preImages: item.preImages || [],
                     images: item.images || []
@@ -1323,6 +1332,7 @@
                         marginBottomDesktop: p.marginBottomDesktop !== undefined ? Number(p.marginBottomDesktop) : 0,
                         maskPercentDesktop: p.maskPercentDesktop !== undefined ? Number(p.maskPercentDesktop) : 22,
                         showPreviewStrip: p.showPreviewStrip !== false,
+                        underConstruction: !!p.underConstruction,
                         preFolder: preFolder,
                         preImages: preImages,
                         images: Array.isArray(p.images) ? p.images : []
