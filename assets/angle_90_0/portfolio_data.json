@@ -428,13 +428,13 @@
                 "assets/angle_90_0/03/pre/WY (5).jpg",
                 "assets/angle_90_0/03/pre/WY (6).jpg",
                 "assets/angle_90_0/03/pre/WY (7).jpg",
-                "assets/angle_90_0/03/pre/WY_2 (1).jpg",
                 "assets/angle_90_0/03/pre/WY_2 (7).jpg",
                 "assets/angle_90_0/03/pre/WY_2 (5).jpg",
                 "assets/angle_90_0/03/pre/WY_2 (4).jpg",
                 "assets/angle_90_0/03/pre/WY_2 (6).jpg",
                 "assets/angle_90_0/03/pre/WY_2 (3).jpg",
                 "assets/angle_90_0/03/pre/WY_2 (2).jpg",
+                "assets/angle_90_0/03/pre/WY_2 (1).jpg",
                 "assets/angle_90_0/03/pre/A03_LuckyCoin_BGani.jpg",
                 "assets/angle_90_0/03/pre/A04_LuckyCoin_FGani.jpg",
                 "assets/angle_90_0/03/pre/A05_NG_NormalAni_icon11.jpg",
@@ -528,16 +528,6 @@
                             "height": 720
                         },
                         {
-                            "src": "assets/angle_90_0/03/A/WY_2 (1).png",
-                            "thumb": "assets/angle_90_0/03/pre/WY_2 (1).jpg",
-                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                            "name": "WY_2 (1)",
-                            "design": [],
-                            "web": "assets/angle_90_0/03/A/web/WY_2 (1).webp",
-                            "width": 1080,
-                            "height": 1080
-                        },
-                        {
                             "src": "assets/angle_90_0/03/A/WY_2 (7).png",
                             "thumb": "assets/angle_90_0/03/pre/WY_2 (7).jpg",
                             "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
@@ -596,6 +586,16 @@
                             "web": "assets/angle_90_0/03/A/web/WY_2 (2).webp",
                             "width": 1920,
                             "height": 768
+                        },
+                        {
+                            "src": "assets/angle_90_0/03/A/WY_2 (1).png",
+                            "thumb": "assets/angle_90_0/03/pre/WY_2 (1).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "WY_2 (1)",
+                            "design": [],
+                            "web": "assets/angle_90_0/03/A/web/WY_2 (1).webp",
+                            "width": 1080,
+                            "height": 1080
                         }
                     ]
                 },
@@ -838,6 +838,7 @@
                 "assets/angle_90_0/04/pre/CQ (29).jpg",
                 "assets/angle_90_0/04/pre/CQ (30).jpg",
                 "assets/angle_90_0/04/pre/CQ (31).jpg",
+                "assets/angle_90_0/04/pre/CQII (6).jpg",
                 "assets/angle_90_0/04/pre/CQ (34).jpg",
                 "assets/angle_90_0/04/pre/CQ (35).jpg"
             ],
@@ -1231,7 +1232,7 @@
                     ]
                 },
                 {
-                    "name": "怪物生物",
+                    "name": "怪物",
                     "folder": "D/",
                     "items": [
                         {
@@ -1277,7 +1278,7 @@
                     ]
                 },
                 {
-                    "name": "技能概念",
+                    "name": "技能",
                     "folder": "E/",
                     "items": [
                         {
@@ -1323,9 +1324,16 @@
                     ]
                 },
                 {
-                    "name": "吉祥物套裝",
+                    "name": "吉祥物",
                     "folder": "F/",
                     "items": [
+                        {
+                            "src": "assets/angle_90_0/04/F/CQII (6).png",
+                            "thumb": "assets/angle_90_0/04/pre/CQII (6).jpg",
+                            "fallback": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
+                            "name": "CQII (6)",
+                            "design": []
+                        },
                         {
                             "src": "assets/angle_90_0/04/F/CQ (34).png",
                             "thumb": "assets/angle_90_0/04/pre/CQ (34).jpg",

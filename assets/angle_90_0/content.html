@@ -112,16 +112,28 @@
         }
         @keyframes angle90-spin { to { transform: rotate(360deg); } }
 
-        /* 主題面板收折（手機版） */
-        #angle90-theme-collapse {
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            max-height: 300px; opacity: 1; overflow: hidden;
+        /* 主題按鈕列：不換行、最寬 600px，超出部分用遮罩淡出（走馬燈），兩側三角形或滑動可移動 */
+        #angle90-theme-viewport {
+            position: relative;
+            flex: 0 1 auto; min-width: 0; max-width: 600px;
+            overflow-x: auto; overflow-y: hidden;
+            touch-action: pan-x; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; -ms-overflow-style: none;
+            --fade-l: 0px; --fade-r: 0px;
+            -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
         }
-        #angle90-theme-collapse.is-collapsed { max-height: 0; opacity: 0; pointer-events: none; }
-        @media (min-width: 768px) {
-            #angle90-theme-collapse,
-            #angle90-theme-collapse.is-collapsed { max-height: none; opacity: 1; pointer-events: auto; overflow: visible; }
+        #angle90-theme-viewport::-webkit-scrollbar { display: none; }
+        #angle90-theme-viewport.has-left { --fade-l: 32px; }
+        #angle90-theme-viewport.has-right { --fade-r: 32px; }
+        .angle90-theme-arrow {
+            flex-shrink: 0; width: 1.25rem; height: 1.75rem; border-radius: 0.5rem;
+            display: flex; align-items: center; justify-content: center;
+            color: #fcd191; cursor: pointer; transition: opacity 0.2s ease, background-color 0.2s ease;
         }
+        .angle90-theme-arrow:hover { background: rgba(255, 255, 255, 0.08); }
+        .angle90-theme-arrow:disabled { opacity: 0.2; cursor: default; background: none; }
+        .angle90-theme-arrow.is-hidden { display: none; }
         /* 手機版：未選取的類別按鈕縮小 50% */
         @media (max-width: 767px) {
             #angle90-subcat-tags .angle90-subcat-btn.is-inactive { zoom: 0.5; }
@@ -143,26 +155,26 @@
         
         <!-- 1. Top Panel: Dedicated Centered Theme Selection Floating Glass Panel -->
         <div class="w-full flex flex-col items-center justify-center relative z-40 flex-shrink-0">
-            <div id="angle90-theme-collapse" class="w-full flex justify-center">
-                <div class="glass-panel px-3 md:px-4 py-1.5 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center gap-2 max-w-[70vw] md:max-w-none">
+            <div id="angle90-theme-bar" class="w-full flex justify-center">
+                <div class="glass-panel px-1.5 md:px-2 py-1.5 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center gap-1 max-w-[calc(100vw-5.5rem)]">
                     <!-- 主題排列方式切換：設計類型 / 公司排法 -->
                     <div id="angle90-group-switch" class="flex flex-col md:flex-row items-stretch gap-1 flex-shrink-0">
                         <!-- Dynamic Group Buttons Injected via JS -->
                     </div>
                     <div id="angle90-group-divider" class="w-[1px] self-stretch bg-white/10 flex-shrink-0"></div>
-                    <div id="angle90-theme-tags" class="flex flex-wrap md:flex-nowrap justify-center items-center gap-1.5 md:gap-2 md:overflow-x-auto no-scrollbar md:max-w-[calc(100vw-16rem)]">
-                        <!-- Dynamic Theme Buttons Injected via JS -->
+                    <button id="angle90-theme-left" type="button" onclick="window.angle90ScrollThemes(-1)" class="angle90-theme-arrow is-hidden" title="往左">
+                        <svg width="8" height="10" viewBox="0 0 8 10" fill="currentColor"><path d="M7 0v10L0 5z"/></svg>
+                    </button>
+                    <div id="angle90-theme-viewport">
+                        <div id="angle90-theme-tags" class="flex flex-nowrap items-center gap-1.5 md:gap-2 w-max mx-auto py-0.5">
+                            <!-- 主題按鈕由 JS 產生 -->
+                        </div>
                     </div>
+                    <button id="angle90-theme-right" type="button" onclick="window.angle90ScrollThemes(1)" class="angle90-theme-arrow is-hidden" title="往右">
+                        <svg width="8" height="10" viewBox="0 0 8 10" fill="currentColor"><path d="M1 0v10l7-5z"/></svg>
+                    </button>
                 </div>
             </div>
-
-            <!-- Mobile Theme Panel Collapse Toggle -->
-            <button id="angle90-theme-toggle" onclick="window.angle90ToggleThemePanel()"
-                    class="md:hidden glass-panel px-6 py-1 rounded-b-2xl border-t-0 -mt-[1px] max-w-[70vw] text-gray-300 flex items-center justify-center gap-2 shadow-xl cursor-pointer active:scale-95 transition"
-                    title="收折/展開主題">
-                <div class="w-8 h-1 bg-peach-500/70 rounded-full"></div>
-                <span id="angle90-theme-toggle-icon" class="text-[10px] text-peach-400 font-bold">▲</span>
-            </button>
 
             <!-- Modal Close Button -->
             <button onclick="window.angle90CloseModal()"
@@ -571,6 +583,50 @@
                 switchThemeCategory(keys[0], true);
             };
 
+            // 主題按鈕列走馬燈：依捲動位置顯示左右遮罩與三角形
+            function updateThemeScroller(scrollToActive) {
+                const vp = document.getElementById('angle90-theme-viewport');
+                const btnL = document.getElementById('angle90-theme-left');
+                const btnR = document.getElementById('angle90-theme-right');
+                if (!vp) return;
+
+                if (!vp.dataset.bound) {
+                    vp.dataset.bound = '1';
+                    vp.addEventListener('scroll', () => updateThemeScroller(false), { passive: true });
+                    // 桌機滑鼠滾輪直接橫向捲動按鈕列
+                    vp.addEventListener('wheel', (e) => {
+                        if (vp.scrollWidth <= vp.clientWidth || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;
+                        e.preventDefault();
+                        vp.scrollLeft += e.deltaY;
+                    }, { passive: false });
+                }
+                if (!window.__angle90ThemeResizeBound) {
+                    window.__angle90ThemeResizeBound = true;
+                    window.addEventListener('resize', () => updateThemeScroller(false));
+                }
+
+                if (scrollToActive) {
+                    const activeBtn = vp.querySelector('.bg-peach-500');
+                    if (activeBtn) vp.scrollLeft = activeBtn.offsetLeft - (vp.clientWidth - activeBtn.offsetWidth) / 2;
+                }
+
+                const max = vp.scrollWidth - vp.clientWidth;
+                const overflow = max > 2;
+                const atStart = vp.scrollLeft <= 2;
+                const atEnd = vp.scrollLeft >= max - 2;
+                vp.classList.toggle('has-left', overflow && !atStart);
+                vp.classList.toggle('has-right', overflow && !atEnd);
+                [btnL, btnR].forEach(b => b && b.classList.toggle('is-hidden', !overflow));
+                if (btnL) btnL.disabled = atStart;
+                if (btnR) btnR.disabled = atEnd;
+            }
+
+            window.angle90ScrollThemes = function(direction) {
+                const vp = document.getElementById('angle90-theme-viewport');
+                if (!vp) return;
+                vp.scrollBy({ left: direction * Math.max(80, vp.clientWidth * 0.7), behavior: 'smooth' });
+            };
+
             function renderThemeTags() {
                 const tagsContainer = document.getElementById('angle90-theme-tags');
                 if (!tagsContainer) return;
@@ -595,6 +651,7 @@
                     `;
                 });
                 tagsContainer.innerHTML = html;
+                requestAnimationFrame(() => updateThemeScroller(true));
             }
 
             window.angle90SelectTheme = function(catKey) {
@@ -649,16 +706,6 @@
                     finishAndRender();
                 });
             }
-
-            window.angle90ToggleThemePanel = function() {
-                const panel = document.getElementById('angle90-theme-collapse');
-                const icon = document.getElementById('angle90-theme-toggle-icon');
-                if (!panel) return;
-                const collapsed = panel.classList.toggle('is-collapsed');
-                if (icon) icon.innerText = collapsed ? '▼' : '▲';
-                // 收折後舞台高度改變，動畫結束後重算大圖尺寸
-                setTimeout(() => renderLightboxImage(false), 320);
-            };
 
             window.angle90NavImage = function(direction) {
                 if (!flatImageList || flatImageList.length === 0) return;
