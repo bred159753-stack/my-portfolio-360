@@ -124,6 +124,8 @@
             mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
         }
         #angle90-theme-viewport::-webkit-scrollbar { display: none; }
+        /* 手機版：整條主題列最寬為螢幕寬度的 4/5，不另外限制 600px */
+        @media (max-width: 767px) { #angle90-theme-viewport { max-width: none; } }
         #angle90-theme-viewport.has-left { --fade-l: 32px; }
         #angle90-theme-viewport.has-right { --fade-r: 32px; }
         .angle90-theme-arrow {
@@ -156,7 +158,7 @@
         <!-- 1. Top Panel: Dedicated Centered Theme Selection Floating Glass Panel -->
         <div class="w-full flex flex-col items-center justify-center relative z-40 flex-shrink-0">
             <div id="angle90-theme-bar" class="w-full flex justify-center">
-                <div class="glass-panel px-1.5 md:px-2 py-1.5 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center gap-1 max-w-[calc(100vw-5.5rem)]">
+                <div class="glass-panel px-1.5 md:px-2 py-1.5 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center gap-1 max-w-[80vw] md:max-w-[calc(100vw-5.5rem)]">
                     <!-- 主題排列方式切換：設計類型 / 公司排法 -->
                     <div id="angle90-group-switch" class="flex flex-col md:flex-row items-stretch gap-1 flex-shrink-0">
                         <!-- Dynamic Group Buttons Injected via JS -->
@@ -1106,6 +1108,45 @@
                 });
             }
 
+            // 縮圖中心點在縮圖列捲動座標中的位置。
+            // 不用 offsetLeft：它是相對外層面板 (含 padding) 算的，會讓目前縮圖偏離畫面中線
+            function thumbCenterInStrip(stripEl, el) {
+                const r = el.getBoundingClientRect();
+                const sr = stripEl.getBoundingClientRect();
+                return stripEl.scrollLeft + (r.left + r.width / 2) - (sr.left + stripEl.clientLeft);
+            }
+
+// 程式捲動縮圖列：捲動「真的結束」前都不讓 scroll 事件改選縮圖。
+            // 原本固定 280~320ms 解除，跳很遠時動畫還沒跑完就被中途經過的縮圖搶走，最後沒對齊目標
+            let programmaticScrollTimer = null;
+            function scrollStripTo(stripEl, left, smooth) {
+                const maxLeft = stripEl.scrollWidth - stripEl.clientWidth;
+                const target = Math.max(0, Math.min(maxLeft, left));
+                clearTimeout(programmaticScrollTimer);
+                const finish = (ev) => {
+                    // 拖曳慣性留下的 scrollend 可能先到，還沒到目標位置就不算結束
+                    if (ev && Math.abs(stripEl.scrollLeft - target) > 1) return;
+                    clearTimeout(programmaticScrollTimer);
+                    stripEl.removeEventListener('scrollend', finish);
+                    if (stripEl.__onScrollEnd === finish) stripEl.__onScrollEnd = null;
+                    isProgrammaticScroll = false;
+                };
+                if (Math.abs(stripEl.scrollLeft - target) < 1) {
+                    finish();
+                    return;
+                }
+                isProgrammaticScroll = true;
+                if (smooth && 'onscrollend' in window) {
+                    stripEl.removeEventListener('scrollend', stripEl.__onScrollEnd || finish);
+                    stripEl.__onScrollEnd = finish;
+                    stripEl.addEventListener('scrollend', finish);
+                    programmaticScrollTimer = setTimeout(finish, 1200);
+                } else {
+                    programmaticScrollTimer = setTimeout(finish, smooth ? 700 : 40);
+                }
+                stripEl.scrollTo({ left: target, behavior: smooth ? 'smooth' : 'auto' });
+            }
+
             function centerActiveThumbnail(smooth = true) {
                 requestAnimationFrame(() => {
                     const stripEl = document.getElementById('angle90-thumb-strip');
@@ -1114,17 +1155,10 @@
                     if (!activeEl) return;
 
                     const containerWidth = stripEl.clientWidth;
-                    const itemCenter = activeEl.offsetLeft + activeEl.clientWidth / 2;
+                    const itemCenter = thumbCenterInStrip(stripEl, activeEl);
                     const scrollTarget = itemCenter - (containerWidth / 2);
 
-                    isProgrammaticScroll = true;
-                    stripEl.scrollTo({
-                        left: scrollTarget,
-                        behavior: smooth ? 'smooth' : 'auto'
-                    });
-                    setTimeout(() => {
-                        isProgrammaticScroll = false;
-                    }, smooth ? 320 : 40);
+                    scrollStripTo(stripEl, scrollTarget, smooth);
                 });
             }
 
@@ -1135,17 +1169,10 @@
                 if (!activeEl) return;
 
                 const containerWidth = stripEl.clientWidth;
-                const itemCenter = activeEl.offsetLeft + activeEl.clientWidth / 2;
+                const itemCenter = thumbCenterInStrip(stripEl, activeEl);
                 const scrollTarget = itemCenter - (containerWidth / 2);
 
-                isProgrammaticScroll = true;
-                stripEl.scrollTo({
-                    left: scrollTarget,
-                    behavior: 'smooth'
-                });
-                setTimeout(() => {
-                    isProgrammaticScroll = false;
-                }, 280);
+                scrollStripTo(stripEl, scrollTarget, true);
             }
 
             function triggerSubcategoryToast(textMsg) {
@@ -1334,7 +1361,7 @@
 
                             thumbs.forEach((el) => {
                                 const idx = parseInt(el.dataset.thumbIdx, 10);
-                                const elCenter = el.offsetLeft + el.clientWidth / 2;
+                                const elCenter = thumbCenterInStrip(stripEl, el);
                                 const diff = Math.abs(containerCenter - elCenter);
                                 if (diff < minDiff) {
                                     minDiff = diff;

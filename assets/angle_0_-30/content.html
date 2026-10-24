@@ -102,6 +102,8 @@
             mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
         }
         #angle0n30-theme-viewport::-webkit-scrollbar { display: none; }
+        /* 手機版：整條主題列最寬為螢幕寬度的 4/5，不另外限制 600px */
+        @media (max-width: 767px) { #angle0n30-theme-viewport { max-width: none; } }
         #angle0n30-theme-viewport.has-left { --fade-l: 32px; }
         #angle0n30-theme-viewport.has-right { --fade-r: 32px; }
         .angle0n30-theme-arrow {
@@ -119,7 +121,7 @@
         <!-- 1. 上方：主題選擇 -->
         <div class="w-full flex flex-col items-center justify-center relative z-40 flex-shrink-0">
             <div id="angle0n30-theme-bar" class="w-full flex justify-center">
-                <div class="glass-panel px-1.5 md:px-2 py-1.5 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center gap-1 max-w-[calc(100vw-5.5rem)]">
+                <div class="glass-panel px-1.5 md:px-2 py-1.5 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center gap-1 max-w-[80vw] md:max-w-[calc(100vw-5.5rem)]">
                     <button id="angle0n30-theme-left" type="button" onclick="window.angle0n30ScrollThemes(-1)" class="angle0n30-theme-arrow is-hidden" title="往左">
                         <svg width="8" height="10" viewBox="0 0 8 10" fill="currentColor"><path d="M7 0v10L0 5z"/></svg>
                     </button>
